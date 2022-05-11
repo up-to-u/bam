@@ -1,0 +1,1 @@
+<?include('inc/include.inc.php');echo template_header();?>Main<?echo template_footer();?>
