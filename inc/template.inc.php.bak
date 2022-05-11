@@ -1,0 +1,614 @@
+<?php
+
+function template_header_front() {
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="user-scalable=no, width=device-width, maximum-scale=1.0" />
+        <meta name="keywords" content="">
+        <meta name="author" content="SME">
+        <meta name="fragment" content="!">
+        <meta property="og:title"              content="ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย" />
+        <meta property="og:description"        content="เป็นสถาบันการเงินหลักของรัฐที่มั่นคงยั่งยืน เพื่อช่วยเหลือและสนับสนุน SMEs ไทย" />
+        <meta property="og:image"              content="img/share.jpg" />
+        <title>SMEBank</title>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+        <link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
+        <link rel="stylesheet" type="text/css" href="css/magic_popup.css">
+        <link rel="stylesheet" type="text/css" href="css/main1.css">
+		<script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap-select.min.js"></script>
+        <script type="text/javascript" src="js/owl.carousel.js"></script>
+        <script type="text/javascript" src="js/magic_popup.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123748083-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		  gtag('config', 'UA-123748083-1');
+		</script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="topbar">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6 social">
+                                <a href="https://www.facebook.com/SMEDevelopmentBank/?rf=212061755498506" target="_blank"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                                <a href="https://www.youtube.com/channel/UC-HQ9P7hgiOF-gOybbWk0kQ" target="_blank"><i class="fa fa-youtube-play"></i></a>
+                                <a href="https://line.me/ti/p/%40gyl5080f" target="_blank"><img src="img/line_white.png" class="icon_line white"></a>
+                            </div>
+                            <div class="col-sm-6 text-right font-lang">
+                                <div class="clearfix">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="https://www.smebank.co.th/">
+                            <img src="img/logo.png">
+                        </a>
+                        <div class="navbar-detail">
+                            <div class="left">
+                                <h1>ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย</h1>
+                                <p><small>Small and Medium Enterprise Development Bank of Thailand</small></p>
+                            </div>
+                            <div class="right">
+                                <div class="box">
+                                    <a href="tel:1357">
+                                        <img src="img/icon_tel.png">
+                                        <h2>สายด่วน</h2><h1>1357</h1>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse navbar-collapse" id="menu">
+                        <div class="nav navbar-nav top">
+                            <div class="left">
+                                <h1>ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย</h1>
+                                <p><small>Small and Medium Enterprise Development Bank of Thailand</small></p>
+                            </div>
+                            <div class="right">
+                                <div class="box">
+                                    <a href="https://www.smebank.co.th/faq">
+                                        <img src="img/icon_help.png">
+                                        บริการช่วยเหลือ
+                                    </a>
+                                </div>
+                                <div class="box">
+                                    <a href="tel:1357">
+                                        <img src="img/icon_tel.png">
+                                        <h2>สายด่วน</h2><h1>1357</h1>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="nav navbar-nav">
+<?
+	$cf = substr(strrchr($_SERVER['PHP_SELF'], '/'), 1);
+	$menu = array(
+		/*'index.php' => 'ติดต่อขอรับบริการ',*/
+		'calendar.php' => 'กิจกรรม' /*,
+		'smetoolbox.php' => 'TOOLBOX',
+		'elibrary.php' => 'e-LIBRARY'*/
+	);
+	
+	foreach (array_keys($menu) as $m) {
+?>
+                            <li><a class="normal <?if ($m==$cf) echo 'active'?>" href="<?=$m?>" ><?=$menu[$m]?></a></li>
+<?		
+	}
+?>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div id="wrapper">
+<?	
+}
+
+function template_footer_front() {
+?>
+	        </div>
+
+        <footer>
+            <div class="container">
+                <div class="top">
+                    <div class="col-md-8 col-sm-6 no-padding">
+                        <div class="logo">
+                            <img src="img/logo.png">
+                            <h2>ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย</h2>
+                            <p>Small and Medium Enterprise Development Bank of Thailand</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 text-right no-padding">
+                        <div class="comment">
+                            <a href="https://www.smebank.co.th/feedback"><img src="img/icon_comment.png"> แนะนำและติชม</a>
+                            <a href="tel:1357"><img src="img/icon_tel.png"> สายด่วน 1357</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="middle">
+                    <div class="control">
+                        <div class="head">Sitemap<div class="icon-close"></div></div>
+                        <div class="ct">
+                            <div class="box">
+                                <ul>
+                                    <li><a href="https://www.smebank.co.th/">หน้าหลัก</a></li>
+                                    <li><a href="https://www.smebank.co.th/about">เกี่ยวกับธนาคาร</a></li>
+                                    <li><a href="https://www.smebank.co.th/loans">สินเชื่อ</a></li>
+                                    <li><a href="https://www.smebank.co.th/services">บริการ</a></li>
+                                    <li><a href="https://www.smebank.co.th/interest-rates">อัตราดอกเบี้ย</a></li>
+                                    <li><a href="https://www.smebank.co.th/news">ข่าวสารธนาคาร</a></li>
+                                </ul>
+                            </div>
+                            <div class="box">
+                                <ul>
+                                    <li><a href="https://www.smebank.co.th/development-entrepreneurs">พัฒนาผู้ประกอบการ</a></li>
+                                    <li><a href="https://www.smebank.co.th/knowledge-sme">มุมความรู้ SMEs</a></li>
+                                    <li><a href="https://www.smebank.co.th/cg-csr">CG & CSR</a></li>
+                                    <li><a href="http://npa.smebank.co.th/" target="_blank">ทรัพย์สินรอการขาย</a></li>
+                                    <li><a href="https://www.smebank.co.th/faq">คำถามที่พบบ่อย (FAQ)</a></li>
+                                    <li><a href="https://www.smebank.co.th/payment-services">จุดบริการชำระเงินกู้</a></li>
+                                </ul>
+                            </div>
+                            <div class="box">
+                                <ul>
+                                    <li><a href="https://www.smebank.co.th/procure">จัดซื้อจัดจ้าง</a></li>
+                                    <li><a href="https://www.smebank.co.th/testimonial">เสียงสะท้อนจากลูกค้า</a></li>
+                                    <li><a href="#">SME Showcase</a></li>
+                                    <li><a href="https://www.smebank.co.th/media">สื่อธนาคาร</a></li>
+                                    <li><a href="https://www.smebank.co.th/contact">ติดต่อเรา</a></li>
+                                    <li><a href="https://www.smebank.co.th/career">ร่วมงานกับเรา</a></li>
+                                </ul>
+                            </div>
+                            <div class="box">
+                                <ul>
+                                    <li><a href="https://www.smebank.co.th/links">เว็บไซต์ที่เกี่ยวข้อง</a></li>
+                                    <li><a href="https://www.smebank.co.th/sitemap">แผนผังเว็บไซต์</a></li>
+                                    <li><a href="https://www.smebank.co.th/policy">นโยบายเว็บไซต์</a></li>
+                                    <li><a href="https://www.smebank.co.th/privacy-policy">นโยบายความเป็นส่วนตัว</a></li>
+                                    <li><a href="https://www.smebank.co.th/security-policy">นโยบายความปลอดภัยเว็บไซต์</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <div class="head">Contact Us<div class="icon-close"></div></div>
+                        <div class="ct">
+                            <div class="box">
+                                <div class="in">
+                                    <img src="img/icon_tel.png">
+                                    <div class="txt">
+                                        <h2 class="red"><a href="tel:1357">สายด่วน 1357</a></h2>
+                                        <p><a href="tel:02-265-4724">02-265-4724</a>, <a href="tel:02-265-4155">02-265-4155</a></p>
+                                        <p>โทรสาร: <a href="tel:02-270-0569">02-270-0569</a></p>
+                                    </div>
+                                </div>
+                                <div class="in">
+                                    <img src="img/icon_servey.png">
+                                    <div class="txt">
+                                        <p> <a href="https://www.smebank.co.th/survey" style="color: #0074b1 !important;font-size: 25px;">แบบสำรวจ</a></p>
+                                    </div>
+                                </div>
+                                <div class="in">
+                                    <img src="img/icon_address.png">
+                                    <div class="txt">
+                                        <p>สำนักงานพหลโยธิน 310 อาคาร SME Bank</p>
+                                    </div>
+                                </div>
+                                <div class="in">
+                                    <img src="img/icon_time.png">
+                                    <div class="txt">
+                                        <p>ทุกวัน จันทร์ - ศุกร์<br>ตั้งแต่เวลา 9.00 น.-12.00 น.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div class="social">
+                        <a href="https://www.facebook.com/SMEDevelopmentBank/?rf=212061755498506" target="_blank"><i class="fa fa-facebook"></i></a>
+                        <a href="https://line.me/ti/p/%40gyl5080f" target="_blank"><img src="img/line_blue.png" class="icon_line"></a>
+                        <a href="#" target="_blank"><i class="fa fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fa fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UC-HQ9P7hgiOF-gOybbWk0kQ" target="_blank"><i class="fa fa-youtube-play"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">สงวนสิทธิ์โดย SMEDevelopment Bank</div>
+        </footer>
+        <div id="popup-success">
+            <div class="box">
+                <div class="txt">การส่งข้อมูลแนะนำติชมสำเร็จ</div>
+                <button class="btn btn-green no-icon btn-fill">ตกลง</button>
+            </div>
+        </div>
+        <div id="popup-error">
+            <div class="box">
+                <div class="txt">การส่งข้อมูลแนะนำติชมไม่สำเร็จ<br>โปรดลองใหม่อีกครั้ง</div>
+                <button class="btn btn-green no-icon btn-fill">ตกลง</button>
+            </div>
+        </div>
+        <!--<div id="share">
+            <img src="img/icon_share.png" class="head">
+            <div class="control">
+                <div class="box twitter">
+                    <img src="img/icon_twitter.png" >
+                </div>
+                <div class="box google">
+                    <img src="img/icon_google.png" >
+                </div>
+                <div class="box line">
+                    <img src="img/icon_line.png" >
+                </div>
+                <div class="box facebook">
+                    <img src="img/icon_facebook.png" >
+                </div>
+            </div>
+        </div>-->
+        <div><a href='#' id="totop"><i class="fa fa-angle-right icon"></i></a></div>
+		
+<script>
+$(document).ready(function(){
+	$("#totop").click(function() {
+		$("html, body").animate({ scrollTop: 0 }, "fast");
+		return false;
+	});
+});
+</script>		
+    </body>
+</html>
+<?php
+}
+
+function template_header() {
+	global $user_id, $dep_id, $company_id, $login, $password, $ui_mode, $img ,$ui_calendar ,$ul_calendar_ck, $connect;
+
+	if ($user_id==0 || $user_id==0) {
+		$script_name = urlencode($_SERVER['SCRIPT_NAME'].'?'.$_SERVER['QUERY_STRING']);
+		echo '<script language="JavaScript">document.location="worklist.php?action=logout&ref='.$script_name.'";</script>';
+		exit;
+	}
+	if ($dep_id=='' || $dep_id == 0) {
+		$current_filename = strrchr($_SERVER['PHP_SELF'], '/');
+		$cf = substr($current_filename, 1);
+		if ($cf!='profile.php') {
+			echo '<script language="JavaScript">document.location="profile.php";</script>';
+			exit;
+		}
+	}
+
+	$max_p = 21;
+	$p = array();
+	$sql2="SELECT *	FROM `system_permission` WHERE user_id = '$user_id' OR department_id = '$dep_id' ";		
+	$result2=mysqli_query($connect, $sql2);
+	while ($row2 = mysqli_fetch_array($result2)) {
+		for ($j=1; $j<=$max_p; $j++) {		
+			if ($row2['p_'.$j]==1) {
+				$p[$j] = 1;
+			}
+		}		
+	}
+	
+	$sql="SELECT * FROM `user` WHERE `user_id` = '$user_id' ";
+	$result=mysqli_query($connect, $sql);
+	if ($row = mysqli_fetch_array($result)) {
+		$img = !isset($row['img']) ? 'images/no_photo.png' : $row['img'];
+		$user_name = $row['name'].' '.$row['surname'];
+		$user_email = $row['email'];
+	}
+    
+	template_header2($p);
+}
+
+function template_footer() {
+	global $ui_mode;
+	template_footer2();
+}
+
+
+function template_header2($permission) {
+	global $img, $dep_id, $user_id;
+	global $connect;
+/*	$hash_cookie = $_COOKIE['hash'];
+	$hash_new = md5($user_id.'S#A*D#@$er%ewr%@6Q)#$');
+	if ($hash_cookie!=$hash_new) {
+		header('Location: worklist.php?action=logout');
+	}*/
+	
+	header('Content-Type: text/html; charset=utf-8');
+	$img = 'images/no_photo.png';
+?>
+<html lang="en">
+	 <head>
+		<meta charset="utf-8" />
+		<title>SME Bank</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<meta content="SME Bank" name="description" />
+		<meta content="" name="author" />
+		<!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />-->
+		<link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+		<link href="assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+		<link href="assets/global/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+		<link href="assets/global/css/components-rounded.css" rel="stylesheet" id="style_components" type="text/css" />
+		<link href="assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+		<link href="assets/layouts/layout/css/layout.css" rel="stylesheet" type="text/css" />
+		<link href="assets/layouts/layout/css/themes/light.css" rel="stylesheet" type="text/css" id="style_color" />
+		<link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+		<link rel="Shortcut Icon" href="favicon.ico">
+		<script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+	</head>
+	<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+		<div class="page-wrapper">
+			<div class="page-header navbar navbar-fixed-top">
+				<div class="page-header-inner ">
+					<div class="page-logo">
+						<a href="job_assign.php"><img src="images/logo.png" alt="logo" height='40' class="logo-default" /></a>
+							<div class="menu-toggler sidebar-toggler"><span>&nbsp;</span></div>
+					</div>
+					<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"><span></span></a>
+					<div class="top-menu">
+						<ul class="nav navbar-nav pull-right">
+							<li class="dropdown dropdown-user">
+								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+									<img alt="" class="img-circle" src="<?=$img?>" />
+									<span class="username username-hide-on-mobile"><?=$user_name?></span>
+									<i class="fa fa-angle-down"></i>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-default">
+									<li><a href="profile.php"><i class="icon-user"></i> ข้อมูลส่วนตัว </a></li>
+<?	if ($dep_id>0) {?>				<li><a href="job_assign.php"><i class="icon-calendar"></i> โต๊ะทำงาน </a></li><?}?>
+									<li><a href="worklist.php?action=logout"><i class="icon-power"></i> ออกจากระบบ </a>
+									</li>
+								</ul>
+							</li>
+							<li class="dropdown dropdown-quick-sidebar-toggler">
+								<a href="javascript:;" class="dropdown-toggle">
+									<i class="icon-logout"></i>
+								</a>
+								</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"> </div>
+			<div class="page-container">
+				<div class="page-sidebar-wrapper">
+					<div class="page-sidebar navbar-collapse collapse">
+						<ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
+							<li class="sidebar-toggler-wrapper hide">
+								<div class="sidebar-toggler">
+									<span></span>
+								</div>
+							</li>
+<?
+	$current_filename = strrchr($_SERVER['PHP_SELF'], '/');
+	$cf = substr($current_filename, 1);
+	
+	if ($dep_id>0) {
+		$item = array();
+		$item[] = array(
+			'name' => 'โต๊ะทำงาน',
+			'icon' => 'icon-home',
+			'type' => 1,
+			'url' => 'job_today.php'
+		);
+	}
+	$item = array();
+	$item[] = array(
+		'name' => 'ข้อมูลส่วนตัว',
+		'icon' => 'icon-user',
+		'type' => 1,
+		'url' => 'profile.php'
+	);	
+	$item[] = array(
+			'name' => 'แจ้งเหตุการณ์ความเสียหาย ',
+			'icon' => 'fa fa-bolt',
+			'type' => 1,
+			'url' => 'loss_data.php'
+		);	
+	$item[] = array(
+			'name' => 'ความเสี่ยง RCSA',
+			'icon' => 'fa fa-archive',
+			'type' => 1,
+			'url' => 'csa.php'
+		);
+	generate_menu($item, $cf);	
+
+	$k = array_keys($permission);
+	array_multisort($k);	
+	foreach ($k as $kk) {
+		menu_item_newUI($kk, $cf);
+	}
+	
+	$item = array();
+	$item[] = array(
+		'name' => 'ออกจากระบบ',
+		'icon' => 'icon-power',
+		'type' => 1,
+		'url' => 'index.php?action=logout'
+	);		
+	generate_menu($item, $cf);		
+	
+?>	
+						</ul>
+					</div>
+				</div>
+				<div class="page-content-wrapper">
+					<div class="page-content">
+<?
+	}
+
+function template_footer2() {
+?>
+					</div>
+				</div>
+				<a href="javascript:;" class="page-quick-sidebar-toggler">
+					<i class="icon-login"></i>
+				</a>
+	<? ?>               <div class="page-quick-sidebar-wrapper" data-close-on-body-click="false">
+					<div class="page-quick-sidebar">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a href="javascript:;" data-target="#quick_sidebar_tab_1" data-toggle="tab"> USER<span class="badge badge-danger">0</span></a>
+							</li>
+							<li>
+								<a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> Notifications <span class="badge badge-success">0</span></a>
+							</li>
+
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active page-quick-sidebar-chat" id="quick_sidebar_tab_1">
+								
+							</div>
+							<div class="tab-pane page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
+								
+							</div>
+						</div>
+					</div><? ?>					
+				</div>				
+			</div>
+			<div class="page-footer">
+			</div>
+		</div>
+		<script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+		<script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+		<script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+		<script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+		<script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+		<script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
+		<script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
+	        <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
+		<script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+		<script src="assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
+	</body>
+</html>
+<?
+}
+
+function generate_menu($d, $current_filename) {
+	foreach ($d as $dd) {
+		$name = $dd['name'];
+		$icon = $dd['icon'];
+		$type = $dd['type'];	
+		$active = false;
+		if ($type==1) {
+			$url = $dd['url'];	
+?>
+	<li class="nav-item <?if ($current_filename==$url) echo 'active open'?> ">
+		<a href="<?=$url?>" class="nav-link">
+			<i class="<?=$icon?>"></i>
+			<span class="title"><?=$name?></span>
+			<?if ($current_filename==$url) {?>
+			<span class="selected"></span>			
+			<?} else{?>
+			<?} ?>
+		</a>
+	</li>
+<?		} else {  
+			$list = $dd['list'];
+			if (array_key_exists($current_filename, $list)) $active = true;
+?>
+	<li class="nav-item  <?if ($active) echo 'active open'?>">
+		<a href="javascript:void(0)" class="nav-link nav-toggle">
+			<i class="<?=$icon?>"></i>
+			<span class="title"> <?=$name?></span>
+			<i class="icon-arrow"></i>
+			<span class="arrow <?if ($active) echo 'open'?>"></span>
+			<?if ($active) echo '<span class="selected"></span>'?>
+		</a>
+		<ul class="sub-menu">
+<?			foreach ($list as $k => $v) { ?>
+			<li <?if ($current_filename==$k) echo 'class="active open"'?>>
+				<a href="<?=$k?>" class="nav-link ">
+					<span class="title"> <?=$v?> </span>
+					<?if ($current_filename==$k) echo '<span class="selected"></span>'?>
+				</a>
+			</li>
+<?			}?>			
+		</ul>
+	</li>
+<?php	
+		}
+	}
+}
+
+function menu_item_newUI($p, $current_filename) {
+	global $user_id, $dep_id, $company_id, $menu_count, $connect;
+
+	if ($p==20) { 
+	
+		$item = array();
+		$item[] = array(
+				'name' => 'จัดการ Lossdata',
+				'icon' => 'icon-doc',
+				'list' => array(
+					'loss_data_admin.php' => 'จัดการรายการเหตุการณ์',
+					'loss_data_adminmanage.php' => 'ปรับสถานะรายการ',
+					'loss_data_report.php' => 'ทะเบียนสรุปรายงาน'
+			)
+		);
+		generate_menu($item,$current_filename);  
+		
+	} 
+	else if ($p==3) { 
+		
+		$item = array();
+		$item[] = array(
+				'name' => 'ประเมินความเสี่ยง',
+				'icon' => 'icon-share',
+				'list' => array(
+					'csa.php' => 'RCSA',
+					'csa_admin.php' => 'RCSA Admin',
+					'csa_permission.php' => 'กำหนดสิทธิ์'	
+			)
+		);
+		generate_menu($item,$current_filename);  
+		
+	}
+	else if ($p==1) { 
+		$item = array();
+
+		$item[] = array(
+			'name' => 'การตั้งค่าระบบ',
+			'icon' => 'icon-settings',
+			'list' => array(
+				'user.php' => 'ผู้ใช้งาน',
+				'department.php' => 'ฝ่าย / สาขา',
+				'job_assign_admin.php' => 'จัดการผู้มอบหมายงาน'
+				)
+		);		 
+		generate_menu($item,$current_filename);
+	}
+	
+	
+	$menu_count++;
+}
+?>

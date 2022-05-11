@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>jQuery treetable</title>
+  </head>
+  <body>
+
+
+      <table id="example-basic-expandable">
+        <tr data-tt-id="0">
+          <td>app</td>
+        </tr>
+        <tr data-tt-id="1" data-tt-parent-id="0">
+          <td>controllers</td>
+        </tr>
+        <tr data-tt-id="5" data-tt-parent-id="1">
+          <td>application_controller.rb</td>
+        </tr>
+        <tr data-tt-id="2" data-tt-parent-id="0">
+          <td>helpers</td>
+        </tr>
+        <tr data-tt-id="3" data-tt-parent-id="0">
+          <td>models</td>
+        </tr>
+        <tr data-tt-id="4" data-tt-parent-id="0">
+          <td>views</td>
+        </tr>
+      </table>
+<br>
+
+<input type='button' value='แสดงทั้งหมด' onClick='$("#example-basic-expandable").treetable("expandAll")'>
+<script language="javascript" src="jquery.js"></script>
+<script language="javascript" src="jquery.treetable.js"></script>
+<script language='JavaScript'>
+      $("#example-basic-expandable").treetable({ expandable: true });
+</script>
+
+</body>
+</html>
