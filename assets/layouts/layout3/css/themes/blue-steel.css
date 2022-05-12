@@ -1,14 +1,14 @@
 /* Cubic Bezier Transition */
-/****
-Boby
+/****
+Boby
 ****/
 body {
   background-color: #fff; }
   body.page-md {
     background: white; }
 
-/******
-General 
+/******
+General 
 ******/
 /* Theme Font Color */
 .theme-font {
@@ -31,8 +31,8 @@ General
     .portlet.light .btn.btn-circle.btn-icon-only.btn-default:hover > i, .portlet.light .btn.btn-circle.btn-icon-only.btn-default.active > i {
       color: #fff; }
 
-/******
-Page Header 
+/******
+Page Header 
 ******/
 .page-header {
   background-color: #fff;
@@ -282,8 +282,8 @@ Page Header
         .page-header .page-header-menu .search-form .input-group .input-group-btn .btn.submit > i {
           color: #616d7d; }
 
-/******
-Page Footer 
+/******
+Page Footer 
 ******/
 .page-prefooter {
   background: #48525e;
@@ -476,8 +476,8 @@ Page Footer
         .page-header .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle:hover {
           background-color: #fff; } }
 
-/****
- CSS3 Spinner Bar
+/****
+ CSS3 Spinner Bar
 ****/
 .page-spinner-bar > div,
 .block-spinner-bar > div {

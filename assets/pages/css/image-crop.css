@@ -1,5 +1,5 @@
 /* Cubic Bezier Transition */
-/* Apply these styles only when #preview-pane has
+/* Apply these styles only when #preview-pane has
    been placed within the Jcrop widget */
 #preview-pane {
   display: block;
@@ -20,8 +20,8 @@
   #preview-pane {
     right: 0; } }
 
-/* The Javascript code will set the aspect ratio of the crop
-   area based on the size of the thumbnail preview,
+/* The Javascript code will set the aspect ratio of the crop
+   area based on the size of the thumbnail preview,
    specified here */
 #preview-pane .preview-container {
   width: 175px;

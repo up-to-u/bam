@@ -12,27 +12,9 @@ $update_id = intval($_POST['update_id']);
 $submit = $_POST['submit'];
 
 
-if ($submit=='update' && ($update_id>0)) {
-	$prefix = addslashes($_POST[prefix]);
-	$name = addslashes($_POST[name]);
-	$surname = addslashes($_POST[surname]);
-	$prefix_en = addslashes($_POST[prefix_en]);
-	$name_en = addslashes($_POST[name_en]);
-	$surname_en = addslashes($_POST[surname_en]);
-	$tel = addslashes($_POST[tel]);
-	$mobile = addslashes($_POST[mobile]);
-	$email = addslashes($_POST[email]);
-	$contact_address = addslashes($_POST[contact_address]);
-	$login = addslashes($_POST[userName]);
-	$password = addslashes($_POST[password]);
-	$code = addslashes($_POST[code]);
-	$login = addslashes($_POST[login]);
-	$position = addslashes($_POST[position]);
-	$img1_url = addslashes($_POST[img1_url]);
-	$mark_del = intval($_POST[mark_del]);
-	$department_id = intval($_POST[department_id]);
+if ($submit=='update' && ($update_id>0)) {	$prefix = addslashes($_POST['prefix']);	$name = addslashes($_POST['name']);	$surname = addslashes($_POST['surname']);	$prefix_en = addslashes($_POST['prefix_en']);	$name_en = addslashes($_POST['name_en']);	$surname_en = addslashes($_POST['surname_en']);	$tel = addslashes($_POST['tel']);	$mobile = addslashes($_POST['mobile']);	$email = addslashes($_POST['email']);	$contact_address = addslashes($_POST['contact_address']);	$login = addslashes($_POST['login']);	$password = addslashes($_POST['password']);	$code = addslashes($_POST['code']);	$position = addslashes($_POST['position']);	$department_id = intval($_POST['department_id']);	$img1_url = addslashes($_POST['img1_url']);	$department_id = intval($_POST['department_id']);
 	$wsql = '';
-	if ($img1_url!='') {
+	list($dep_name, $group_name) = get_dep_name($department_id);	if ($img1_url!='') {
 		$ext_src = '.jpg';
 		$new_name = 'person/'.$update_id.$ext_src;
 		$success = false;
@@ -96,7 +78,7 @@ if ($submit=='update' && ($update_id>0)) {
 	surname = '$surname', 
 	prefix_en = '$prefix_en', 
 	name_en = '$name_en', 
-	surname_en = '$surname_en', 
+	surname_en = '$surname_en', 	department_name = '$dep_name', 	group_name = '$group_name', 
 	tel = '$tel', 
 	mobile = '$mobile', 
 	contact_address = '$contact_address',
@@ -120,28 +102,28 @@ if ($submit=='update' && ($update_id>0)) {
 	echo '<script>$(document).ready(function(){$(".alert").fadeTo(2000, 500).slideUp(500, function(){ $(".alert").slideUp(500); });});</script>';			
 	
 } else if ($submit=='add') {
-	$prefix = addslashes($_POST[prefix]);
-	$name = addslashes($_POST[name]);
-	$surname = addslashes($_POST[surname]);
-	$prefix_en = addslashes($_POST[prefix_en]);
-	$name_en = addslashes($_POST[name_en]);
-	$surname_en = addslashes($_POST[surname_en]);
-	$tel = addslashes($_POST[tel]);
-	$mobile = addslashes($_POST[mobile]);
-	$email = addslashes($_POST[email]);
-	$contact_address = addslashes($_POST[contact_address]);
-	$login = addslashes($_POST[userName]);
-	$password = addslashes($_POST[password]);
-	$code = addslashes($_POST[code]);
-	$position = addslashes($_POST[position]);
-	$department_id = intval($_POST[department_id]);
-	$img1_url = addslashes($_POST[img1_url]);
-	$error = 0;	$sql = "SELECT COUNT(*) FROM user WHERE (code='$code' OR userName='$login' OR email='$email') AND mark_del = '0' ";	$result2 = mysqli_query($connect, $sql);	if ($row2 = mysqli_fetch_array($result2)) {		$error = 1;	}	if ($error==0) {
+	$prefix = addslashes($_POST['prefix']);
+	$name = addslashes($_POST['name']);
+	$surname = addslashes($_POST['surname']);
+	$prefix_en = addslashes($_POST['prefix_en']);
+	$name_en = addslashes($_POST['name_en']);
+	$surname_en = addslashes($_POST['surname_en']);
+	$tel = addslashes($_POST['tel']);
+	$mobile = addslashes($_POST['mobile']);
+	$email = addslashes($_POST['email']);
+	$contact_address = addslashes($_POST['contact_address']);
+	$login = addslashes($_POST['userName']);
+	$password = addslashes($_POST['password']);
+	$code = addslashes($_POST['code']);
+	$position = addslashes($_POST['position']);
+	$department_id = intval($_POST['department_id']);
+	$img1_url = addslashes($_POST['img1_url']);
+	$error = 0;	$sql = "SELECT COUNT(*) FROM user WHERE (code='$code' OR userName='$login' OR email='$email') AND mark_del = '0' ";	$result2 = mysqli_query($connect, $sql);	if ($row2 = mysqli_fetch_array($result2)) {		$error = 1;	}	if ($error==0) {		list($dep_name, $group_name) = get_dep_name($department_id);		
 		$qx = true;	
 		mysqli_autocommit($connect,FALSE);
 		
-		$sql = "INSERT INTO user (prefix, name, surname, prefix_en, name_en, surname_en, department_id, tel, mobile, email, contact_address, userName, password, code, position, status, create_date) VALUES 
-		('$prefix', '$name', '$surname', '$prefix_en', '$name_en', '$surname_en', '$department_id', '$tel', '$mobile', '$email', '$contact_address', '$login', '$password', '$code', '$position', '0', now()) ";
+		$sql = "INSERT INTO user (prefix, name, surname, prefix_en, name_en, surname_en, department_id, department_name, group_name, tel, mobile, email, contact_address, userName, password, code, position, status, create_date) VALUES 
+		('$prefix', '$name', '$surname', '$prefix_en', '$name_en', '$surname_en', '$department_id', '$dep_name', '$group_name', '$tel', '$mobile', '$email', '$contact_address', '$login', '$password', '$code', '$position', '0', now()) ";
 		$q = mysqli_query($connect, $sql);
 		$qx = ($qx and $q);	
 		$update_id = mysqli_insert_id($connect);
@@ -493,7 +475,7 @@ while ($row = mysqli_fetch_array($result)) {
 		<option value='0'>--- เลือก ---</option>
 <?
 
-$sql="SELECT * FROM department ORDER BY department_no, department_name";
+$sql="SELECT * FROM department WHERE mark_del = 0 ORDER BY department_no, department_name";
 $result2=mysqli_query($connect, $sql);
 while ($row2 = mysqli_fetch_array($result2)) {
 ?>
@@ -617,28 +599,32 @@ if ($submit=='search') {
 			<thead>
 			<tr>
 			  <th width='3%'>No.</th>
-			  <th width='10%'>รหัส</th>
+			  <th width='7%'>รหัส</th>
 			  <th width='20%'>ชื่อ</th>
-			  <th width='15%'>ตำแหน่ง</th>			  <th width='25%'>สังกัดฝ่าย</th>			  <th width='10%'>Login</th>
+			  <th width='15%'>ตำแหน่ง</th>			  <th width='15%'>ฝ่าย</th>			  <th width='15%'>สายงาน</th>			  <th width='10%'>Login</th>
 			</tr>
 			</thead>
 			<tbody>
 <?
 	$i = 1;
-	$sql2="SELECT 		user.*,		department.department_name
+/*	$sql2="SELECT 		user.*,		d.department_name,		d2.department_name AS group_name
 	FROM `user` 
-	LEFT JOIN department ON user.department_id = department.department_id	WHERE 
-	user.status = '0' AND	user.mark_del = '0'
-	ORDER BY department_no, department_name, user.user_id DESC
+	LEFT JOIN department d ON user.department_id = d.department_id AND d.mark_del = 0	LEFT JOIN department d2 ON d.parent_id = d2.department_id AND d2.mark_del = 0	WHERE 
+		user.status = '0' AND		user.mark_del = '0'
+	ORDER BY 		d.department_no, 		d.department_name, 		user.user_id DESC
+	LIMIT $limit_start, $view_per_page ";	*/		$sql2="SELECT 		user.*	FROM `user` 
+	WHERE 
+		user.status = '0' AND		user.mark_del = '0'
+	ORDER BY 		group_name, 		department_name, 		user.code DESC
 	LIMIT $limit_start, $view_per_page ";
 	$result2=mysqli_query($connect, $sql2);
 	while ($row2 = mysqli_fetch_array($result2)) {
 ?>
 <tr onClick='document.location="user.php?edit_id=<?=$row2['user_id']?>"' style='cursor:pointer'>
 	<td width='3%'><?=$i++?></td>
-	<td width='10%'><?=$row2['code']?></td>
+	<td width='7%'><?=$row2['code']?></td>
 	<td width='20%'><?=$row2['prefix']?><?=$row2['name']?> <?=$row2['surname']?></td>
-	<td width='15%'><?=$row2['position']?></td>	<td width='25%'><?=$row2['department_name']?></td>	<td width='10%'><?=$row2['userName']?></td>
+	<td width='15%'><?=$row2['position']?></td>	<td width='15%'><?=$row2['department_name']?></td>	<td width='15%'><?=$row2['group_name']?></td>	<td width='10%'><?=$row2['userName']?></td>
 </tr>
 <?		
 	}	
@@ -674,5 +660,5 @@ if ($submit=='search') {
 </div>
 
 <?
-echo template_footer();
+echo template_footer();function get_dep_name($dep_id) {	global $connect;	$dep_name = '';	$group_name = '';		$sql="SELECT 		d.department_name,		d2.department_name AS group_name	FROM department d 	LEFT JOIN department d2 ON d.parent_id = d2.department_id AND d2.mark_del = 0	WHERE 		d.department_id = ? ";	$stmt = $connect->prepare($sql);	if ($stmt) {							$stmt->bind_param('i', $dep_id);		$stmt->execute();		$result2 = $stmt->get_result();		if ($row2 = mysqli_fetch_assoc($result2)) {			$dep_name = $row2['department_name'];			$group_name = $row2['group_name'];		}	}	return array($dep_name, $group_name);}
 ?>

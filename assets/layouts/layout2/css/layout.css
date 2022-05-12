@@ -30,8 +30,8 @@
         padding: 0;
         margin: 0; } }
 
-/***
-Page Header
+/***
+Page Header
 ***/
 .page-header.navbar {
   width: 100%;
@@ -578,8 +578,8 @@ Page Header
       display: block;
       clear: both; } }
 
-/***
-Pace - Page Progress
+/***
+Pace - Page Progress
 ***/
 .pace .pace-progress {
   z-index: 10000;
@@ -602,8 +602,8 @@ Pace - Page Progress
     top: 276px;
     right: 15px; } }
 
-/***
-Page container
+/***
+Page container
 ***/
 .page-container {
   margin: 0px;
@@ -644,8 +644,8 @@ Page container
   .page-header-fixed.page-header-fixed-mobile .page-container {
     margin-top: 136px !important; } }
 
-/***
-Page sidebar
+/***
+Page sidebar
 ***/
 /* IE8 fix */
 .ie8 .page-sidebar {
@@ -1131,8 +1131,8 @@ Page sidebar
     .page-sidebar.in {
       margin-top: 10px !important; } }
 
-/***
-Page content
+/***
+Page content
 ***/
 /* Page title */
 .page-title {
@@ -1312,8 +1312,8 @@ Page content
     display: block;
     clear: both; } }
 
-/***
-Page footer
+/***
+Page footer
 ***/
 .page-footer {
   padding: 8px 20px 5px 20px;
@@ -1442,8 +1442,8 @@ Page footer
     .scroll-to-top > i {
       font-size: 28px; } }
 
-/***
-Theme Panel
+/***
+Theme Panel
 ***/
 .theme-panel {
   width: 400px;
@@ -2144,8 +2144,8 @@ Theme Panel
     top: 120px;
     margin-top: 0; } }
 
-/***     
-Page Loading    
+/***     
+Page Loading    
 ***/
 .page-on-load {
   background: #fefefe; }

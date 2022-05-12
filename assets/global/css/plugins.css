@@ -1,10 +1,10 @@
 @charset "UTF-8";
-/******************************
- 3RD PARTY PLUGIN CUSTOMIZATION 
+/******************************
+ 3RD PARTY PLUGIN CUSTOMIZATION 
 ******************************/
 /* Cubic Bezier Transition */
-/***
-Bootstrap Colorpicker
+/***
+Bootstrap Colorpicker
 ***/
 .input-group.color .input-group-btn i {
   position: absolute;
@@ -21,8 +21,8 @@ Bootstrap Colorpicker
 .modal-open .colorpicker {
   z-index: 10055 !important; }
 
-/***
-Bootstrap Datepaginator
+/***
+Bootstrap Datepaginator
 ***/
 .datepaginator a {
   font-family: 'Open Sans';
@@ -42,8 +42,8 @@ Bootstrap Datepaginator
 .datepaginator .fa-angle-left:before {
   content: ""/*rtl:""*/; }
 
-/***
-Bootstrap Datepicker
+/***
+Bootstrap Datepicker
 ***/
 .datepicker.dropdown-menu {
   padding: 5px; }
@@ -90,8 +90,8 @@ Bootstrap Datepicker
 .datepicker .fa-angle-right:before {
   content: ""/*rtl:""*/; }
 
-/***
-Bootstrap Daterangepicker
+/***
+Bootstrap Daterangepicker
 ***/
 .modal-open .daterangepicker {
   z-index: 10055 !important; }
@@ -156,8 +156,8 @@ Bootstrap Daterangepicker
 .daterangepicker .fa-angle-left:before {
   content: ""/*rtl:""*/; }
 
-/***
-Bootstrap  Datetimepicker
+/***
+Bootstrap  Datetimepicker
 ***/
 .datetimepicker table td {
   color: #000;
@@ -191,8 +191,8 @@ Bootstrap  Datetimepicker
 .modal-open .datetimepicker {
   z-index: 10055; }
 
-/***
-Bootstrap Editable
+/***
+Bootstrap Editable
 ***/
 .editable-input table,
 .editable-input table th,
@@ -203,8 +203,8 @@ Bootstrap Editable
 .editable-input .combodate select {
   margin-bottom: 5px; }
 
-/***
-Jansy File Input plugin css changes
+/***
+Jansy File Input plugin css changes
 ***/
 .fileinput {
   margin-bottom: 0; }
@@ -214,8 +214,8 @@ Jansy File Input plugin css changes
     white-space: nowrap;
     overflow: hidden; }
 
-/***
-Bootstrap Markdown
+/***
+Bootstrap Markdown
 ***/
 .md-input {
   padding: 5px !important;
@@ -251,8 +251,8 @@ Bootstrap Markdown
   -moz-box-shadow: none !important;
   box-shadow: none !important; }
 
-/***
-Error state for WYSIWYG Editors
+/***
+Error state for WYSIWYG Editors
 ***/
 .has-error .md-editor {
   border: 1px solid #fbe1e3 !important; }
@@ -263,8 +263,8 @@ Error state for WYSIWYG Editors
 .has-warning .md-editor {
   border: 1px solid #f9e491 !important; }
 
-/***
-Bootstrap Modal
+/***
+Bootstrap Modal
 ***/
 /* fix: content shifting to the right on modal open */
 .modal-open.page-overflow .page-container,
@@ -286,8 +286,8 @@ Bootstrap Modal
   z-index: 10051;
   overflow-y: scroll !important; }
 
-/***
-Bootstrap Select
+/***
+Bootstrap Select
 ***/
 .bootstrap-select .btn {
   border-color: #c2cad8; }
@@ -345,8 +345,8 @@ Bootstrap Select
 .modal-open .bootstrap-select .dropdown-menu {
   z-index: 10050 !important; }
 
-/***
-Bootstrap Switch 
+/***
+Bootstrap Switch 
 ***/
 .bootstrap-switch {
   border-color: #c2cad8; }
@@ -354,8 +354,8 @@ Bootstrap Switch
     box-shadow: none;
     border-color: #c2cad8; }
 
-/***
-Color variants
+/***
+Color variants
 ***/
 .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
 .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
@@ -392,8 +392,8 @@ Color variants
   border-color: transparent;
   margin-top: 0px; }
 
-/***
-Bootstrap Time Picker
+/***
+Bootstrap Time Picker
 ***/
 .bootstrap-timepicker-widget table td a {
   padding: 4px 0; }
@@ -410,8 +410,8 @@ Bootstrap Time Picker
 .bootstrap-timepicker-widget.timepicker-orient-bottom:after {
   top: auto; }
 
-/***
-Toastr Notifications
+/***
+Toastr Notifications
 ***/
 .toast {
   -webkit-box-shadow: none !important;
@@ -459,8 +459,8 @@ Toastr Notifications
   .toast-bottom-center .toast {
     margin: 0 !important; }
 
-/***
-Bootstrap Wizard
+/***
+Bootstrap Wizard
 ***/
 .form-wizard .progress {
   margin-bottom: 30px; }
@@ -527,8 +527,8 @@ Bootstrap Wizard
   .form-wizard .steps > li > a {
     text-align: left; } }
 
-/*!
- * Tab drop for Bootstrap
+/*!
+ * Tab drop for Bootstrap
  */
 .tabbable-tabdrop .nav-tabs,
 .tabbable-tabdrop .nav-pills {
@@ -548,8 +548,8 @@ Bootstrap Wizard
   right: 9px;
   left: auto; }
 
-/***
-wysihtml5
+/***
+wysihtml5
 ***/
 .wysihtml5-sandbox {
   width: 100% !important; }
@@ -561,8 +561,8 @@ wysihtml5
 .wysihtml5-toolbar li .dropdown-menu {
   margin-top: 5px; }
 
-/***
-Error state for WYSIWYG Editors
+/***
+Error state for WYSIWYG Editors
 ***/
 .has-error .wysihtml5-sandbox {
   border: 1px solid #fbe1e3 !important; }
@@ -573,8 +573,8 @@ Error state for WYSIWYG Editors
 .has-warning .wysihtml5-sandbox {
   border: 1px solid #f9e491 !important; }
 
-/***
-Error state for WYSIWYG Editors
+/***
+Error state for WYSIWYG Editors
 ***/
 .note-editor {
   border: 1px solid #c2cad8;
@@ -620,8 +620,8 @@ Error state for WYSIWYG Editors
 .has-warning .note-editor {
   border: 1px solid #f9e491 !important; }
 
-/***
-Bootstrap GtreeTable
+/***
+Bootstrap GtreeTable
 ***/
 .gtreetable .dropdown-menu {
   margin-top: 0px; }
@@ -640,8 +640,8 @@ Bootstrap GtreeTable
   opacity: 0.6 ;
   filter: alpha(opacity=60) ; }
 
-/***
-Modify bootstrap-tagsinput plugin's css
+/***
+Modify bootstrap-tagsinput plugin's css
 ***/
 .bootstrap-tagsinput {
   display: block;
@@ -688,14 +688,14 @@ Modify bootstrap-tagsinput plugin's css
     .fixed-table-header th.bs-checkbox .th-inner .mt-checkbox {
       right: -5px; }
 
-/***
-Bootbox
+/***
+Bootbox
 ***/
 .bootbox .bootbox-close-button {
   margin-top: 0px !important; }
 
-/*--------------------------------------------------
-    [CSS Animation Amchart]
+/*--------------------------------------------------
+    [CSS Animation Amchart]
 ----------------------------------------------------*/
 .CSSAnimationChart {
   width: 100%;
@@ -772,8 +772,8 @@ Bootbox
   100% {
     stroke-dashoffset: 0px; } }
 
-/*--------------------------------------------------
-    [Mao Amchart]
+/*--------------------------------------------------
+    [Mao Amchart]
 ----------------------------------------------------*/
 .mapChart {
   width: 100%;
@@ -782,8 +782,8 @@ Bootbox
     color: #bbb !important;
     font-size: 12px !important; }
 
-/*--------------------------------------------------
-    [Column Line]
+/*--------------------------------------------------
+    [Column Line]
 ----------------------------------------------------*/
 .columnLine {
   width: 100%;
@@ -805,16 +805,16 @@ Bootbox
   100% {
     stroke-dashoffset: -28px; } }
 
-/*--------------------------------------------------
-    [Animated Pie Chart]
+/*--------------------------------------------------
+    [Animated Pie Chart]
 ----------------------------------------------------*/
 .animated-pie-chart {
   width: 100%;
   height: 350px;
   font-size: 11px; }
 
-/***
-CKEditor css changes
+/***
+CKEditor css changes
 ***/
 .cke {
   -webkit-border-radius: 4px;
@@ -905,8 +905,8 @@ CKEditor css changes
   -ms-box-shadow: none !important;
   -o-box-shadow: none !important; }
 
-/***
-Error state for WYSIWYG Editors
+/***
+Error state for WYSIWYG Editors
 ***/
 .has-error .cke {
   border: 1px solid #fbe1e3 !important; }
@@ -917,8 +917,8 @@ Error state for WYSIWYG Editors
 .has-warning .cke {
   border: 1px solid #f9e491 !important; }
 
-/***
-Clockface
+/***
+Clockface
 ***/
 .modal-open .clockface {
   z-index: 10055 !important; }
@@ -929,8 +929,8 @@ Clockface
   background-image: none;
   filter: none; }
 
-/***
-Datatables general customization
+/***
+Datatables general customization
 ***/
 .table-checkable tr > th:first-child,
 .table-checkable tr > td:first-child {
@@ -957,8 +957,8 @@ table.dataTable th.sorting_2,
 table.dataTable th.sorting_3 {
   background: #fbfcfd !important; }
 
-/***
-Extended pagination
+/***
+Extended pagination
 ***/
 .paging_bootstrap_extended {
   margin: 5px 0 0 0 !important;
@@ -1017,8 +1017,8 @@ Extended pagination
 .table-container .table-actions-wrapper {
   display: none; }
 
-/***
-Scroller Extension
+/***
+Scroller Extension
 ***/
 .dataTables_scroll {
   margin-bottom: 10px; }
@@ -1034,8 +1034,8 @@ Scroller Extension
 .table-both-scroll .dataTables_scrollBody {
   border-bottom: 0 !important; }
 
-/***
-Datatables processing
+/***
+Datatables processing
 ***/
 .dataTables_wrapper .dataTables_processing {
   width: 200px;
@@ -1053,8 +1053,8 @@ Datatables processing
   -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1); }
 
-/***
-Tool Buttons
+/***
+Tool Buttons
 ***/
 .dt-button-background {
   display: none !important; }
@@ -1098,8 +1098,8 @@ a.dt-button {
   .portlet.box .dataTables_wrapper .dt-buttons {
     margin-top: -50px; }
 
-/***
-Rot Details
+/***
+Rot Details
 ***/
 .dataTable .row-details.row-details-close {
   background: url("../img/datatable-row-openclose.png") no-repeat 0 0; }
@@ -1107,8 +1107,8 @@ Rot Details
 .dataTable .row-details.row-details-open {
   background: url("../img/datatable-row-openclose.png") no-repeat 0 -23px; }
 
-/***
-Sorting
+/***
+Sorting
 ***/
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
@@ -1141,8 +1141,8 @@ table.dataTable thead .sorting_desc_disabled {
 table.dataTable th:active {
   outline: none; }
 
-/***
-Fixed Header
+/***
+Fixed Header
 ***/
 table.dataTable.fixedHeader-floating {
   margin-top: 0 !important;
@@ -1162,8 +1162,8 @@ table.dataTable.fixedHeader-floating {
   border-top: 1px solid #e7ecf1;
   font-weight: 600; }
 
-/***
-Responsive Datatables
+/***
+Responsive Datatables
 ***/
 .table.dataTable.dt-responsive
 .table.dataTable.responsive {
@@ -1238,8 +1238,8 @@ table.dataTable > tbody > tr.child ul li {
   margin-left: 0;
   margin-right: -1px; }
 
-/***
-Dropzone css changes(new in v1.1.1)
+/***
+Dropzone css changes(new in v1.1.1)
 ***/
 .dropzone {
   -webkit-border-radius: 0px;
@@ -1261,8 +1261,8 @@ Dropzone css changes(new in v1.1.1)
   .dropzone-file-area {
     width: auto; } }
 
-/***
-Fancy box fix overlay fix
+/***
+Fancy box fix overlay fix
 ***/
 .fancybox-overlay {
   z-index: 100000; }
@@ -1270,8 +1270,8 @@ Fancy box fix overlay fix
 .fancybox-opened {
   z-index: 100001; }
 
-/***
-FuelUX Spinners
+/***
+FuelUX Spinners
 ***/
 .spinner-buttons.btn-group-vertical .btn {
   text-align: center;
@@ -1288,8 +1288,8 @@ FuelUX Spinners
     border-radius: 0;
     border-bottom-right-radius: 4px; }
 
-/***
-Fullcalendar
+/***
+Fullcalendar
 ***/
 /* External events */
 .external-event {
@@ -1485,8 +1485,8 @@ Fullcalendar
 .portlet.calendar .mobile .fc-content {
   margin-top: 53px; }
 
-/***
-Google Maps
+/***
+Google Maps
 ***/
 .gmaps {
   height: 300px;
@@ -1506,8 +1506,8 @@ Google Maps
   margin-top: 10px;
   margin-bottom: 0px; }
 
-/***
-Gritter notification modify
+/***
+Gritter notification modify
 ***/
 #gritter-notice-wrapper {
   right: 1px !important; }
@@ -1521,8 +1521,8 @@ Gritter notification modify
   font-size: 18px;
   font-weight: 300; }
 
-/***
-Dashboard Charts(new in v1.2.1)
+/***
+Dashboard Charts(new in v1.2.1)
 ***/
 .easy-pie-chart,
 .sparkline-chart {
@@ -1570,8 +1570,8 @@ Dashboard Charts(new in v1.2.1)
 .easy-pie-chart .title > i {
   margin-top: 5px; }
 
-/***
-jQuery File Upload
+/***
+jQuery File Upload
 ***/
 .blueimp-gallery .close {
   background-image: url("../img/portlet-remove-icon-white.png") !important;
@@ -1581,8 +1581,8 @@ jQuery File Upload
 .blueimp-gallery .next {
   border-radius: 23px !important; }
 
-/***
-jQuery Multi Select
+/***
+jQuery Multi Select
 ***/
 .ms-container .ms-list {
   border: 1px solid #e5e5e5;
@@ -1611,8 +1611,8 @@ jQuery Multi Select
 .ms-container .form-control {
   margin-bottom: 5px; }
 
-/***
-jQuery Notific8 Plugin
+/***
+jQuery Notific8 Plugin
 ***/
 .jquery-notific8-message {
   font-size: 13px; }
@@ -1632,8 +1632,8 @@ jQuery Notific8 Plugin
   font-weight: 300;
   font-size: 16px; }
 
-/***
-Password Strength(in v1.4)
+/***
+Password Strength(in v1.4)
 ***/
 .password-strength .password-verdict {
   display: inline-block;
@@ -1647,8 +1647,8 @@ Password Strength(in v1.4)
 .password-strength .progress-bar {
   padding: 2px; }
 
-/***
-jQuery Slimscroll
+/***
+jQuery Slimscroll
 ***/
 .scroller {
   padding: 0px;
@@ -1667,8 +1667,8 @@ jQuery Slimscroll
 .portlet-body .slimScrollBar {
   margin-right: 0px; }
 
-/***
-jQuery Sparkline
+/***
+jQuery Sparkline
 ***/
 .jqstooltip {
   width: auto !important;
@@ -1712,8 +1712,8 @@ jQuery Sparkline
 .easy-pie-chart .title > i {
   margin-top: 5px; }
 
-/***
-jQuery UI Sliders(new in v1.1.1)
+/***
+jQuery UI Sliders(new in v1.1.1)
 ***/
 .slider {
   border: 0;
@@ -1736,8 +1736,8 @@ jQuery UI Sliders(new in v1.1.1)
   filter: none !important;
   background-image: none !important; }
 
-/***
-JQVMAP Plugin
+/***
+JQVMAP Plugin
 ***/
 .jqvmap-zoomout,
 .jqvmap-zoomin {
@@ -1750,8 +1750,8 @@ JQVMAP Plugin
   overflow: hidden;
   height: 300px; }
 
-/***
-Jstree
+/***
+Jstree
 ***/
 .jstree-default .jstree-clicked {
   border: 0;
@@ -1836,14 +1836,14 @@ Jstree
   padding: 2px 6px !important;
   margin-right: -4px !important; }
 
-/***
-NoUIRangeSlider
+/***
+NoUIRangeSlider
 ***/
 .noUi-horizontal {
   margin: 9px 0; }
 
-/***
-Color variants
+/***
+Color variants
 ***/
 .noUi-primary .noUi-connect {
   background: #337ab7; }
@@ -1877,14 +1877,14 @@ Color variants
   background: #80C9F5;
   box-shadow: inset 0 0 3px rgba(51, 51, 51, 0.45); }
 
-/* When the slider is moved by tap,
+/* When the slider is moved by tap,
    transition the connect bar like the handle. */
 .noui-connect.noUi-state-tap .connect {
   -webkit-transition: left 300ms, right 300ms;
   transition: left 300ms, right 300ms; }
 
-/**
-noUI Tooltips
+/**
+noUI Tooltips
 **/
 .noUi-handle .noUi-tooltip {
   display: block;
@@ -1902,8 +1902,8 @@ noUI Tooltips
     display: block;
     padding: 2px; }
 
-/***
-Google reCaptcha
+/***
+Google reCaptcha
 ***/
 .form-recaptcha-img {
   margin-bottom: 10px;
@@ -1995,8 +1995,8 @@ iframe[src="about:blank"] {
   .select2-selection__choice .select2-selection__choice__remove {
     font-weight: normal !important; }
 
-/***
-Morris Charts
+/***
+Morris Charts
 ***/
 .portlet-body-morris-fit {
   margin-right: -20px;
@@ -2022,8 +2022,8 @@ Morris Charts
   font-weight: 400;
   font-family: "Open Sans", sans-serif; }
 
-/***
-iCheck
+/***
+iCheck
 ***/
 .icheck-list > label {
   display: block;
@@ -2089,8 +2089,8 @@ div[class*='iradio_'] {
     .icheck-colors > li.purple {
       background: #6a5a8c; }
 
-/***
-AngularJS UI-select
+/***
+AngularJS UI-select
 ***/
 .ui-select-match-close {
   margin-top: 5px !important;
@@ -2099,15 +2099,15 @@ AngularJS UI-select
 .minicolors-swatch {
   border: 0; }
 
-/***
-Codemirror Plugin
+/***
+Codemirror Plugin
 ***/
 .CodeMirror {
   border: 1px solid #eee;
   height: auto; }
 
-/***
-Prism Plugin
+/***
+Prism Plugin
 ***/
 pre[class*="language-"] {
   padding: 10px;

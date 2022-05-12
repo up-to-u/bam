@@ -46,8 +46,8 @@ label {
 	float: left;
 	width: 12em;
 }
-input[type=text] { width: 15em; }
-
-#banner { padding: 15px; background-color: #06b; color: white; font-size: large; border-bottom: 1px solid #ccc;
-    background: url(bg.gif) repeat-x; text-align: center }
+input[type=text] { width: 15em; }
+
+#banner { padding: 15px; background-color: #06b; color: white; font-size: large; border-bottom: 1px solid #ccc;
+    background: url(bg.gif) repeat-x; text-align: center }
 #banner a { color: white; }

@@ -1,20 +1,20 @@
 /* Cubic Bezier Transition */
-/***********
-    Theme Colors
+/***********
+    Theme Colors
     ***********/
 .theme-font-color {
   color: #5b9bd1; }
 
-/***********
-    Body bg color
+/***********
+    Body bg color
     ***********/
 body {
   background: #e9ecf3; }
   body.page-md {
     background: #f3f5f9; }
 
-/*********** 
-    Page Header
+/*********** 
+    Page Header
     ***********/
 /* Header search bar, toggler button & top menu */
 .page-header.navbar {
@@ -267,8 +267,8 @@ body {
       .page-sidebar .page-sidebar-menu .sub-menu > li.active > a > .arrow.open:before {
         color: #67a2d4; }
 
-/******
-    Page Footer 
+/******
+    Page Footer 
     ******/
 .page-footer .page-footer-inner {
   color: #69789E; }
@@ -339,8 +339,8 @@ body {
     .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle:hover {
       background-color: #393d4e; } }
 
-/****
- CSS3 Spinner Bar  
+/****
+ CSS3 Spinner Bar  
 ****/
 .page-spinner-bar > div,
 .block-spinner-bar > div {

@@ -35,8 +35,9 @@ if ($submit=='update') {
 	
 	$q_no = addslashes($_POST['q_no']);	
 	$q_name = addslashes($_POST['q_name']);	
+	$q_help = addslashes($_POST['q_help']);	
 	if ($q_no!='' && $q_name!='') {
-		$sql = "UPDATE csa_questionnaire_topic SET q_no='$q_no', q_name='$q_name' WHERE csa_q_topic_id = '$update_id' ";
+		$sql = "UPDATE csa_questionnaire_topic SET q_no='$q_no', q_name='$q_name', q_help='$q_help' WHERE csa_q_topic_id = '$update_id' ";
 		
 		$q = mysqli_query($connect, $sql);
 		$qx = ($qx and $q);	
@@ -57,9 +58,10 @@ if ($submit=='update') {
 	$q_year = intval($_POST['q_year']);	
 	$add_q_no = addslashes($_POST['add_q_no']);	
 	$add_q_name = addslashes($_POST['add_q_name']);	
+	$add_q_help = addslashes($_POST['add_q_help']);	
 	if ($q_year>0 && $add_q_no!='' && $add_q_name!='') {
-		$sql = "INSERT INTO csa_questionnaire_topic (q_year, q_no, q_name, parent_id, create_date)
-				VALUES ('$q_year', '$add_q_no', '$add_q_name', 0, now())";
+		$sql = "INSERT INTO csa_questionnaire_topic (q_year, q_no, q_name, q_help, parent_id, create_date)
+				VALUES ('$q_year', '$add_q_no', '$add_q_name', '$add_q_helpe', 0, now())";
 		
 		$q = mysqli_query($connect, $sql);
 		$insert_id = mysqli_insert_id($connect);
@@ -82,9 +84,10 @@ if ($submit=='update') {
 	$add_q_year = intval($_POST['add_q_year']);	
 	$add_q_no = addslashes($_POST['add_q_no']);	
 	$add_q_name = addslashes($_POST['add_q_name']);	
+	$add_q_help = addslashes($_POST['add_q_help']);	
 	if ($add_parent_id>0 && $add_q_year>0 && $add_q_no!='' && $add_q_name!='') {
-		$sql = "INSERT INTO csa_questionnaire_topic (q_year, q_no, q_name, parent_id, create_date)
-				VALUES ('$add_q_year', '$add_q_no', '$add_q_name', '$add_parent_id', now())";
+		$sql = "INSERT INTO csa_questionnaire_topic (q_year, q_no, q_name, q_help, parent_id, create_date)
+				VALUES ('$add_q_year', '$add_q_no', '$add_q_name', '$add_q_help', '$add_parent_id', now())";
 		
 		$q = mysqli_query($connect, $sql);
 		$insert_id = mysqli_insert_id($connect);
@@ -131,9 +134,15 @@ if ($submit=='update') {
 		</div>		
 	</div>	
 	<div class="form-group">
-	  <label>รายการ</label>
+	  <label>คำถาม</label>
 		<div class="row">
-			<div class="col-xs-4"><textarea class="form-control" placeholder="รายการ" name='add_q_name' rows='4'></textarea></div>
+			<div class="col-xs-4"><textarea class="form-control" placeholder="คำถาม" name='add_q_name' rows='3'></textarea></div>
+		</div>		
+	</div>	
+	<div class="form-group">
+	  <label>คำอธิบายขยายความ</label>
+		<div class="row">
+			<div class="col-xs-4"><textarea class="form-control" placeholder="คำอธิบายขยายความ" name='add_q_help' rows='6'></textarea></div>
 		</div>		
 	</div>	
 	<br>
@@ -190,9 +199,15 @@ if ($submit=='update') {
 		</div>		
 	</div>	
 	<div class="form-group">
-	  <label>รายการ</label>
+	  <label>คำถาม</label>
 		<div class="row">
-			<div class="col-xs-4"><textarea class="form-control" placeholder="รายการ" name='q_name' rows='4'><?=$row2['q_name']?></textarea></div>
+			<div class="col-xs-4"><textarea class="form-control" placeholder="คำถาม" name='q_name' rows='3'><?=$row2['q_name']?></textarea></div>
+		</div>		
+	</div>		
+	<div class="form-group">
+	  <label>คำอธิบายขยายความ</label>
+		<div class="row">
+			<div class="col-xs-4"><textarea class="form-control" placeholder="คำอธิบายขยายความ" name='q_help' rows='6'><?=$row2['q_help']?></textarea></div>
 		</div>		
 	</div>	
 	<br>
@@ -407,9 +422,13 @@ $(function () {
 	}
 ?>
 			<tr id='add_row' style='display:none'>
-				<td>เพิ่ม</td>
-				<td><input type='text' class="form-control input-sm" name='add_q_no'></td>
-				<td><input type='text' class="form-control input-sm" name='add_q_name'></td>
+				<td>
+					เพิ่ม<br>
+					<input type='text' class="form-control input-sm" name='add_q_no'>
+				</td>
+				<td><br>
+					<input type='text' class="form-control input-sm" name='add_q_name'></td>
+				<td></td>
 				<td><button type="submit" name='submit' value='add_topic' class="btn btn-success btn-sm"><i class='fa fa-save'></i> บันทึก</button></td>
 			</tr>
 			</tbody>

@@ -157,7 +157,7 @@ function template_header2($permission) {
 			'type' => 1,
 			'url' => 'loss_data.php'
 		);	
-	$item[] = array(			'name' => 'ประเมินความเสี่ยง CSA',			'icon' => 'icon-layers',			'list' => array(				'csa.php' => 'ประเมิน CSA',				'csa_approve.php' => 'อนุมัติรายการ CSA'			)	);		
+	$item[] = array(			'name' => 'ประเมินความเสี่ยง CSA',			'icon' => 'icon-layers',			'list' => array(				'csa_user.php' => 'ประเมิน CSA',				/*'csa.php' => 'CSA',*/				'csa_approve.php' => 'อนุมัติรายการ CSA'			)	);		
 	generate_menu($item, $cf);	
 
 	$k = array_keys($permission);
@@ -288,10 +288,10 @@ function menu_item_newUI($p, $current_filename) {
 				'name' => 'จัดการ Lossdata',
 				'icon' => 'icon-user-following',
 				'list' => array(
-					'loss_admin_master.php' => 'จัดการข้อมูลชุด',
 					'loss_data_admin.php' => 'จัดการรายการเหตุการณ์',
-                    'loss_permission.php' => 'กำหนดสิทธิ์',
+					'loss_data_adminmanage.php' => 'ปรับสถานะรายการ',
 					'loss_data_report.php' => 'ทะเบียนสรุปรายงานประจำปี',
+					'loss_data_graph.php' => 'รายงานแผนภาพ'
 			)
 		);
 		generate_menu($item,$current_filename);  
@@ -305,9 +305,7 @@ function menu_item_newUI($p, $current_filename) {
 				'icon' => 'icon-user-following',
 				'list' => array(
 					'csa_admin.php' => 'CSA Admin',
-					'csa_permission.php' => 'กำหนดสิทธิ์',
-					'csa_admin_q.php' => 'แบบสอบถาม',
-					'csa_admin_factor.php' => 'ปัจจัยเสี่ยง'	
+					'csa_permission.php' => 'กำหนดสิทธิ์',					'csa_admin_q.php' => 'แบบสอบถาม',						'csa_admin_factor.php' => 'ปัจจัยเสี่ยง',					'job_function.php' => 'Job Function'	
 			)
 		);
 		generate_menu($item,$current_filename);  
@@ -321,7 +319,7 @@ function menu_item_newUI($p, $current_filename) {
 			'icon' => 'icon-settings',
 			'list' => array(
 				'user.php' => 'ผู้ใช้งาน',
-				'department.php' => 'ฝ่าย / สาขา',				'user_request_admin.php' => 'คำร้องยื่นขอสิทธิ'
+				'department.php' => 'ฝ่ายงาน',				'department_level.php' => 'ระดับฝ่ายงาน',				'user_request_admin.php' => 'คำร้องยื่นขอสิทธิ'
 				)
 		);		 
 		generate_menu($item,$current_filename);

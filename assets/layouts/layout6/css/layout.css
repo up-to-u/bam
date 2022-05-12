@@ -1,20 +1,20 @@
 @charset "UTF-8";
 /* Cubic Bezier Transition */
-/*--------------------------------------------------
-    [PLACEHOLDER]
+/*--------------------------------------------------
+    [PLACEHOLDER]
 ----------------------------------------------------*/
-/*--------------------------------------------------
-    [TRANSITION]
+/*--------------------------------------------------
+    [TRANSITION]
 ----------------------------------------------------*/
 /* Cubic Bezier Transition */
-/*--------------------------------------------------
-    [Dropdown Menu v2]
+/*--------------------------------------------------
+    [Dropdown Menu v2]
 ----------------------------------------------------*/
 .dropdown-menu-v2 {
   margin-right: 10px !important; }
 
-/*--------------------------------------------------
-	[Header]
+/*--------------------------------------------------
+	[Header]
 ----------------------------------------------------*/
 .page-header {
   margin: 0;
@@ -287,8 +287,8 @@
   .page-header-fixed .page-content {
     margin-top: 20px; } }
 
-/*--------------------------------------------------
-	[PAGE CONTENT]
+/*--------------------------------------------------
+	[PAGE CONTENT]
 ----------------------------------------------------*/
 /* Body */
 body {
@@ -322,8 +322,8 @@ html {
   .page-boxed .container {
     width: 1270px; } }
 
-/*--------------------------------------------------
-    [Center Aligned Content]
+/*--------------------------------------------------
+    [Center Aligned Content]
 ----------------------------------------------------*/
 /* Set displays an element as in inline-level flex container */
 @media (min-width: 768px) {
@@ -347,8 +347,8 @@ html {
     display: table-cell;
     vertical-align: middle; } }
 
-/*--------------------------------------------------
-    [Webapp Button]
+/*--------------------------------------------------
+    [Webapp Button]
 ----------------------------------------------------*/
 @media (max-width: 991px) {
   /* 991px */
@@ -392,8 +392,8 @@ html {
   .webapp-btn h3 {
     font-size: 30px; } }
 
-/*--------------------------------------------------
-    [Page Content Popup]
+/*--------------------------------------------------
+    [Page Content Popup]
 ----------------------------------------------------*/
 .page-content.page-content-popup {
   background: #fff; }
@@ -409,8 +409,8 @@ html {
   .page-content.page-content-popup {
     margin-top: 20px; } }
 
-/*--------------------------------------------------
-    [Page Content]
+/*--------------------------------------------------
+    [Page Content]
 ----------------------------------------------------*/
 /* Page Content */
 .page-content {
@@ -527,8 +527,8 @@ html {
   .page-content .page-content-fixed-header .page-breadcrumb > li {
     font-size: 16px; } }
 
-/*--------------------------------------------------
-    [Page Fixed  Main Content]
+/*--------------------------------------------------
+    [Page Fixed  Main Content]
 ----------------------------------------------------*/
 .page-content .page-fixed-main-content {
   padding: 20px; }
@@ -541,8 +541,8 @@ html {
     overflow: hidden;
     margin-left: 255px; } }
 
-/***
-Page sidebar
+/***
+Page sidebar
 ***/
 /* IE8 fix */
 .ie8 .page-sidebar {
@@ -1014,8 +1014,8 @@ Page sidebar
     .page-sidebar.in {
       margin-top: 10px !important; } }
 
-/*--------------------------------------------------
-    [Copyright]
+/*--------------------------------------------------
+    [Copyright]
 ----------------------------------------------------*/
 .copyright {
   color: #55616b;
@@ -1033,8 +1033,8 @@ Page sidebar
     bottom: 5px;
     position: absolute; } }
 
-/*--------------------------------------------------
-    [Copyright v2]
+/*--------------------------------------------------
+    [Copyright v2]
 ----------------------------------------------------*/
 .copyright-v2 {
   color: #55616b;
@@ -1045,11 +1045,11 @@ Page sidebar
   .copyright-v2 a {
     z-index: 1; }
 
-/******************
-Page Quick Sidebar
+/******************
+Page Quick Sidebar
 ******************/
-/***
-Quick Sidebar Layout
+/***
+Quick Sidebar Layout
 ***/
 /* Quick Sidebar Notification */
 .quick-sidebar-notification {

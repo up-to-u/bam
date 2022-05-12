@@ -1,6 +1,6 @@
 /* Cubic Bezier Transition */
-/***
-Login page
+/***
+Login page
 ***/
 /* bg color */
 .login {
@@ -180,8 +180,8 @@ Login page
   font-size: 13px; }
 
 @media (max-width: 440px) {
-  /***
-  Login page
+  /***
+  Login page
   ***/
   .login .logo {
     margin-top: 10px; }

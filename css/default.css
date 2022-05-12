@@ -1,75 +1,75 @@
-#sddm {
-	z-index: 30
-}
-
-#sddm li {	
-	list-style: none;
-	float: left;
-}
-
-#sddm li a {	
-	display: block;
-}
-
-#sddm li a:hover {
-	background: #49A3FF
-}
-
-#sddm div {
-	position: absolute;
-	visibility: hidden;
-	border: 1px solid #f3845a;
-	background: #ff6600;
-	padding: 3px 0px 5px 0px;
-}
-
-#sddm div a {	
-	position: relative;
-	display: block;
-	width: auto;
-	white-space: nowrap;
-	text-align: left;
-	color: #000000;
-	font-weight: bold;
-}
-
-#sddm div a:hover {
-	background: #f3845a;
-}
-
-
-/* menu */
-#menu {
-	clear: both;
-	background: #3e8a1f;
-	height: 20px;
-	margin: 0;
-	font-family: Tahoma, Verdana, Arial, Sans-Serif;		
-	font-size: 12;
-	font-weight: bold;
-	vertical-align: middle;
-	padding: 5px 0px 0px 0px;
-}
-#menu ul{
-	margin: 0; 
-	padding: 0 0 0 8px;
-}
-#menu ul li {
-	float: left;
-	list-style: none;		
-	border-right: 0px solid #ff6600;
-}
-#menu ul li a {
-	display: block;
-	text-decoration: none;	
-	padding: 0 15px;
-	color: #FFFFFF;	
-}
-#menu ul li a:hover {
-  	color: #00aee0;	
-	background: none;
-}
-#menu ul li#current a {
-	color: #333;
-	background: url(../images/menu-current-bg.gif) repeat-x;	
+#sddm {
+	z-index: 30
+}
+
+#sddm li {	
+	list-style: none;
+	float: left;
+}
+
+#sddm li a {	
+	display: block;
+}
+
+#sddm li a:hover {
+	background: #49A3FF
+}
+
+#sddm div {
+	position: absolute;
+	visibility: hidden;
+	border: 1px solid #f3845a;
+	background: #ff6600;
+	padding: 3px 0px 5px 0px;
+}
+
+#sddm div a {	
+	position: relative;
+	display: block;
+	width: auto;
+	white-space: nowrap;
+	text-align: left;
+	color: #000000;
+	font-weight: bold;
+}
+
+#sddm div a:hover {
+	background: #f3845a;
+}
+
+
+/* menu */
+#menu {
+	clear: both;
+	background: #3e8a1f;
+	height: 20px;
+	margin: 0;
+	font-family: Tahoma, Verdana, Arial, Sans-Serif;		
+	font-size: 12;
+	font-weight: bold;
+	vertical-align: middle;
+	padding: 5px 0px 0px 0px;
+}
+#menu ul{
+	margin: 0; 
+	padding: 0 0 0 8px;
+}
+#menu ul li {
+	float: left;
+	list-style: none;		
+	border-right: 0px solid #ff6600;
+}
+#menu ul li a {
+	display: block;
+	text-decoration: none;	
+	padding: 0 15px;
+	color: #FFFFFF;	
+}
+#menu ul li a:hover {
+  	color: #00aee0;	
+	background: none;
+}
+#menu ul li#current a {
+	color: #333;
+	background: url(../images/menu-current-bg.gif) repeat-x;	
 }

@@ -1,98 +1,98 @@
-BODY {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:20px;
-word-wrap:break-word;
-margin: 0 0 0 0;
-}
-
-TD, TH,  FONT, PRE {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:20px;
-word-wrap:break-word;
-}
-
-.fnormal {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:20px;
-word-wrap:break-word;
-}
-
-.f0 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:20px;
-font-weight: bold;
-word-wrap:break-word;
-}	
-
-.f04 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:19px;
-word-wrap:break-word;
-}	
-
-.f05 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:18px;
-word-wrap:break-word;
-}	
-
-.f06 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:17px;
-word-wrap:break-word;
-}	
-
-.f1 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:16px;
-word-wrap:break-word;
-}	
-
-.f15{
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:15px;
-word-wrap:break-word;
-}	
-
-.f2 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:14px;
-word-wrap:break-word;
-}	
-
-.f3 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:12px;
-word-wrap:break-word;
-}
-	
-.f4 {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:10px;
-word-wrap:break-word;
-}	
-
-.logo {
-font-family: 'TH SarabunPSK', 'Angsana New';
-font-size:16px;
-word-wrap:break-word;
-}	
-
-.break { 
-	page-break-before: always; 
-}
-
-.watermark {
-    position: absolute;
-    opacity: 0.25;
-    font-size: 4em;
-	font-weight: bold;
-    width: 100%;
-    text-align: center;
-    z-index: 1000;
-}
-
-.table_border_print {
-	border: solid 1px #000000;
-	border-collapse:collapse;
+BODY {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:20px;
+word-wrap:break-word;
+margin: 0 0 0 0;
+}
+
+TD, TH,  FONT, PRE {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:20px;
+word-wrap:break-word;
+}
+
+.fnormal {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:20px;
+word-wrap:break-word;
+}
+
+.f0 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:20px;
+font-weight: bold;
+word-wrap:break-word;
+}	
+
+.f04 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:19px;
+word-wrap:break-word;
+}	
+
+.f05 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:18px;
+word-wrap:break-word;
+}	
+
+.f06 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:17px;
+word-wrap:break-word;
+}	
+
+.f1 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:16px;
+word-wrap:break-word;
+}	
+
+.f15{
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:15px;
+word-wrap:break-word;
+}	
+
+.f2 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:14px;
+word-wrap:break-word;
+}	
+
+.f3 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:12px;
+word-wrap:break-word;
+}
+	
+.f4 {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:10px;
+word-wrap:break-word;
+}	
+
+.logo {
+font-family: 'TH SarabunPSK', 'Angsana New';
+font-size:16px;
+word-wrap:break-word;
+}	
+
+.break { 
+	page-break-before: always; 
+}
+
+.watermark {
+    position: absolute;
+    opacity: 0.25;
+    font-size: 4em;
+	font-weight: bold;
+    width: 100%;
+    text-align: center;
+    z-index: 1000;
+}
+
+.table_border_print {
+	border: solid 1px #000000;
+	border-collapse:collapse;
 }

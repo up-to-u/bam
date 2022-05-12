@@ -1,6 +1,6 @@
 /* Cubic Bezier Transition */
-/*********** 
-    Page Header
+/*********** 
+    Page Header
     ***********/
 /* Header search bar, toggler button & top menu */
 .page-header.navbar {
@@ -231,8 +231,8 @@
       .page-sidebar .page-sidebar-menu .sub-menu > li.active > a > .arrow.open:before {
         color: #01b070; }
 
-/******
-    Page Footer 
+/******
+    Page Footer 
     ******/
 .page-footer .page-footer-inner {
   color: #bfc9d0; }
@@ -308,15 +308,15 @@
     .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle:hover {
       background-color: #eff1f6; } }
 
-/****
- CSS3 Spinner Bar  
+/****
+ CSS3 Spinner Bar  
 ****/
 .page-spinner-bar > div,
 .block-spinner-bar > div {
   background: #fc6e70; }
 
-/****
-    Boby
+/****
+    Boby
     ****/
 body {
   background-color: #3D4A53; }
