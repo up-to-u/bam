@@ -1,6 +1,8 @@
 @charset "UTF-8";
-/***
-NEW TODO Page
+/***
+
+NEW TODO Page
+
 ***/
 /* Cubic Bezier Transition */
 .todo-main-header {
@@ -23,9 +25,9 @@ NEW TODO Page
       .todo-main-header > .todo-breadcrumb > li > a {
         color: #77838d;
         text-transform: uppercase;
-        text-decoration: none; }
+        text-deco#004C85 none; }
         .todo-main-header > .todo-breadcrumb > li > a:hover {
-          color: #337ab7;
+          color: #004C85;
           text-decoration: none; }
       .todo-main-header > .todo-breadcrumb > li > .todo-active {
         color: #49a7fa; }

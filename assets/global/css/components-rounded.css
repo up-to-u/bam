@@ -1,9 +1,13 @@
-/*********************************
- METRONIC ROUNDED STYLE COMPONENTS 
+/*********************************
+
+ METRONIC ROUNDED STYLE COMPONENTS 
+
 *********************************/
 /* Cubic Bezier Transition */
-/***
-General reset
+/***
+
+General reset
+
 ***/
 /* Set default body */
 body {
@@ -14,10 +18,14 @@ body {
   direction: "ltr";
   font-size: 14px; }
 
-/*
- Internet Explorer 10 doesn't differentiate device width from viewport width, and thus doesn't 
- properly apply the media queries in Bootstrap's CSS. To address this, 
- you can optionally include the following CSS and JavaScript to work around this problem until Microsoft issues a fix.
+/*
+
+ Internet Explorer 10 doesn't differentiate device width from viewport width, and thus doesn't 
+
+ properly apply the media queries in Bootstrap's CSS. To address this, 
+
+ you can optionally include the following CSS and JavaScript to work around this problem until Microsoft issues a fix.
+
 */
 @-webkit-viewport {
   width: device-width; }
@@ -34,9 +42,12 @@ body {
 @viewport {
   width: device-width; }
 
-/*
- Internet Explorer 10 doesn't differentiate device width from viewport width, 
- and thus doesn't properly apply the media queries in Bootstrap's CSS. To address this, following CSS code applied 
+/*
+
+ Internet Explorer 10 doesn't differentiate device width from viewport width, 
+
+ and thus doesn't properly apply the media queries in Bootstrap's CSS. To address this, following CSS code applied 
+
 */
 @-ms-viewport {
   width: auto !important; }
@@ -816,8 +827,10 @@ body {
     background: #eee;
     transform: scale(1.25); } }
 
-/***
-General typography
+/***
+
+General typography
+
 ***/
 /* Links */
 a:hover {
@@ -873,7 +886,7 @@ h5 small,
 h6 small {
   color: #444444; }
 
-/* Block headings */
+/* Block #004C85s */
 h1.block,
 h2.block,
 h3.block,
@@ -886,7 +899,7 @@ h6.block {
 /* Links */
 a {
   text-shadow: none;
-  color: #337ab7; }
+  color: #004C85; }
   a:hover {
     color: #23527c; }
   a:focus, a:hover, a:active {
@@ -922,8 +935,10 @@ code {
 .disabled-link:hover {
   cursor: not-allowed !important; }
 
-/***
-Utilities
+/***
+
+Utilities
+
 ***/
 /* Rounded Element */
 .rounded-2 {
@@ -1083,8 +1098,10 @@ Utilities
 .ie9 .hidden-ie9 {
   display: none !important; }
 
-/***
-Responsive Utils
+/***
+
+Responsive Utils
+
 ***/
 @media (max-width: 1024px) {
   .hidden-1024 {
@@ -1098,8 +1115,10 @@ Responsive Utils
   .hidden-320 {
     display: none; } }
 
-/***
-Demo Utils
+/***
+
+Demo Utils
+
 ***/
 .scrollspy-example {
   position: relative;
@@ -1122,8 +1141,10 @@ Demo Utils
 .padding-tb-20 {
   padding: 20px 0; }
 
-/***
-Users
+/***
+
+Users
+
 ***/
 .user-info {
   margin-bottom: 10px !important; }
@@ -1136,8 +1157,10 @@ Users
     font-weight: 300;
     font-size: 11px; }
 
-/***
-Custom vertical inline menu
+/***
+
+Custom vertical inline menu
+
 ***/
 .ver-inline-menu {
   padding: 0;
@@ -1195,8 +1218,10 @@ Custom vertical inline menu
   .ver-inline-menu > li.active:after {
     display: none; } }
 
-/***
-Separated List
+/***
+
+Separated List
+
 ***/
 .list-separated {
   margin-top: 10px;
@@ -1209,8 +1234,10 @@ Separated List
       .list-separated > div {
         margin-bottom: 20px; } }
 
-/***
-Number & Chart Stats
+/***
+
+Number & Chart Stats
+
 ***/
 .number-stats {
   margin: 10px 0; }
@@ -1252,8 +1279,10 @@ Number & Chart Stats
   .number-stats .stat-chart {
     float: left; }
 
-/***
-General User Record Listing
+/***
+
+General User Record Listing
+
 ***/
 .general-item-list > .item {
   padding: 10px 0;
@@ -1294,8 +1323,10 @@ General User Record Listing
   .general-item-list > .item > .item-body {
     color: #96a5aa; }
 
-/***
-File dropzone
+/***
+
+File dropzone
+
 ***/
 .file-drop-zone {
   border: 2px dashed #ddd;
@@ -1675,8 +1706,10 @@ File dropzone
       .m-grid.m-grid-responsive-lg.m-grid-flex > .m-grid-col-order-12 {
         order: 12; } }
 
-/***
-Fontawesome Icons
+/***
+
+Fontawesome Icons
+
 ***/
 [class^="fa-"]:not(.fa-stack),
 [class^="glyphicon-"],
@@ -1734,8 +1767,10 @@ li [class*=" icon-"].icon-large {
 .icon-state-danger {
   color: #ed6b75; }
 
-/***
-Font Awesome 4.x Demo
+/***
+
+Font Awesome 4.x Demo
+
 ***/
 .fa-item {
   font-size: 14px;
@@ -1749,8 +1784,10 @@ Font Awesome 4.x Demo
     cursor: pointer;
     background: #eee; }
 
-/***
-Simple Line Icons Demo
+/***
+
+Simple Line Icons Demo
+
 ***/
 .simplelineicons-demo .item-box {
   display: inline-block;
@@ -1772,8 +1809,10 @@ Simple Line Icons Demo
   .simplelineicons-demo .item-box {
     width: 33.333%; } }
 
-/*** 
-Glyphicons Demo
+/*** 
+
+Glyphicons Demo
+
 ***/
 .glyphicons-demo ul {
   padding-left: 0;
@@ -1816,9 +1855,11 @@ Glyphicons Demo
   .glyphicons-demo ul li {
     width: 12.5%; } }
 
-/***
-Customized Bootstrap Alerts
-***/
+/***
+
+Customized Bootstrap Alerts
+
+***/#004C85
 .alert {
   border-width: 1px; }
   .alert > p {
@@ -1826,8 +1867,10 @@ Customized Bootstrap Alerts
   .alert.alert-borderless {
     border: 0; }
 
-/***
-Custom Bootstrap Badges
+/***
+
+Custom Bootstrap Badges
+
 ***/
 .badge {
   font-size: 11px !important;
@@ -1859,7 +1902,7 @@ Custom Bootstrap Badges
   background-image: none; }
 
 .badge-primary {
-  background-color: #337ab7;
+  background-color: #004C85;
   background-image: none; }
 
 .badge-info {
@@ -1883,8 +1926,10 @@ Custom Bootstrap Badges
 .nav.nav-stacked > li > a > .badge {
   margin-top: -2px; }
 
-/***
-Dropdown Menu Badges
+/***
+
+Dropdown Menu Badges
+
 ***/
 .dropdown-menu > li > a > .badge {
   position: absolute;
@@ -1897,8 +1942,10 @@ Dropdown Menu Badges
   -moz-border-radius: 0 !important;
   border-radius: 0 !important; }
 
-/***
-Custom buttons based on bootstrap SASS
+/***
+
+Custom buttons based on bootstrap SASS
+
 ***/
 .btn {
   outline: none !important;
@@ -1909,8 +1956,10 @@ Custom buttons based on bootstrap SASS
 .btn:not(.btn-sm):not(.btn-lg) {
   line-height: 1.44; }
 
-/***
-Custom color buttons 
+/***
+
+Custom color buttons 
+
 ***/
 .btn.white:not(.btn-outline) {
   color: #666;
@@ -5025,8 +5074,10 @@ Custom color buttons
 .btn-group-vertical.btn-group-vertical-circle > .btn:last-child {
   border-radius: 0 0 25px 25px !important; }
 
-/***
-Image Carousel
+/***
+
+Image Carousel
+
 ***/
 .carousel.image-carousel .carousel-inner {
   padding-top: 0;
@@ -5084,8 +5135,10 @@ Image Carousel
   .carousel.image-carousel .carousel-caption .item {
     margin: 0; }
 
-/***
-Charts and statistics
+/***
+
+Charts and statistics
+
 ***/
 .chart,
 .pie,
@@ -5096,8 +5149,10 @@ Charts and statistics
   font-family: "Open Sans", sans-serif !important;
   font-size: 14px; }
 
-/***
-Statistic lists
+/***
+
+Statistic lists
+
 ***/
 .item-list.table .percent {
   width: 30px;
@@ -5105,8 +5160,10 @@ Statistic lists
   margin-right: 10px;
   margin-top: 3px; }
 
-/***
-Chart tooltips
+/***
+
+Chart tooltips
+
 ***/
 .chart-tooltip {
   clear: both;
@@ -5119,15 +5176,19 @@ Chart tooltips
     display: block;
     margin-bottom: 2px; }
 
-/***
-Mini chart containers
+/***
+
+Mini chart containers
+
 ***/
 .bar-chart,
 .line-chart {
   display: none; }
 
-/***
-Chats
+/***
+
+Chats
+
 ***/
 .chats {
   margin: 0;
@@ -5235,8 +5296,10 @@ Chats
       background-color: #0362fd;
       transition: all 0.3s; }
 
-/***
-Customized Bootstrap Close Icon 
+/***
+
+Customized Bootstrap Close Icon 
+
 ***/
 .close {
   display: inline-block;
@@ -5249,18 +5312,24 @@ Customized Bootstrap Close Icon
   outline: none;
   background-image: url("../img/remove-icon-small.png") !important; }
 
-/***
-Customized Bootstrap Dropdowns
+/***
+
+Customized Bootstrap Dropdowns
+
 ***/
-/***
-Dropdowns
+/***
+
+Dropdowns
+
 ***/
 .dropup.open > .dropdown-toggle,
 .dropdown.open > .dropdown-toggle {
   border-color: #ddd; }
 
-/***
-Dropdown Menu
+/***
+
+Dropdown Menu
+
 ***/
 /*rtl:ignore*/
 .dropdown-menu {
@@ -5462,8 +5531,10 @@ Dropdown Menu
     .navbar-nav .open .dropdown-menu > li > a:active {
       background-color: #eee; } }
 
-/***
-Dropdown Checkboxes
+/***
+
+Dropdown Checkboxes
+
 ***/
 .dropdown-content {
   padding: 10px; }
@@ -5488,8 +5559,10 @@ Dropdown Checkboxes
     .dropdown-checkboxes label .radio {
       margin-right: 3px; }
 
-/*--------------------------------------------------
-    [Dropdown Menu v2]
+/*--------------------------------------------------
+
+    [Dropdown Menu v2]
+
 ----------------------------------------------------*/
 .dropdown-menu-v2 {
   top: 100%;
@@ -5592,8 +5665,10 @@ Dropdown Checkboxes
   right: 0;
   left: auto; }
 
-/***
-System feeds
+/***
+
+System feeds
+
 ***/
 .feeds {
   margin: 0px;
@@ -5648,8 +5723,10 @@ System feeds
         font-style: italic;
         color: #c1cbd0; }
 
-/***
-Form Layouts
+/***
+
+Form Layouts
+
 ****/
 /* Static info */
 .static-info {
@@ -5895,8 +5972,10 @@ Form Layouts
 .form-horizontal .form-group .form-control-static {
   margin-top: 1px; }
 
-/***
-Form Repeater
+/***
+
+Form Repeater
+
 ****/
 .mt-repeater {
   display: table;
@@ -5961,8 +6040,10 @@ Form Repeater
     .mt-repeater .mt-repeater-input .mt-repeater-delete {
       margin-top: 0; } }
 
-/***
-Forms
+/***
+
+Forms
+
 ***/
 .form-control {
   outline: none !important;
@@ -5973,8 +6054,10 @@ Forms
 .input-group-addon > i {
   color: #c5cdda; }
 
-/***
-Custom color buttons 
+/***
+
+Custom color buttons 
+
 ***/
 .form-control.white {
   border-color: #ffffff; }
@@ -6708,8 +6791,10 @@ td > .mt-checkbox.mt-checkbox-single {
     .mt-radio-inline .mt-radio:last-child {
       margin-right: 0; }
 
-/***
-Custom icon buttons
+/***
+
+Custom icon buttons
+
 ***/
 .icon-btn {
   height: 60px;
@@ -6783,9 +6868,11 @@ Custom icon buttons
     font-size: 18px; }
   .ie8 .icon-btn:hover {
     filter: none; }
+#004C85
+/***
 
-/***
-Input icons
+Input icons
+
 ***/
 .input-icon {
   position: relative;
@@ -6826,7 +6913,7 @@ Input icons
       padding-left: 12px; }
       .input-group .input-icon.right > .form-control {
         -webkit-border-radius: 0 4px 4px 0;
-        -moz-border-radius: 0 4px 4px 0;
+        -#004C85der-radius: 0 4px 4px 0;
         -ms-border-radius: 0 4px 4px 0;
         -o-border-radius: 0 4px 4px 0;
         border-radius: 0 4px 4px 0; }
@@ -6840,8 +6927,10 @@ Input icons
     margin-top: 8px;
     font-size: 13px; }
 
-/***
-Customized Bootstrap Labels
+/***
+
+Customized Bootstrap Labels
+
 ***/
 .label {
   text-shadow: none !important;
@@ -6868,7 +6957,7 @@ Customized Bootstrap Labels
     background-color: #9ca8bb; }
 
 .label-primary {
-  background-color: #337ab7; }
+  background-color: #004C85; }
   .label-primary[href]:hover, .label-primary[href]:focus {
     background-color: #286090; }
 
@@ -6892,8 +6981,10 @@ Customized Bootstrap Labels
   .label-danger[href]:hover, .label-danger[href]:focus {
     background-color: #e73d4a; }
 
-/***
-Iconic labels
+/***
+
+Iconic labels
+
 ***/
 .label.label-icon {
   padding: 4px 0px 4px 4px;
@@ -6906,14 +6997,16 @@ Iconic labels
   .ie9 .label.label-icon {
     padding: 3px 0px 3px 3px; }
 
-/***
-Text states
+/***
+
+Text states
+
 ***/
 .text-default {
   color: #bac3d0; }
 
 .text-primary {
-  color: #337ab7; }
+  color: #004C85; }
 
 .text-success {
   color: #36c6d3; }
@@ -6927,8 +7020,10 @@ Text states
 .text-danger {
   color: #ed6b75; }
 
-/***
-Customized List Group
+/***
+
+Customized List Group
+
 ***/
 /* Contextual variants */
 .list-group > li:first-child {
@@ -7031,8 +7126,10 @@ Customized List Group
     background-color: #e73d4a;
     border-color: #e73d4a; }
 
-/***
-UI Loading
+/***
+
+UI Loading
+
 ***/
 .loading-message {
   display: inline-block;
@@ -7136,8 +7233,10 @@ UI Loading
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s; }
 
-/***
-Metro icons
+/***
+
+Metro icons
+
 ***/
 [class^="m-icon-"] {
   display: inline-block;
@@ -7212,8 +7311,10 @@ Metro icons
 .m-icon-big-swapup {
   background-position: -78px -28px; }
 
-/***
-Customized Bootstrap Modal 
+/***
+
+Customized Bootstrap Modal 
+
 ***/
 .modal {
   z-index: 10050;
@@ -7269,8 +7370,10 @@ body[ng-controller] .modal {
   .modal-full.modal-dialog {
     width: auto; } }
 
-/***
-Notes
+/***
+
+Notes
+
 ***/
 .note {
   margin: 0 0 20px 0;
@@ -7359,8 +7462,10 @@ Notes
       border-color: #f6b3b8;
       box-shadow: 5px 5px rgba(246, 184, 189, 0.2); }
 
-/***
-Customized Bootstrap Pagination
+/***
+
+Customized Bootstrap Pagination
+
 ***/
 .pagination {
   margin: 10px 0; }
@@ -7369,8 +7474,10 @@ Customized Bootstrap Pagination
   .pagination.pagination-circle > li:last-child > a {
     border-radius: 0 25px 25px 0 !important; }
 
-/***
-Customized Bootstrap Panels
+/***
+
+Customized Bootstrap Panels
+
 ***/
 .panel {
   -webkit-box-shadow: none !important;
@@ -7396,8 +7503,10 @@ Customized Bootstrap Panels
     .accordion .panel .panel-title .accordion-toggle.accordion-toggle-styled.collapsed {
       background-position: right 12px; }
 
-/***
-Accordions
+/***
+
+Accordions
+
 ***/
 .panel-heading {
   background: #eee; }
@@ -7408,8 +7517,10 @@ Accordions
   .panel-heading a:hover {
     text-decoration: none; }
 
-/***
-Customized Bootstrap Popover
+/***
+
+Customized Bootstrap Popover
+
 ***/
 /*rtl:ignore*/
 .popover {
@@ -7419,8 +7530,10 @@ Customized Bootstrap Popover
 .popover .popover-title {
   margin: 0 !important; }
 
-/***
-Portlets
+/***
+
+Portlets
+
 ***/
 /* Full Screen portlet mode */
 .page-portlet-fullscreen {
@@ -7800,8 +7913,10 @@ Portlets
   .portlet-collapsed-on-mobile {
     display: none; } }
 
-/***
-Custom colored portlets 
+/***
+
+Custom colored portlets 
+
 ***/
 .portlet > .portlet-body.white,
 .portlet.white {
@@ -10871,8 +10986,10 @@ Custom colored portlets
         border: 1px solid #dfdbe8;
         color: #edebf2; }
 
-/***
-Customized Progress Bars
+/***
+
+Customized Progress Bars
+
 ***/
 .progress {
   border: 0;
@@ -11124,8 +11241,10 @@ Customized Progress Bars
   background: #8877a9 !important;
   color: #ffffff !important; }
 
-/***
-Dashboard Stats
+/***
+
+Dashboard Stats
+
 ***/
 .dashboard-stat {
   display: block;
@@ -12267,8 +12386,10 @@ Dashboard Stats
       font-weight: 300;
       margin-bottom: 0px; }
 
-/***
-Dashboard Stats 2
+/***
+
+Dashboard Stats 2
+
 ***/
 .dashboard-stat2 {
   -webkit-border-radius: 4px;
@@ -12330,8 +12451,10 @@ Dashboard Stats 2
         float: right;
         display: inline-block; }
 
-/***
-Text Stats
+/***
+
+Text Stats
+
 ***/
 .text-stat h3 {
   margin-top: 5px;
@@ -12346,8 +12469,10 @@ Text Stats
   .text-stat {
     margin-top: 20px; } }
 
-/***
-Social Icons
+/***
+
+Social Icons
+
 ***/
 .social-icons {
   padding: 0;
@@ -12464,8 +12589,10 @@ Social Icons
   .social-icons.social-icons-circle > li > a {
     border-radius: 25px !important; }
 
-/***
-Inline Social Icons
+/***
+
+Inline Social Icons
+
 ***/
 .social-icon {
   display: inline-block !important;
@@ -12606,8 +12733,10 @@ Inline Social Icons
   .social-icon-color:hover {
     opacity: 1; }
 
-/***
-Scrollable Tables
+/***
+
+Scrollable Tables
+
 ***/
 .table-scrollable {
   width: 100%;
@@ -12654,8 +12783,10 @@ Scrollable Tables
     .table-scrollable > .table-bordered > tfoot > tr:last-child > td {
       border-bottom: 0; }
 
-/***
-Customized Bootstrap Tables
+/***
+
+Customized Bootstrap Tables
+
 ***/
 .table td,
 .table th {
@@ -12667,15 +12798,17 @@ Customized Bootstrap Tables
 .table td .img-responsive {
   width: 100%; }
 
-/***
-Responsive Flip Scroll Tables
+/***
+
+Responsive Flip Scroll Tables
+
 ***/
 .flip-scroll table {
   width: 100%; }
 
 @media only screen and (max-width: 768px) {
   /* 768px */
-  .flip-scroll .flip-content:after {
+  .flip-scroll .flip-cont#004C85er {
     visibility: hidden;
     display: block;
     font-size: 0;
@@ -12751,8 +12884,10 @@ Responsive Flip Scroll Tables
   .flip-scroll td:last-child {
     border-bottom: 1px solid #ddd; } }
 
-/***
-Custom tables
+/***
+
+Custom tables
+
 ***/
 .table-toolbar {
   margin-bottom: 20px; }
@@ -12808,7 +12943,7 @@ Custom tables
   margin-left: 15px; }
 
 .table-advance td.highlight div.primary {
-  border-left: 2px solid #337ab7; }
+  border-left: 2px solid #004C85; }
 
 .table-advance td.highlight div.success {
   border-left: 2px solid #36c6d3; }
@@ -12827,8 +12962,10 @@ Custom tables
   .table-advance tr > td.highlight:first-child a {
     margin-left: 8px; } }
 
-/***
-Light Table
+/***
+
+Light Table
+
 ***/
 .table.table-light {
   border: 0 !important; }
@@ -12871,8 +13008,10 @@ Light Table
 .table-hover > tbody > tr:hover > td {
   background: #f3f4f6 !important; }
 
-/***
-Customized Bootstrap Tabs 
+/***
+
+Customized Bootstrap Tabs 
+
 ***/
 /* Tabs and pills */
 .nav-tabs,
@@ -12993,8 +13132,10 @@ Customized Bootstrap Tabs
     border-radius: 0 0 4px 4px;
     border-color: transparent #ddd #ddd #ddd  !important; }
 
-/***
-Custom tabs
+/***
+
+Custom tabs
+
 ***/
 /* In BS3.0.0 tabbable class was removed. We had to added it back */
 .tabbable:before, .tabbable:after {
@@ -13183,8 +13324,10 @@ Custom tabs
   border: 1px solid #ddd;
   background: #ffffff; }
 
-/***
-Tiles(new in v1.1.1)
+/***
+
+Tiles(new in v1.1.1)
+
 ***/
 .tiles {
   margin-right: -10px; }
@@ -13355,8 +13498,10 @@ Tiles(new in v1.1.1)
         margin-bottom: 8px;
         margin-right: 10px; }
 
-/***
-Custimized Bootstrap Wells
+/***
+
+Custimized Bootstrap Wells
+
 ***/
 .well {
   border: 0;
@@ -13371,8 +13516,10 @@ Custimized Bootstrap Wells
 .well-sm {
   padding: 10px; }
 
-/*--------------------------------------------------
-	[Widgets]
+/*--------------------------------------------------
+
+	[Widgets]
+
 ----------------------------------------------------*/
 /*** Widget Background Colors ***/
 .widget-bg-color-purple {
@@ -13558,11 +13705,11 @@ Custimized Bootstrap Wells
           color: #f36a5a; }
           .widget-tab .nav-tabs > li.active > a > i {
             color: #f36a5a; }
-  .widget-tab .tab-content {
+  .widget-tab .t#004C85ent {
     padding: 20px;
     color: #8e9daa; }
   .widget-tab .slimScrollBar {
-    right: 10px !important;
+    right: 10#004C85ortant;
     margin-top: 17px !important;
     margin-bottom: 17px !important; }
 
@@ -13705,11 +13852,11 @@ Custimized Bootstrap Wells
     color: #fff;
     border: 1px solid #ebf0f6;
     padding: 3px 10px;
-    background: #337ab7; }
+    background: #004C85; }
     .widget-media .widget-btn-blue .widget-btn-icon {
       line-height: 1.5; }
     .widget-media .widget-btn-blue:hover {
-      color: #337ab7;
+      color: #004C85;
       background: #fff;
       text-decoration: none; }
   .widget-media .widget-media-body {
@@ -13875,8 +14022,10 @@ Custimized Bootstrap Wells
   .widget-subscribe.widget-subscribe-border-top {
     border-top: 1px solid #f5f8fb; } }
 
-/*--------------------------------------------------
-    [Material Design]
+/*--------------------------------------------------
+
+    [Material Design]
+
 ----------------------------------------------------*/
 .page-md .widget-bg-color-white,
 .page-md .widget-map,
@@ -13886,8 +14035,10 @@ Custimized Bootstrap Wells
 .page-md .widget-blog {
   box-shadow: 0px 2px 3px 2px rgba(0, 0, 0, 0.03); }
 
-/***
-AngularJS Basic Animations
+/***
+
+AngularJS Basic Animations
+
 ***/
 @-webkit-keyframes fadeInUp {
   0% {
@@ -13999,8 +14150,10 @@ AngularJS Basic Animations
   .m-heading-1 {
     margin: 0px 0; } }
 
-/***
-Timeline 
+/***
+
+Timeline 
+
 ***/
 .timeline {
   margin: 0;
@@ -14137,8 +14290,10 @@ Timeline
   .timeline .timeline-body-arrow {
     top: 17px; } }
 
-/***
-Timeline 2
+/***
+
+Timeline 2
+
 ***/
 .mt-timeline-2 {
   position: relative; }
@@ -14337,8 +14492,10 @@ Timeline 2
     clear: both;
     padding-top: 10px; } }
 
-/***
-Horizontal Timeline 
+/***
+
+Horizontal Timeline 
+
 ***/
 /* PLUGIN CSS */
 .cd-horizontal-timeline {
@@ -14753,8 +14910,10 @@ Horizontal Timeline
     float: none !important;
     margin: 0 !important; } }
 
-/***
-Tasks Widget 
+/***
+
+Tasks Widget 
+
 ***/
 .tasks-widget:after {
   clear: both; }
@@ -18618,17 +18777,17 @@ body.stop-scrolling {
       padding-bottom: 1em;
       width: 41px;
       text-align: center; }
-    .mt-element-ribbon .ribbon.ribbon-vertical-right {
+    .mt-element-ribbon .#004C85ribbon-vertical-right {
       clear: none;
       float: right;
       margin: -2px 10px 0 0;
       padding-top: 1em;
-      padding-bottom: 1em;
+      padding-bottom: 1em;#004C85
       width: 41px;
       text-align: center; }
     .mt-element-ribbon .ribbon.ribbon-shadow {
-      box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.4); }
-      .mt-element-ribbon .ribbon.ribbon-shadow.ribbon-right, .mt-element-ribbon .ribbon.ribbon-shadow.ribbon-vertical-right {
+      box-shadow: 2px 2px 7px#004C85, 0, 0, 0.4); }
+      .mt-element-ribbon .ribb#004C85on-shadow.ribbon-right, .mt-element-ribbon .ribbon.ribbon-shadow.ribbon-vertical-right {
         box-shadow: -2px 2px 7px rgba(0, 0, 0, 0.4); }
     .mt-element-ribbon .ribbon.ribbon-round {
       border-top-right-radius: 5px !important;
@@ -18777,17 +18936,17 @@ body.stop-scrolling {
           border-left-color: #bac3d0;
           border-right-color: #bac3d0; }
     .mt-element-ribbon .ribbon.ribbon-color-primary {
-      background-color: #337ab7;
+      background-color: #004C85;
       color: #fff; }
       .mt-element-ribbon .ribbon.ribbon-color-primary:after {
         border-color: #286090; }
       .mt-element-ribbon .ribbon.ribbon-color-primary > .ribbon-sub {
-        background-color: #337ab7;
+        background-color: #004C85;
         color: black; }
         .mt-element-ribbon .ribbon.ribbon-color-primary > .ribbon-sub:after {
           border-color: #122b40;
-          border-left-color: #337ab7;
-          border-right-color: #337ab7; }
+          border-left-color: #004C85;
+          border-right-color: #004C85; }
     .mt-element-ribbon .ribbon.ribbon-color-info {
       background-color: #659be0;
       color: #fff; }
@@ -19412,8 +19571,10 @@ body.stop-scrolling {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0); }
 
-/***
-Custom color buttons 
+/***
+
+Custom color buttons 
+
 ***/
 .bg-white {
   background: #ffffff !important; }
@@ -22601,8 +22762,10 @@ Custom color buttons
 .border-right-after-purple-soft:after {
   border-right-color: #8877a9 !important; }
 
-/***
-Color library demo
+/***
+
+Color library demo
+
 ***/
 .color-demo {
   border: 1px solid #eee;

@@ -11,7 +11,7 @@ if ($submit == 'deleteSignature' && $_POST['deleteUserId'] != "") {
 	$update_id = $_POST['deleteUserId'];
 	$fileNameS = $_POST['deleteFileName'];
 
-	$pathRemove = 'signature_file/'.$fileNameS;
+	$pathRemove = 'signature_file/' . $fileNameS;
 	unlink($pathRemove);
 
 	$sql = "UPDATE user SET	signature = '', 
@@ -21,7 +21,7 @@ if ($submit == 'deleteSignature' && $_POST['deleteUserId'] != "") {
 	$qx = ($qx and $q);
 	if ($qx) {
 		mysqli_commit($connect);
-	
+
 		echo "<font color='green'><b>ระบบได้ลบข้อมูลลายเซ็นของท่านเรียบร้อยแล้ว</b></font>";
 	}
 }
@@ -33,10 +33,10 @@ if ($submit == 'editSignature' && $_FILES["edit_signature"]["name"] != "") {
 	$target_file = $target_dir . basename($_FILES["edit_signature"]["name"]);
 
 	$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-	$new_name = $update_id.'_signature.'.$imageFileType;
-	$target_file = $target_dir.$new_name;
+	$new_name = $update_id . '_signature.' . $imageFileType;
+	$target_file = $target_dir . $new_name;
 	$check = getimagesize($_FILES["edit_signature"]["tmp_name"]);
-	$uploadOk =1 ;
+	$uploadOk = 1;
 	// if (file_exists($target_file)) {
 	// 	echo "Sorry, file already exists. ";
 	// 	$uploadOk = 0;
@@ -65,23 +65,22 @@ if ($submit == 'editSignature' && $_FILES["edit_signature"]["name"] != "") {
 		}
 	}
 
-	if($uploadOk != 0){
-		
-		$pathRemove = 'signature_file/'.$editSignature;
+	if ($uploadOk != 0) {
+
+		$pathRemove = 'signature_file/' . $editSignature;
 		$checkMove = unlink($pathRemove);
-		
-			$sql = "UPDATE user SET	signature = '$new_name', 
+
+		$sql = "UPDATE user SET	signature = '$new_name', 
 			last_modify = now() 
 			WHERE user_id = '$update_id'";
-			$q = mysqli_query($connect, $sql);
-			$qx = ($qx and $q);
-			if ($qx) {
-				mysqli_commit($connect);
-			
-				echo "<font color='green'><b>ระบบได้บันทึกข้อมูลของท่านแล้ว</b></font>";
-			}
-	}
+		$q = mysqli_query($connect, $sql);
+		$qx = ($qx and $q);
+		if ($qx) {
+			mysqli_commit($connect);
 
+			echo "<font color='green'><b>ระบบได้บันทึกข้อมูลของท่านแล้ว</b></font>";
+		}
+	}
 }
 
 if ($submit == 'update' && $update_id > 0) {
@@ -109,8 +108,8 @@ if ($submit == 'update' && $update_id > 0) {
 		$target_dir = "signature_file/";
 		$target_file = $target_dir . basename($_FILES["signature"]["name"]);
 		$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-		$new_name = $update_id.'_signature.'.$imageFileType;
-		$target_file = $target_dir.$new_name;
+		$new_name = $update_id . '_signature.' . $imageFileType;
+		$target_file = $target_dir . $new_name;
 		$check = getimagesize($_FILES["signature"]["tmp_name"]);
 
 		// if (file_exists($target_file)) {
@@ -154,8 +153,8 @@ if ($submit == 'update' && $update_id > 0) {
 	if ($uploadOk != 0) {
 		if ($_POST['signature'] != '' || $_POST['signature'] != null) {
 			$signatures = $_POST['signature'];
-		}else{
-			$signatures=$new_name;
+		} else {
+			$signatures = $new_name;
 		}
 		$sql = "UPDATE user SET
 	prefix = '$prefix', 
@@ -407,8 +406,8 @@ echo template_footer();
 						<hr>
 					</div>
 					<span>กรุณาเลือกรูปภาพ : </span> &nbsp;<input type='file' name='edit_signature' id="edit_signature" style="display: inline;">
-					<input type="hidden" name="editSignature" id="editSignature" >
-					<input type="hidden" name="editUserId" id="editUserId" >
+					<input type="hidden" name="editSignature" id="editSignature">
+					<input type="hidden" name="editUserId" id="editUserId">
 				</div>
 				<div class="modal-footer">
 					<div class="row" align="center">
@@ -435,7 +434,7 @@ echo template_footer();
 					<span>กรุณายืนยันการลบข้อมูลรายเซ็น !</span>
 					<input type="hidden" name="deleteUserId" id="deleteUserId">
 					<input type="hidden" name="deleteFileName" id="deleteFileName">
-					
+
 				</div>
 				<div class="modal-footer">
 					<div class="row" align="center">
@@ -461,7 +460,7 @@ echo template_footer();
 		$('#editUserId').val(editId);
 		var editSignatures = $(this).attr('data-edit-sig');
 		$('#editSignature').val(editSignatures);
-		document.getElementById("imageEditShow").src = 'signature_file/'+editSignatures;
+		document.getElementById("imageEditShow").src = 'signature_file/' + editSignatures;
 
 	});
 </script>

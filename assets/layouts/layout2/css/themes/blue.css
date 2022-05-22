@@ -1,6 +1,8 @@
 /* Cubic Bezier Transition */
-/*********** 
-    Page Header
+/*********** 
+
+    Page Header
+
     ***********/
 /* Header search bar, toggler button & top menu */
 .page-header.navbar {
@@ -39,9 +41,9 @@
       .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu > li.external {
         background: #eaedf2; }
         .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu > li.external > h3 {
-          color: #62878f; }
+          color: #004C85; }
         .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu > li.external > a {
-          color: #337ab7; }
+          color: #004C85; }
           .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu > li.external > a:hover {
             color: #23527c;
             text-decoration: none; }
@@ -231,8 +233,10 @@
       .page-sidebar .page-sidebar-menu .sub-menu > li.active > a > .arrow.open:before {
         color: #4d5d7c; }
 
-/******
-    Page Footer 
+/******
+
+    Page Footer 
+
     ******/
 .page-footer .page-footer-inner {
   color: #a1b2cf; }
@@ -308,15 +312,19 @@
     .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle:hover {
       background-color: #eff1f6; } }
 
-/****
- CSS3 Spinner Bar  
+/****
+
+ CSS3 Spinner Bar  
+
 ****/
 .page-spinner-bar > div,
 .block-spinner-bar > div {
   background: #1adbd1; }
 
-/****
-    Boby
+/****
+
+    Boby
+
     ****/
 body {
   background-color: #26344B; }
