@@ -23,6 +23,7 @@ echo template_header();
 	.margins-top-10 {
 		margin-top: 10px;
 	}
+	
 </style>
 
 
@@ -208,19 +209,19 @@ $stmt->execute();
 $result = $stmt->get_result();
 while ($row = mysqli_fetch_array($result)) {
 										?>
-											<tr>
-												<td><?= ' ' . month_name($row['loss_data_doc_month']) . ' พ.ศ. ' . $row['loss_year']; ?></td>
+											<tr >
+												<td style="vertical-align: middle;"><?= ' ' . month_name($row['loss_data_doc_month']) . ' พ.ศ. ' . $row['loss_year']; ?></td>
 
-												<td><?php $row['loss_have'];
+												<td style="vertical-align: middle;"><?php $row['loss_have'];
 													if ($row['loss_have'] == '0') { ?>
 														<span class="glyphicon glyphicon-exclamation-sign" style="color: #E31D2D;"></span><span> พบเหตุการณ์ความเสียหาย</span>
 													<?php } else if ($row['loss_have'] == '1') {  ?>
 														<span class="glyphicon glyphicon-ok-sign" style="color: #004C85;"></span><span> ไม่พบเหตุการณ์ความเสียหาย</span>
 													<?php }  ?>
 												</td>
-												<td><?= $row['loss_create']; ?></td>
+												<td style="vertical-align: middle;"><?= $row['loss_create']; ?></td>
 										
-												<td width="300">
+												<td style="vertical-align: middle;" width="300">
  <button type='submit' name='submit' value='update' class="btn btn-primary" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-share'></i> รายงานเหตุการณ์</button>
 
 
@@ -287,33 +288,31 @@ while ($row = mysqli_fetch_array($result)) {
 											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">สาเหตุ<span style="color: red;">*</span></label><textarea id="fdf" class="form-control" name="sdd" rows="3" cols="50" style="min-height:80px;"></textarea></div>
 											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><input type="text" class="form-control" name='surname' value='<?= $row2['surname'] ?>'></div>
 											<div class="col-lg-3"> <label class="margins-top-10">ประเภทความเสียหาย<span style="color: red;">*</span></label><select name='department_id' id='department_id' class="form-control">
-													<option value="0">กรุณาระบุ สาขา / ฝ่าย </option>
+													<option value="0">- - - เลือก - - - </option>
 													<?
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
+													$iFactor7 = 7;
+																$sqlFactor = "SELECT * FROM loss_factor Where parent_id =?";
+														   $stmt = $connect->prepare($sqlFactor);
+														   $stmt->bind_param("i",$iFactor7);
+															$stmt->execute();
+															$result = $stmt->get_result();
+															while ($row1 = mysqli_fetch_array($result)) {
 													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
+														<option value="<?= $row1['loss_factor_id'] ?>" ><?= $row1['factor'] ?></option>
 													<?		} ?>
 												</select></div>
 											<div class="col-lg-3"><label class="margins-top-10">ประเภทเหตุการณ์ความเสียหาย<span style="color: red;">*</span></label><select name='department_id' id='department_id' class="form-control">
-													<option value="0"> - - - - </option>
+											<option value="0">- - - เลือก - - - </option>
 													<?
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
+													$iFactor1 = 1;
+																$sqlFactor = "SELECT * FROM loss_factor Where parent_id =?";
+														   $stmt = $connect->prepare($sqlFactor);
+														   $stmt->bind_param("i",$iFactor1);
+															$stmt->execute();
+															$result = $stmt->get_result();
+															while ($row1 = mysqli_fetch_array($result)) {
 													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
+														<option value="<?= $row1['loss_factor_id'] ?>" ><?= $row1['factor'] ?></option>
 													<?		} ?>
 												</select></div>
 
@@ -325,38 +324,43 @@ ORDER BY
 												</label></div>
 
 											<div class="col-lg-6"><label class="margins-top-10">การควบคุมที่มีอยู่<span style="color: red;">*</span></label><input type="text" class="form-control" name='signature'></div>
-											<div class="col-lg-4"><label class="margins-top-10">มูลค่าความเสียหาย<span style="color: red;">*</span></label><input type="text" class="form-control" name='surname' value='<?= $row2['surname'] ?>'></div>
+											<div class="col-lg-4"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" name='surname' value='<?= $row2['surname'] ?>'></div>
 											<div class="col-lg-4"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='department_id' id='department_id' class="form-control">
-													<option value="0">มูลค่าความเสียหาย<span style="color: red;">*</span></option>
+											<option value="0">- - - เลือก - - - </option>
 													<?
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
+													$iFactor = 1;
+																$sqlFactor = "SELECT * FROM loss_factor Where parent_id =?";
+														
+														   $z = 0;
+														   $stmt = $connect->prepare($sqlFactor);
+														   $stmt->bind_param("i",$iFactor);
+															$stmt->execute();
+															$result = $stmt->get_result();
+															while ($row1 = mysqli_fetch_array($result)) {
+											
 													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
+														<option value="<?= $row1['loss_factor_id'] ?>" ><?= $row1['factor'] ?></option>
 													<?		} ?>
 												</select></div>
 											<div class="col-lg-4"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='department_id' id='department_id' class="form-control">
-													<option value="0"> - - - - </option>
+											<option value="0">- - - เลือก - - - </option>
 													<?
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
+													$iFactor = 1;
+																$sqlFactor = "SELECT * FROM loss_factor Where parent_id =?";
+														
+														   $z = 0;
+														   $stmt = $connect->prepare($sqlFactor);
+														   $stmt->bind_param("i",$iFactor);
+															$stmt->execute();
+															$result = $stmt->get_result();
+															while ($row1 = mysqli_fetch_array($result)) {
+											
 													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
+														<option value="<?= $row1['loss_factor_id'] ?>" ><?= $row1['factor'] ?></option>
 													<?		} ?>
 												</select></div>
-											<div class="col-lg-3"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง</label><select name='department_id' id='department_id' class="form-control">
+										
+											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 1</label><select name='department_id' id='department_id' class="form-control">
 													<option value="0"> - - - -</option>
 													<?
 													$sql = "SELECT * FROM department 
@@ -371,7 +375,7 @@ ORDER BY
 														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
 													<?		} ?>
 												</select></div>
-											<div class="col-lg-3"><label class="margins-top-10">ฝ่ายงานที่ 1</label><select name='department_id' id='department_id' class="form-control">
+											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 2</label><select name='department_id' id='department_id' class="form-control">
 													<option value="0"> - - - -</option>
 													<?
 													$sql = "SELECT * FROM department 
@@ -386,7 +390,7 @@ ORDER BY
 														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
 													<?		} ?>
 												</select></div>
-											<div class="col-lg-3"><label class="margins-top-10">ฝ่ายงานที่ 2</label><select name='department_id' id='department_id' class="form-control">
+											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 3</label><select name='department_id' id='department_id' class="form-control">
 													<option value="0"> - - - -</option>
 													<?
 													$sql = "SELECT * FROM department 
@@ -401,22 +405,7 @@ ORDER BY
 														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
 													<?		} ?>
 												</select></div>
-											<div class="col-lg-3"><label class="margins-top-10">ฝ่ายงานที่ 3</label><select name='department_id' id='department_id' class="form-control">
-													<option value="0"> - - - -</option>
-													<?
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
-													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-12"><label class="margins-top-10">ความเห็นผู้มีอำนาจอนุมัติ</label><textarea id="fdf" class="form-control" name="sdd" rows="3" cols="50" style="min-height:80px;"></textarea></div>
+										
 										</div>
 									</div>
 									<div align="center" style="margin-top: 30px;">
