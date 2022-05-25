@@ -2,17 +2,6 @@
 include('inc/include.inc.php');
 echo template_header();
 
-				$sql="SELECT department_name, group_name,department_level_no FROM user join department_level on department_level.department_level_id = user.level WHERE user_id=?";
-				$stmt = $connect->prepare($sql);
-				$stmt->bind_param("s",$user_id);
-				$stmt->execute();
-				$res1 = $stmt->get_result();
-				if ($row_mem = $res1->fetch_assoc()) {
-					$deptName = $row_mem['department_name'];
-					$groupName = $row_mem['group_name'];
-					$levelName = $row_mem['department_level_no'];
-				}
-
 ?>
 <style>
 	.margins-3 {
@@ -24,221 +13,93 @@ echo template_header();
 		margin-top: 10px;
 	}
 </style>
-
-
 <div class="row">
 	<div class="col-lg-12 col-lg-12 col-sm-12">
 		<div class="portlet light tasks-widget bordered">
 			<div class="portlet-title">
 				<div class="caption">
 					<i class="icon-share font-dark hide"></i>
-					<span class="caption-subject font-green sbold uppercase">แจ้งเหตุการณ์ความเสียหาย</span>
+					<span class="caption-subject font-green sbold uppercase">ข้อมูลรายการเหตุการณ์</span>
 					<span class="caption-helper"></span>
 				</div>
-			</div>
-			<!---------------->
-
-			<div class="row" style="margin-top: 20px;margin-bottom: 20px;">
-			<div class="col-lg-3"> 
-			
-			</div>
-			<div class="col-lg-3"> 
-			<b>สายงาน :</b> <?= $groupName; ?>
-			</div>
-			<div class="col-lg-3"> 
-			<b>ฝ่าย :</b> <?= $deptName; ?>
-			</div>
-			<div class="col-lg-3"> 
-			<b>กลุ่มงาน :</b>  <?= $levelName; ?>
-			</div>
-</div>
-			<div class="row">
-			<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <div class="dashboard-stat dashboard-stat-v2 green" >
-					<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
-					<div class="details">
-						<div class="number"> <span data-counter="counterup">รอการอนุมัติ 
-						<?php 	$i1=1;
-								$sqlCount1="SELECT COUNT(*) AS num FROM loss_data_doc_list WHERE status_approve =?";
-								$stmt = $connect->prepare($sqlCount1);
-								$stmt->bind_param("i",$i1);
-								$stmt->execute();
-								$res = $stmt->get_result();
-								if ($rows = $res->fetch_assoc()) {
-									echo $rows['num'];
-								}
-								?>	
-						คำขอ</span> </div>
-						<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=1"><< เรียกดูขอมูลเพิ่มเติม >></a></div>
-					</div>
-				</div> 
-			</div>
-			<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <div class="dashboard-stat dashboard-stat-v2 green" >
-					<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
-					<div class="details">
-						<div class="number"> <span data-counter="counterup">ส่งกลับแก้ไข 	<?php 	$i2=2;
-								$sqlCount2="SELECT COUNT(*) AS num FROM loss_data_doc_list WHERE status_approve =?";
-								$stmt = $connect->prepare($sqlCount2);
-								$stmt->bind_param("i",$i2);
-								$stmt->execute();
-								$res = $stmt->get_result();
-								if ($rows = $res->fetch_assoc()) {
-									echo $rows['num'];
-								}
+			</div><br>
+			<div align="center">
+								<?php
+	if($_GET['listId'] > 0){
+		echo "<span style='font-size: 20px;margin:10px;'>ข้อมูลเหตุการณ์ประจำเดือน ".month_name($_GET['m']). " ปี ".$_GET['y']."</span><br>";
+	}elseif($_GET['statusListId'] > 0 ){
+	 if($_GET['statusListId'] == 1){
+       echo "<span style='font-size: 20px;margin:10px;'>รายการข้อมูลรออนุมัติทั้งหมด</span><br>";
+	 }elseif($_GET['statusListId'] == 2){
+		echo "<span style='font-size: 20px;margin:10px;'>รายการข้อมูลส่งกลับแก้ไขทั้งหมด</span><br>";
+	 }elseif($_GET['statusListId'] == 3){
+		echo "<span style='font-size: 20px;margin:10px;'>รายการข้อมูลที่ดำเนินการเสร็จแล้วทั้งหมด</span><br>";
+	 }
+	}
 								?>
-							 คำขอ</span> </div>
-						<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=2"><< เรียกดูขอมูลเพิ่มเติม >></a></div>
-					</div>
-				</div> 
-			</div>
-			<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <div class="dashboard-stat dashboard-stat-v2 green">
-					<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
-					<div class="details">
-						<div class="number"> <span data-counter="counterup">ดำเนินการแล้วเสร็จ  
-						<?php 	$i3=3;
-								$sqlCount3="SELECT COUNT(*) AS num FROM loss_data_doc_list WHERE status_approve =?";
-								$stmt = $connect->prepare($sqlCount3);
-								$stmt->bind_param("i",$i3);
-								$stmt->execute();
-								$res = $stmt->get_result();
-								if ($rows = $res->fetch_assoc()) {
-									echo $rows['num'];
-								}
-								?>
-								 คำขอ</span> </div>
-						<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=3"><< เรียกดูขอมูลเพิ่มเติม >></a></div>
-					</div>
-				</div> 
-			</div>
-			</div>
-			<!---------------->
-			<form method='post' action='profile.php' enctype="multipart/form-data">
-				<div class="form-group" style="margin-top: 21px;">
-					<div class="row">
-
-						<div class="col-lg-12 col-xs-12">
-							<div class='well'>
-
-								<div class='row'>
-
-									<div class="col-lg-3 margins-3">
-										<div class="form-group">
-											<label for="username" class="col-xs-12 col-lg-8 control-label " style="margin-top: 8px;">รายงานความเสียหายประจำเดือน : </label>
-											<div class="col-xs-12 col-lg-4">
-												<select name='department_level_id' class="form-control" style="display: inline;">
-													<option value='0'> - - - </option>
-													<option value="1"> มกราคม</option>
-													<option value="2"> กุมภาพันธ์</option>
-													<option value="3"> มีนาคม</option>
-													<option value="4"> เมษายน</option>
-													<option value="5"> พฤษภาคม</option>
-													<option value="6"> มิถุนายน</option>
-													<option value="7"> กรกฎาคม</option>
-													<option value="8"> สิงหาคม</option>
-													<option value="9"> กันยายน</option>
-													<option value="10"> ตุลาคม</option>
-													<option value="11"> พฤศจิกายน</option>
-													<option value="12"> ธันวาคม</option>
-												</select>
-											</div>
-										</div>
-
-									</div>
-									<div class="col-lg-2 margins-3">
-										<div class="form-group">
-											<label for="username" class="col-xs-12 col-lg-3 control-label " style="margin-top: 8px;">ปี : </label>
-											<div class="col-xs-12 col-lg-9">
-												<select name='department_level_id' class="form-control" style="margin-bottom:5px;">
-													<option value='0'> - - - - - -</option>
-													<?php
-													$year = Date("Y") + 543;
-													for ($k =  ($year + 1); $k >=  ($year - 20); $k--) {
-														echo "<option value='" . $k . "'>  พ.ศ. $k </option>";
-													}
-
-													?>
-												</select>
-											</div>
-										</div>
-
-									</div>
-
-
-									<div class="col-lg-2 margins-3" style="margin-left: 16px;">
-										<label class="radio-inline" style="padding-top: 5px;"><input type="radio" name="optradio"> พบเหตุการณ์ความเสียหาย
-										</label>
-									</div>
-									<div class="col-lg-3 margins-3" style="margin-left: 16px; margin-bottom:10px;">
-										<label class="radio-inline" style="padding-top: 5px;"><input type="radio" name="optradio"> ไม่พบเหตุการณ์ความเสียหาย
-										</label>
-									</div>
-									<div class="col-lg-1 margins-3 " align="center">
-										<button type='submit' name='submit' value='update' class="btn btn-danger"><i class='fa fa-save'></i> บันทึก
-										</button>
-									</div>
-
-
 								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-
-			<div class="form-group" style="margin-top: -30px;">
+								<br>
+			<div class="form-group">
+				
 				<div class="row">
-					<div class="col-lg-12 col-xs-12">
+			
+					<div class="col-lg-12 col-xs-12" >
 						<div class='well'>
+					
 							<div class='row' style="margin-left: 3px;margin-right: 3px;">
 								<!-- start table -->
-								<table id="exampleDataTable" class="table table-striped table-bordered" style="width:100%">
+							
+								<table id="dataTableList" class="table table-striped table-bordered" style="width:100%">
 									<thead>
 										<tr>
-											<th>ช่วงเหตุการณ์</th>
-											<th>ผลการรายงาน</th>
+											<th width="60">ลำดับ</th>
+
+											<th>เหตุการณ์</th>
 											<th align="center" width="90">วันที่บันทึก</th>
-											<th>จัดการ</th>
+											<th width="150">ระดับความเสียหาย</th>
+											<th width="100">จัดการ</th>
 										</tr>
 									</thead>
 									<tbody>
-
-									<?php 
-$sql="SELECT * FROM loss_data_doc order by loss_create DESC";
-$stmt = $connect->prepare($sql);
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = mysqli_fetch_array($result)) {
+										<?php
+										if($_GET['listId'] > 0){
+											$sql = "SELECT * FROM loss_data_doc_list join loss_data_doc on loss_data_doc_list.loss_data_doc_id = loss_data_doc.loss_data_doc_id where loss_data_doc_list.loss_data_doc_id ='".$_GET['listId']."'";
+										}elseif($_GET['statusListId'] > 0 ){
+											$sql = "SELECT * FROM loss_data_doc_list join loss_data_doc on loss_data_doc_list.loss_data_doc_id = loss_data_doc.loss_data_doc_id where loss_data_doc_list.status_approve ='".$_GET['statusListId']."'";
+										}
+                                       $z = 0;
+										$stmt = $connect->prepare($sql);
+										$stmt->execute();
+										$result = $stmt->get_result();
+										while ($row = mysqli_fetch_array($result)) {
+											$z++;						
 										?>
 											<tr>
-												<td><?= ' ' . month_name($row['loss_data_doc_month']) . ' พ.ศ. ' . $row['loss_year']; ?></td>
+												<td><?= $z; ?></td>
 
-												<td><?php $row['loss_have'];
-													if ($row['loss_have'] == '0') { ?>
-														<span class="glyphicon glyphicon-exclamation-sign" style="color: #E31D2D;"></span><span> พบเหตุการณ์ความเสียหาย</span>
-													<?php } else if ($row['loss_have'] == '1') {  ?>
-														<span class="glyphicon glyphicon-ok-sign" style="color: #004C85;"></span><span> ไม่พบเหตุการณ์ความเสียหาย</span>
-													<?php }  ?>
+												<td><?= $row['incidence']; ?>
+													
 												</td>
-												<td><?= $row['loss_create']; ?></td>
-										
-												<td width="300">
- <button type='submit' name='submit' value='update' class="btn btn-primary" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-share'></i> รายงานเหตุการณ์</button>
+												<td><?= $row['loss_data_doc_createdate']; ?></td>
+												<?php 
+												$numImpact = $row['effect'].$row['chance']; 
+											if(checkLossLevel((int)$numImpact) == 1 ){
+echo '<td align="center" style="background-color: #00B050; color:#FFFFFF;"> ต่ำ </td>';
+											}else if(checkLossLevel((int)$numImpact) == 2){
+												echo '<td align="center" style="background-color: #FFFF00;color:#000000;"> ปานกลาง</td>';
+											}else if(checkLossLevel((int)$numImpact) == 3){
+												echo '<td align="center" style="background-color: #FFC000;color:#000000;"> สูง </td>';
+											}else if(checkLossLevel((int)$numImpact) == 4){
+												echo '<td align="center" style="background-color: #FF0000;color:#FFFFFF;"> สูงมาก </td>';
+											}else {
+												echo '<td align="center"> - </td>';
+											}
+												?>
+												<td width="100">
+ <button type='submit' name='submit' value='loss_data_list' class="btn btn-success" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-list-alt'></i> รายละเอียด</button>
+												</td>
+	
 
-
- <?php if (checkLossList($row['loss_data_doc_id']) > 0 ){ ?>
-
- 
-	<form action="loss_data_list.php" methed="post" style="display: inline;">
- <input type="hidden" value="<?= $row['loss_data_doc_id']; ?>" name="listId" id="listId">
- <input type="hidden" value="<?= $row['loss_data_doc_month']; ?>" name="m" id="m">
- <input type="hidden" value="<?= $row['loss_year']; ?>" name="y" id="y">
- <button type='submit'  class="btn btn-success" ><i class="glyphicon glyphicon-list-alt"></i> รายการเพิ่มเติม</button>
- </form>
- <?php }else{  ?>
-	<button disabled type='submit'  class="btn btn-dark" style="background-color: #949596; color:#FFFFFF;" ><i class="glyphicon glyphicon-list-alt" ></i> รายการเพิ่มเติม</button>
-<?php } ?>
-
-</td>
-												
 											</tr>
 
 										<?php } ?>
@@ -250,7 +111,13 @@ while ($row = mysqli_fetch_array($result)) {
 								<!-- end table -->
 
 							</div>
+							
 						</div>
+						<div align="center"><br> <a href="loss_data.php">
+						<span class="glyphicon glyphicon-menu-left"></span><span class="glyphicon glyphicon-menu-left"></span> ย้อนกลับ
+         
+						</a>
+         </div>
 					</div>
 				</div>
 			</div>
@@ -267,7 +134,7 @@ while ($row = mysqli_fetch_array($result)) {
 			<div class="modal-content">
 				<div class="modal-header" style="background-color:#004C85;color:#FFFFFF;">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title" style="font-family: 'Prompt', sans-serif;"> <span class="glyphicon glyphicon-list-alt"></span> รายงานความเสียหาย</h4>
+					<h4 class="modal-title" style="font-family: 'Prompt', sans-serif;"> <span class="glyphicon glyphicon-list-alt"></span> รายละเอียดข้อมูล</h4>
 				</div>
 				<div class="modal-body" align="left">
 
@@ -446,7 +313,7 @@ ORDER BY
 
 <script>
 	$(document).ready(function() {
-		var table = $('#exampleDataTable').DataTable({
+		var table = $('#dataTableList').DataTable({
 			responsive: true
 		});
 
