@@ -396,5 +396,5 @@ ORDER BY
 		$('#attech_name').val(attech_names);
 		
 	});
-	loss_type1
+
 </script>
