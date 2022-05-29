@@ -64,7 +64,7 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 	}
 
 	if ($uploadOk != 0) {
-
+		$qx = true;	
 		$stmt = $connect->prepare("INSERT INTO loss_data_doc_list
 (`loss_data_doc_id`,`happen_date`,`checked_date`,`incidence`,`incidence_detail`,`cause`,`user_effect`,`damage_type`,`incidence_type`,`loss_type`,`control`,`loss_value`,`chance`,`effect`,`damageLevel`,`dep_id_1`,`dep_id_2`,`dep_id_3`,`attech_name`
 ) VALUES
@@ -224,7 +224,7 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 				</div>
 			</div>
 			<!---------------->
-			<form method='post' action='loss_data.php' enctype="multipart/form-data">
+			<form method='post' id='idForm' action='insert_loss_data.php' enctype="multipart/form-data">
 				<div class="form-group" style="margin-top: 21px;">
 					<div class="row">
 
@@ -562,4 +562,23 @@ ORDER BY
 		$('#loss_data_doc_id').val(docId);
 
 	});
+
+
+</script>
+<script type="text/javascript">
+
+	jQuery(document).submit(function(e){
+    var form = jQuery(e.target);
+    if(form.is("#idForm")){ // check if this is the form that you want (delete this check to apply this to all forms)
+        e.preventDefault();
+        jQuery.ajax({
+            type: "POST",
+            url: form.attr("action"), 
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data) {
+             alert(data); // show response from the php script. (use the developer toolbar console, firefox firebug or chrome inspector console)
+            }
+        });
+    }
+});
 </script>
