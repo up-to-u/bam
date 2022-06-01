@@ -3,7 +3,7 @@
 	echo template_header();
 ?>
 	
-อยู่ระหว่างการออกแบบฐานข้อมูลและหน้าจอ 
+อยู่ระหว่างการรอ Requirement
 				
 <?echo template_footer();
 ?>

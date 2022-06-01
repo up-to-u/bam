@@ -177,7 +177,7 @@ if ($submit == 'update' && $update_id > 0) {
 			mysqli_commit($connect);
 			echo "<font color='green'><b>ระบบได้บันทึกข้อมูลของท่านแล้ว</b></font>";
 		} else {
-			echo "<font color='red'><b>ไม่สามารบันทึกข้อมูลได้กรุณาตรวจสอบลายเซ็นให้ถูกต้อง</b></font>";
+			echo "<font color='red'><b>ไม่สามารถบันทึกข้อมูลได้กรุณาตรวจสอบลายเซ็นให้ถูกต้อง</b></font>";
 		}
 
 		$upload_folder = 'contact/';

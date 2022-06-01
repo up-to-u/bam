@@ -2,18 +2,53 @@
 include('inc/include.inc.php');
 echo template_header();
 
-$sql = "SELECT department_name, group_name,department_level_no FROM user join department_level on department_level.department_level_id = user.level WHERE user_id=?";
+$sql = "SELECT department_id,department_name, group_name,division_name FROM user WHERE user_id=?";
 $stmt = $connect->prepare($sql);
-$stmt->bind_param("s", $user_id);
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $res1 = $stmt->get_result();
 if ($row_mem = $res1->fetch_assoc()) {
-	$deptName = $row_mem['department_name'];
+	$department_name = $row_mem['department_name'];
 	$groupName = $row_mem['group_name'];
-	$levelName = $row_mem['department_level_no'];
+	$division_name = $row_mem['division_name'];
+	$department_id = $row_mem['department_id'];
 }
+if ($_POST['submitLossDoc'] == 'submitLossDoc') {
+	$loss_data_doc_month = $_POST['loss_data_doc_month'];
+	$loss_year = $_POST['loss_year'];
+	$loss_have = $_POST['loss_have'];
+	$loss_dep = $_POST['loss_dep'];
+		$qx = true;	
+		$stmt = $connect->prepare("INSERT INTO loss_data_doc (`loss_data_doc_month`,`loss_year`,`loss_have`,`loss_dep`,`approve_id`,`approve_name`,`user_id`) VALUES
+		(?,?,?,?,?,?,?)");
 
+		if ($stmt) {
+			$stmt->bind_param(
+				'iiiiisi',
+				$loss_data_doc_month,
+				$loss_year,
+				$loss_have,
+				$loss_dep,
+				$approve_id,
+				$approve_name,
+				$user_id,
+			);
+			$q = $stmt->execute();
+			$qx = ($qx and $q);
+		
+			if ($qx) {
+				$connect->commit();
+				echo "<script>alert('ระบบได้บันทึกข้อมูลของท่านแล้ว');</script>";
+			
+			} else {
+				$connect->rollback();
+			}
+	
+		} else {
+			$error = "<script>alert('เกิดข้อผิดพลาด ระบบไม่สามารถบันทึกข้อมูลได้');</script>";
 
+		}
+}
 if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 	$loss_data_doc_id = $_POST['loss_data_doc_id'];
 	$happen_date = $_POST['happen_date'];
@@ -33,7 +68,6 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 	$dep_id_1 = $_POST['dep_id_1'];
 	$dep_id_2 = $_POST['dep_id_2'];
 	$dep_id_3 = $_POST['dep_id_3'];
-
 
 	$attech_name = ($_FILES["attech_name"]["name"]);
 	$uploadOk = 1;
@@ -66,13 +100,32 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 	if ($uploadOk != 0) {
 		$qx = true;	
 		$stmt = $connect->prepare("INSERT INTO loss_data_doc_list
-(`loss_data_doc_id`,`happen_date`,`checked_date`,`incidence`,`incidence_detail`,`cause`,`user_effect`,`damage_type`,`incidence_type`,`loss_type`,`control`,`loss_value`,`chance`,`effect`,`damageLevel`,`dep_id_1`,`dep_id_2`,`dep_id_3`,`attech_name`
-) VALUES
-(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		(`loss_data_doc_id`,
+		`happen_date`,
+		`checked_date`,
+		`incidence`,
+		`incidence_detail`,
+		`cause`,
+		`user_effect`,
+		`damage_type`,
+		`incidence_type`,
+		`loss_type`,
+		`control`,
+		`loss_value`,
+		`chance`,
+		`effect`,
+		`damageLevel`,
+		`dep_id_1`,
+		`dep_id_2`,
+		`dep_id_3`,
+		`attech_name`,
+		`doclist_user_id`) 
+		VALUES
+		(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		if ($stmt) {
 			$stmt->bind_param(
-				'issssssiiisiiisiiis',
+				'issssssiiisiiisiiisi',
 				$loss_data_doc_id,
 				$happen_date,
 				$checked_date,
@@ -91,31 +144,28 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 				$dep_id_1,
 				$dep_id_2,
 				$dep_id_3,
-				$attech_name
+				$attech_name,
+				$user_id
 			);
 			$q = $stmt->execute();
 			$qx = ($qx and $q);
 		
 			if ($qx) {
 				$connect->commit();
-				echo "<script>alert('ระบบได้บันทึกข้อมูลของท่านแล้ว');</script>";
+				echo "<script>alert('ระบบได้บันทึกข้อมูลของท่านแล้ว');
+				document.location.href('loss_data.php');
+				</script>";
+				
 			
 			} else {
 				$connect->rollback();
-			
-				echo '	111';
-				die();
 			}
-			$stmt->close();
-			$conn->close();
+		//	$stmt->close();
+		//	$conn->close();
 		} else {
-			$error = 'เกิดข้อผิดพลาด ระบบไม่สามารถบันทึกข้อมูลได้';
-			echo '	22';
-		
-			die();
-		}
-	
-	
+			$error = "<script>alert('เกิดข้อผิดพลาด ระบบไม่สามารถบันทึกข้อมูลได้');
+			document.location.href('loss_data.php');</script>";
+		}	
 	}
 }
 
@@ -131,8 +181,39 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 	}
 </style>
 
+<link rel="stylesheet" href="dist/css/bootstrap-select.css">
+<script src="dist/js/bootstrap-select.js"></script>
+<link href="jquery-ui-1.12.0/jquery-ui.css" rel="stylesheet">
+<script src="jquery-ui-1.12.0/jquery-ui.js"></script>
+<script language='JavaScript'>
+
+$(function () {
+ $(".datepicker").datepicker({ 
+  changeMonth: true,
+  changeYear: true, 
+  yearRange: '-10:+5',
+  dateFormat: 'yy-mm-dd', 
+  dayNames: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'],
+  dayNamesMin: ['อา','จ','อ','พ','พฤ','ศ','ส'],
+  montdocames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
+  monthNamesShort: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']
+ });
+});  
+
+</script>
+<?
+	$sql13="SELECT month_year_id as yid2 FROM loss_time";
+	$result13=mysqli_query($connect, $sql13);
+	$row13 = mysqli_fetch_array($result13);
+	$yid2 = $row13['yid2'];
+	$month_year=$yid2;
+	if ($yid2=='') {
+	$month_year=date('Y')+543;
+	}
+?>
 
 <div class="row">
+<label style="color:gray; font-size:10px;" class="pull-right"> Loss Data V1 - 31/05/65</label>
 	<div class="col-lg-12 col-lg-12 col-sm-12">
 		<div class="portlet light tasks-widget bordered">
 			<div class="portlet-title">
@@ -147,13 +228,14 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 				<div class="col-lg-3">
 				</div>
 				<div class="col-lg-3">
-					<b>สายงาน :</b> <?= $groupName; ?>
+		
+					<b>สายงาน :</b> <?= $division_name; ?>
 				</div>
 				<div class="col-lg-3">
-					<b>ฝ่าย :</b> <?= $deptName; ?>
+					<b>ฝ่าย :</b> <?= $department_name; ?>
 				</div>
 				<div class="col-lg-3">
-					<b>กลุ่มงาน :</b> <?= $levelName; ?>
+					<b>กลุ่มงาน :</b> <?= $groupName; ?>
 				</div>
 			</div>
 			<div class="row">
@@ -162,10 +244,60 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
 						<div class="details">
 							<div class="number"> <span data-counter="counterup">รอการอนุมัติ
-									<?php $i1 = 1;
-									$sqlCount1 = "SELECT COUNT(*) AS num FROM loss_data_doc_list WHERE status_approve =?";
+									<?php $i1 = 0;
+									$sqlCount1 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
+									join loss_data_doc on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
+									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ?";
 									$stmt = $connect->prepare($sqlCount1);
-									$stmt->bind_param("i", $i1);
+									$stmt->bind_param("ii", $i1,$department_id);
+									$stmt->execute();
+									$res = $stmt->get_result();
+									if ($rows = $res->fetch_assoc()) {
+										echo $rows['num'];
+									}
+									?>
+									คำขอ</span> </div>
+							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=0">
+									<< เรียกดูข้อมูลเพิ่มเติม>>
+								</a></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+					<div class="dashboard-stat dashboard-stat-v2 green">
+						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
+						<div class="details">
+							<div class="number"> <span data-counter="counterup">ส่งกลับแก้ไข 
+							<?php $i2 = 2;
+								$sqlCount2 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
+									join loss_data_doc on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
+									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ?";
+								$stmt = $connect->prepare($sqlCount2);
+								$stmt->bind_param("ii", $i2,$department_id);
+								$stmt->execute();
+								$res = $stmt->get_result();
+								if ($rows = $res->fetch_assoc()) {
+								echo $rows['num'];
+								}
+																								?>
+									คำขอ</span> </div>
+							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=2">
+									<< เรียกดูข้อมูลเพิ่มเติม>>
+								</a></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+					<div class="dashboard-stat dashboard-stat-v2 green">
+						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
+						<div class="details">
+							<div class="number"> <span data-counter="counterup">รายการอนุมัติแล้ว
+									<?php $i3 = 1;
+									$sqlCount3 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
+									join loss_data_doc on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
+									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ?";
+									$stmt = $connect->prepare($sqlCount3);
+									$stmt->bind_param("ii", $i3,$department_id);
 									$stmt->execute();
 									$res = $stmt->get_result();
 									if ($rows = $res->fetch_assoc()) {
@@ -174,57 +306,14 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 									?>
 									คำขอ</span> </div>
 							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=1">
-									<< เรียกดูขอมูลเพิ่มเติม>>
-								</a></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-					<div class="dashboard-stat dashboard-stat-v2 green">
-						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
-						<div class="details">
-							<div class="number"> <span data-counter="counterup">ส่งกลับแก้ไข <?php $i2 = 2;
-																								$sqlCount2 = "SELECT COUNT(*) AS num FROM loss_data_doc_list WHERE status_approve =?";
-																								$stmt = $connect->prepare($sqlCount2);
-																								$stmt->bind_param("i", $i2);
-																								$stmt->execute();
-																								$res = $stmt->get_result();
-																								if ($rows = $res->fetch_assoc()) {
-																									echo $rows['num'];
-																								}
-																								?>
-									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=2">
-									<< เรียกดูขอมูลเพิ่มเติม>>
-								</a></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-					<div class="dashboard-stat dashboard-stat-v2 green">
-						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
-						<div class="details">
-							<div class="number"> <span data-counter="counterup">ดำเนินการแล้วเสร็จ
-									<?php $i3 = 3;
-									$sqlCount3 = "SELECT COUNT(*) AS num FROM loss_data_doc_list WHERE status_approve =?";
-									$stmt = $connect->prepare($sqlCount3);
-									$stmt->bind_param("i", $i3);
-									$stmt->execute();
-									$res = $stmt->get_result();
-									if ($rows = $res->fetch_assoc()) {
-										echo $rows['num'];
-									}
-									?>
-									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=3">
-									<< เรียกดูขอมูลเพิ่มเติม>>
+									<< เรียกดูข้อมูลเพิ่มเติม>>
 								</a></div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<!---------------->
-			<form method='post' id='idForm' action='insert_loss_data.php' enctype="multipart/form-data">
+			<form method='post'  action='loss_data.php' enctype="multipart/form-data">
 				<div class="form-group" style="margin-top: 21px;">
 					<div class="row">
 
@@ -235,40 +324,30 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 
 									<div class="col-lg-3 margins-3">
 										<div class="form-group">
-											<label for="username" class="col-xs-12 col-lg-8 control-label " style="margin-top: 8px;">รายงานความเสียหายประจำเดือน : </label>
-											<div class="col-xs-12 col-lg-4">
-												<select name='department_level_id' class="form-control" style="display: inline;">
-													<option value='0'> - - - </option>
-													<option value="1"> มกราคม</option>
-													<option value="2"> กุมภาพันธ์</option>
-													<option value="3"> มีนาคม</option>
-													<option value="4"> เมษายน</option>
-													<option value="5"> พฤษภาคม</option>
-													<option value="6"> มิถุนายน</option>
-													<option value="7"> กรกฎาคม</option>
-													<option value="8"> สิงหาคม</option>
-													<option value="9"> กันยายน</option>
-													<option value="10"> ตุลาคม</option>
-													<option value="11"> พฤศจิกายน</option>
-													<option value="12"> ธันวาคม</option>
-												</select>
+											<label for="username" class="col-xs-12 col-lg-6 control-label " style="margin-top: 8px;">รายงานประจำเดือน  </label>
+											<div class="col-xs-12 col-lg-6">
+											
+											<select   class='form-control' id='loss_data_doc_month' name='loss_data_doc_month' style="display: inline;" >
+											<?  $sql1="SELECT *	FROM month 
+												JOIN loss_time ON loss_time.month_time_id =  month.month_id
+												ORDER BY 	month.month_id  ";
+												$result1=mysqli_query($connect, $sql1);
+												while ($row1 = mysqli_fetch_array($result1)) {	?>
+												<option value='<?=$row1['month_id']?>'><?=$row1['month_name']?></option>
+											<?	}?>
+											</select>
+												
 											</div>
 										</div>
 
 									</div>
 									<div class="col-lg-2 margins-3">
 										<div class="form-group">
-											<label for="username" class="col-xs-12 col-lg-3 control-label " style="margin-top: 8px;">ปี : </label>
+											<label for="username" class="col-xs-12 col-lg-3 control-label " style="margin-top: 8px;">ปี  </label>
 											<div class="col-xs-12 col-lg-9">
-												<select name='department_level_id' class="form-control" style="margin-bottom:5px;">
-													<option value='0'> - - - - - -</option>
-													<?php
-													$year = Date("Y") + 543;
-													for ($k =  ($year + 1); $k >=  ($year - 20); $k--) {
-														echo "<option value='" . $k . "'>  พ.ศ. $k </option>";
-													}
-
-													?>
+												<select name='loss_year' id='loss_year' class="form-control" style="margin-bottom:5px;">
+													<option value='<?=$month_year?>'><?=$month_year?></option>
+												
 												</select>
 											</div>
 										</div>
@@ -277,15 +356,16 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 
 
 									<div class="col-lg-2 margins-3" style="margin-left: 16px;">
-										<label class="radio-inline" style="padding-top: 5px;"><input type="radio" name="optradio"> พบเหตุการณ์ความเสียหาย
+										<label class="radio-inline" style="padding-top: 5px;"><input type="radio" name="loss_have" value="1">  พบเหตุการณ์ความเสียหาย
 										</label>
 									</div>
 									<div class="col-lg-3 margins-3" style="margin-left: 16px; margin-bottom:10px;">
-										<label class="radio-inline" style="padding-top: 5px;"><input type="radio" name="optradio"> ไม่พบเหตุการณ์ความเสียหาย
+										<label class="radio-inline" style="padding-top: 5px;"><input type="radio" name="loss_have" value="0"> ไม่พบเหตุการณ์ความเสียหาย
 										</label>
 									</div>
 									<div class="col-lg-1 margins-3 " align="center">
-										<button type='submit' name='submit' value='update' class="btn btn-danger"><i class='fa fa-save'></i> บันทึก
+									<input type="hidden" name="loss_dep" value="<?=$department_id; ?>">
+										<button type='submit' name='submitLossDoc' value='submitLossDoc' class="btn btn-danger"><i class='fa fa-save'></i> บันทึก
 										</button>
 									</div>
 
@@ -306,17 +386,19 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 								<table id="exampleDataTable" class="table table-striped table-bordered" style="width:100%">
 									<thead>
 										<tr>
-											<th>ช่วงเหตุการณ์</th>
-											<th>ผลการรายงาน</th>
-											<th align="center" width="90">วันที่บันทึก</th>
-											<th>จัดการ</th>
+											<th style='width:20%' >ช่วงเหตุการณ์</th>
+											<th style='width:30%' >ผลการรายงาน</th>
+											<th style='width:10%'>รายงานโดย</th>
+											<th style='width:10%'>วันที่บันทึก</th>
+											<th style='width:30%' >จัดการ</th>
 										</tr>
 									</thead>
 									<tbody>
 
 										<?php
-										$sql = "SELECT * FROM loss_data_doc order by loss_create DESC";
+										$sql = "SELECT * FROM loss_data_doc where loss_dep= ? order by loss_create DESC";
 										$stmt = $connect->prepare($sql);
+										$stmt->bind_param("i", $department_id);
 										$stmt->execute();
 										$result = $stmt->get_result();
 										while ($row = mysqli_fetch_array($result)) {
@@ -331,15 +413,11 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 														<span class="glyphicon glyphicon-ok-sign" style="color: #004C85;"></span><span> ไม่พบเหตุการณ์ความเสียหาย</span>
 													<?php }  ?>
 												</td>
-												<td style="vertical-align: middle;"><?= $row['loss_create']; ?></td>
-
+												<td style="vertical-align: middle;"><?=get_user_name($row['user_id'])?></td>
+												<td style="vertical-align: middle;"><?= mysqldate2th_date($row['loss_create']); ?></td>
 												<td style="vertical-align: middle;" width="300">
 													<button class="btn btn-primary confirmSendCase" data-doc-id="<?= $row['loss_data_doc_id']; ?>" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-share'></i> รายงานเหตุการณ์</button>
-
-
 													<?php if (checkLossList($row['loss_data_doc_id']) > 0) { ?>
-
-
 														<form action="loss_data_list.php" methed="post" style="display: inline;">
 															<input type="hidden" value="<?= $row['loss_data_doc_id']; ?>" name="listId" id="listId">
 															<input type="hidden" value="<?= $row['loss_data_doc_month']; ?>" name="m" id="m">
@@ -391,8 +469,8 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 
 									<div class="form-group">
 										<div class="row">
-											<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่เกิดเหตุการณ์</label><input type="text" class="form-control" name='happen_date' id='happen_date'></div>
-											<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่ตรวจพบ</label><input type="text" class="form-control" name='checked_date' id='checked_date'></div>
+											<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่เกิดเหตุการณ์</label><input type="text" class="form-control datepicker" name='happen_date' readonly id='happen_date'></div>
+											<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่ตรวจพบ</label><input type="text" class="form-control datepicker" name='checked_date' readonly id='checked_date'></div>
 											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">เหตุการณ์</label><input type="text" class="form-control" name='incidence' id='incidence'></div>
 											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">รายละเอียดเหตุการณ์<span style="color: red;">*</span></label><textarea id="incidence_detail" class="form-control" name="incidence_detail" rows="3" cols="50" style="min-height:80px;"></textarea></div>
 											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">สาเหตุ<span style="color: red;">*</span></label><textarea id="cause" class="form-control" name="cause" rows="3" cols="50" style="min-height:80px;"></textarea></div>
@@ -519,7 +597,7 @@ ORDER BY
 														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
 													<?		} ?>
 												</select></div>
-											<div class="col-lg-12"><label class="margins-top-10">Attach File</label>
+											<div class="col-lg-12"><label class="margins-top-10">เอกสารแนบ</label>
 												<input type="file" class="form-control"  name='attech_name'>
 												<input type='hidden' name='loss_data_doc_id' id='loss_data_doc_id'>
 											</div>
@@ -564,21 +642,4 @@ ORDER BY
 	});
 
 
-</script>
-<script type="text/javascript">
-
-	jQuery(document).submit(function(e){
-    var form = jQuery(e.target);
-    if(form.is("#idForm")){ // check if this is the form that you want (delete this check to apply this to all forms)
-        e.preventDefault();
-        jQuery.ajax({
-            type: "POST",
-            url: form.attr("action"), 
-            data: form.serialize(), // serializes the form's elements.
-            success: function(data) {
-             alert(data); // show response from the php script. (use the developer toolbar console, firefox firebug or chrome inspector console)
-            }
-        });
-    }
-});
 </script>
