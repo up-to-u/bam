@@ -1525,36 +1525,5 @@ function checkLossLevel($parameters)
 		return 0;
 	}
 }
-function deptName($parameters)
-{
-	    require('inc/connect.php');
-		$sql = "SELECT department_name FROM department WHERE department_id = '$parameters' ";
-		$qry = mysqli_query($connect, $sql);
-		if ($row = mysqli_fetch_array($qry)) {
-		return $row['department_name'];
-		}else{
-		return 0;
-		}
-		
-}
-function incidenceType($parameters)
-{
-	if($parameters == 9){
-		return "LET 1";
-	}else if($parameters == 10){
-		return "LET 2";
-	}else if($parameters == 11){
-		return "LET 3";
-	}else if($parameters == 12){
-		return "LET 4";
-	}else if($parameters == 13){
-		return "LET 5";
-	}else if($parameters == 14){
-		return "LET 6";
-	}else if($parameters == 15){
-		return "LET 7";
-	}else {
-		return "LET 8";
-	}
-}
+
 ?>

@@ -75,26 +75,16 @@ function template_header2($permission) {
 		<meta content="" name="author" />
 		<!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />-->
 		<link rel="shortcut icon" href="inc/theme/images/logo.png" />
-		
-		<link href="js/data-table/jquery-ui.min.css" rel="stylesheet" type="text/css" />
-		<link href="js/data-table/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
-		<link href="js/data-table/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
-		<link href="js/data-table/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
-		
 		<link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 		<link href="assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
 		<link href="assets/global/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
 		<link href="assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
 		<link href="assets/global/css/components-rounded.css" rel="stylesheet" id="style_components" type="text/css" />
-		<!-- <link href="assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" /> -->
+		<link href="assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
 		<link href="assets/layouts/layout/css/layout.css" rel="stylesheet" type="text/css" />
 		<link href="assets/layouts/layout/css/themes/light.css" rel="stylesheet" type="text/css" id="style_color" />
 		<link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
 		<link href="inc/bam.css" rel="stylesheet" type="text/css" />
-
-	
-
-
 		<script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 	</head>
 	<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
@@ -146,11 +136,13 @@ function template_header2($permission) {
 	
 	$item = array();
 	$item[] = array(
-		'name' => 'ข้อมูลส่วนตัว',
-		'icon' => 'icon-note',
+		'name' => 'หน้าหลัก',
+		'icon' => 'icon-home',
 		'type' => 1,
-		'url' => 'profile.php'
-	);		$item[] = array(
+		'url' => 'dashboard.php'
+	);	
+	
+	$item[] = array(
 		'name' => 'ยื่นขอสิทธิ์',
 		'icon' => 'icon-lock-open',
 		'type' => 1,
@@ -162,12 +154,15 @@ function template_header2($permission) {
 		'url' => 'user_directory.php'
 	);	
 	$item[] = array(
-			'name' => 'แจ้งเหตุการณ์ความเสียหาย ',
-			'icon' => 'fa fa-bolt',
-			'type' => 1,
-			'url' => 'loss_data.php'
-		);	
-	$item[] = array(			'name' => 'ประเมินความเสี่ยง CSA',			'icon' => 'icon-layers',			'list' => array(				'csa_user.php' => 'ประเมิน CSA',				/*'csa.php' => 'CSA',*/				'csa_approve.php' => 'อนุมัติรายการ CSA'			)	);		
+	'name' => 'เหตุการณ์ความเสียหาย',
+	'icon' => 'fa fa-bolt',
+	'list' => array('loss_data.php' => 'แจ้งเหตุการณ์ความเสียหาย','loss_data_approve.php' => 'อนุมัติเหตุการณ์ความเสียหาย'			)	);
+	
+	
+	$item[] = array(
+	'name' => 'ประเมินความเสี่ยง CSA',
+	'icon' => 'icon-layers',
+	'list' => array('csa_user.php' => 'ประเมิน CSA', /*'csa.php' => 'CSA',*/ 'csa_approve.php' => 'อนุมัติรายการ CSA'			)	);		
 	generate_menu($item, $cf);	
 
 	$k = array_keys($permission);
@@ -177,6 +172,12 @@ function template_header2($permission) {
 	}
 	
 	$item = array();
+	$item[] = array(
+		'name' => 'ข้อมูลส่วนตัว',
+		'icon' => 'icon-note',
+		'type' => 1,
+		'url' => 'profile.php'
+	);	
 	$item[] = array(
 		'name' => 'ออกจากระบบ',
 		'icon' => 'icon-power',
@@ -226,10 +227,6 @@ function template_footer2() {
 			<div class="page-footer">
 			</div>
 		</div>
-
-	
-
-		
 		<script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 		<script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
 		<script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
@@ -237,15 +234,9 @@ function template_footer2() {
 		<script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 		<script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
 		<script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
-	    <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
+	        <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
 		<script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 		<script src="assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
-
-		<script src="js/data-table/jquery.dataTables.min.js" type="text/javascript"></script>
-		<script src="js/data-table/dataTables.bootstrap.min.js" type="text/javascript"></script>
-		<script src="js/data-table/dataTables.fixedHeader.min.js" type="text/javascript"></script>
-		<script src="js/data-table/dataTables.responsive.min.js" type="text/javascript"></script>
-		
 	</body>
 </html>
 <?
@@ -308,10 +299,11 @@ function menu_item_newUI($p, $current_filename) {
 				'name' => 'จัดการ Lossdata',
 				'icon' => 'icon-user-following',
 				'list' => array(
+					'loss_data_risk.php' => 'ตรวจสอบรายการเหตุการณ์',
 					'loss_data_admin.php' => 'จัดการรายการเหตุการณ์',
-					'loss_data_adminmanage.php' => 'ปรับสถานะรายการ',
+					'loss_data_adminmanage.php' => 'สรุปรายงานประจำเดือน',
 					'loss_data_report.php' => 'ทะเบียนสรุปรายงานประจำปี',
-					'loss_data_graph.php' => 'รายงานแผนภาพ'
+					'loss_admin_master.php' => 'จัดการชุดข้อมูล'
 			)
 		);
 		generate_menu($item,$current_filename);  
@@ -325,7 +317,12 @@ function menu_item_newUI($p, $current_filename) {
 				'icon' => 'icon-user-following',
 				'list' => array(
 					'csa_admin.php' => 'CSA Admin',
-					'csa_permission.php' => 'กำหนดสิทธิ์',					'csa_admin_q.php' => 'แบบสอบถาม',						'csa_admin_factor.php' => 'ปัจจัยเสี่ยง',					'job_function.php' => 'Job Function'	
+					'csa_permission.php' => 'กำหนดสิทธิ์',					'csa_admin_q.php' => 'แบบสอบถาม',						'csa_admin_factor.php' => 'ปัจจัยเสี่ยง',
+					'csa_admin_control.php' => 'การควบคุม',
+					'csa_admin_risk_type.php' => 'ประเภทความเสี่ยง',					'job_function.php' => 'Job Function',
+					'csa_responsibility.php' => 'ขอบเขตหน้าที่',
+					'csa_audit.php' => 'รายงานผลการตรวจสอบ',
+					'csa_admin_risk_matrix.php' => 'Risk Matrix'	
 			)
 		);
 		generate_menu($item,$current_filename);  

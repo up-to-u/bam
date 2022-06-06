@@ -264,18 +264,20 @@ if ($submit == 'add') {
 	$csa_dep_list = array();
 	$sql = "SELECT 
 		c.*,
-		d.department_name AS dep_name
+		d.department_name AS dep_name1,
+		d2.department_name AS dep_name2
 	FROM csa_department c
-	JOIN department d ON c.department_id = d.department_id 
+	JOIN department d ON c.department_id3 = d.department_id 
+	JOIN department d2 ON c.department_id2 = d2.department_id 
 	WHERE 
 		c.csa_year = '$view_year' AND 
 		c.mark_del = '0' 
 	ORDER BY
-		d.department_no,
-		d.department_name ";
+		dep_name2,
+		dep_name1";
 	$result2 = mysqli_query($connect, $sql);
 	while ($row2 = mysqli_fetch_array($result2)) {	
-		$csa_dep_list[] = array($row2['csa_department_id'], $row2['dep_name'], $row2['department_name']);
+		$csa_dep_list[] = array($row2['csa_department_id'], $row2['dep_name2'].' - '.$row2['dep_name1'], $row2['department_name']);
 	}
 ?>
 
@@ -375,7 +377,7 @@ function save_tab() {
 	d.department_name AS csa_dep_name
 	FROM auth_request a
 	JOIN csa_department c ON a.csa_department_id = c.csa_department_id
-	JOIN department d ON c.department_id = d.department_id
+	JOIN department d ON c.department_id3 = d.department_id
 	LEFT JOIN auth_request_type aut ON a.auth_request_type_id = aut.auth_request_type_id
 	WHERE 
 		a.user_id = '$user_id' AND 

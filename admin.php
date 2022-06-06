@@ -42,24 +42,25 @@
 						LEFT JOIN department ON user.department_id = department.department_id 
 						WHERE 
 						user.userName='$login' AND 
-						user.status=0
+						user.mark_del=0
 						LIMIT 1 ";	
+
 						$result=mysqli_query($connect, $sql);
 						if ($row = mysqli_fetch_array($result)) {		
-							$sql="SELECT * FROM user LEFT JOIN department ON user.department_id = department.department_id WHERE user.userName='$login' AND password = '$password' AND user.status=0 LIMIT 1 ";						
+							$sql="SELECT * FROM user LEFT JOIN department ON user.department_id = department.department_id WHERE user.userName='$login' AND password = '$password' AND user.mark_del=0 LIMIT 1 ";						
 							$result=mysqli_query($connect, $sql);
 							if ($row = mysqli_fetch_array($result)) {		
 								set_login($row['user_id'], $row['code'], $row['department_id'], $row['department_no'], md5($row['user_id'].'S#A*D#@$er%ewr%@6Q)#$'), $t='cookie');
 								
 								if ($row['department_id']==0) {
-									header("Location: profile.php");
+									header("Location: dashboard.php");
 									exit;
 								} else if ($fwd!='') {
 									if (strpos($fwd, 'https://')>0) $fwd = 'https://'.$_SERVER['SERVER_NAME'].$fwd;
 									header("Location: $fwd");
 									exit;
 								} else {
-									header("Location: profile.php");				
+									header("Location: dashboard.php");				
 									exit;
 								}
 							} else {
@@ -68,8 +69,9 @@
 						} else {
 							$msg = "เกิดข้อผิดพลาด login ไม่ถูกต้อง<br>";
 						}
+
 						
-					} else if ($authen_mode==1) { // ad
+					} else if ($authen_mode==1) { /* ad */
 					
 						$login = strtoupper(trim($login));
 						$info = array();
@@ -82,8 +84,7 @@
 							if ($code=='' || $code==0) {
 								$msg = "เกิดข้อผิดพลาดภายใน ไม่พบรหัสพนักงานจาก AD<br>";
 							} else {
-								//$sql="SELECT COUNT(*) AS num FROM user WHERE user.userName='$login' AND user.status=0 ";						
-								$sql="SELECT COUNT(*) AS num FROM user WHERE user.code='$code' AND user.status=0 ";
+								$sql="SELECT COUNT(*) AS num FROM user WHERE user.code='$code' AND user.mark_del=0 ";
 								$result=mysqli_query($connect, $sql);
 								$row = mysqli_fetch_array($result);
 								if ($row['num']==0) {
@@ -100,7 +101,7 @@
 									if (!is_numeric($info['code'])) $info['code'] = 0;
 									//if ($dep_id==0) $dep_id = 38;
 									
-									$sql="INSERT INTO `user` (`code`, `userName` , `password`, `name`, `surname`, `name_en`, `surname_en`, `pid`, `tel`, `mobile`, `position`, `department_id`, `level` , `status`, `create_date`) VALUES 
+									$sql="INSERT INTO `user` (`code`, `userName` , `password`, `name`, `surname`, `name_en`, `surname_en`, `pid`, `tel`, `mobile`, `position`, `department_id`, `level` , `mark_del`, `create_date`) VALUES 
 									('$info[code]', '$login', '', '$info[name]', '$info[surname]', '$info[name_en]', '$info[surname_en]', '$info[pid]', '$info[tel]', '', '$info[position]', '$dep_id', '$info[level]', '0', now())";
 									$q = mysqli_query($connect, $sql);
 									$qx = ($qx and $q);						
@@ -117,7 +118,7 @@
 							}
 						
 							if ($pass) {
-								$sql="SELECT * FROM user LEFT JOIN department ON user.department_id = department.department_id WHERE user.userName='$login' AND user.status=0 LIMIT 1 ";						
+								$sql="SELECT * FROM user LEFT JOIN department ON user.department_id = department.department_id WHERE user.userName='$login' AND user.mark_del=0 LIMIT 1 ";						
 								$result=mysqli_query($connect, $sql);
 								if ($row = mysqli_fetch_array($result)) {						
 									set_login($row['user_id'], $row['code'], $row['department_id'], $row['department_no'], md5($row['user_id'].'S#A*D#@$er%ewr%@6Q)#$'), $t='cookie');
@@ -264,10 +265,10 @@ body{
           <div class="col-lg-6 d-flex align-items-center justify-content-center">
             <div class="auth-form-transparent text-left p-3">
               <div class="brand-logo">
-                <img src="inc/theme/images/logo.png" width='50px' alt="logo">
+                <img src="images/bam_logo.png" style='width:360px' alt="logo">
               </div>
-              <h4>ระบบบริหารความเสี่ยง </h4>
-              <h6 class="font-weight-light">Risk management system</h6>
+              <h4 style='font-size: 28px; font-weight: bold'>ระบบบริหารความเสี่ยง </h4>
+              <h6 class="font-weight-light" style='font-size: 20px'>Risk management system</h6>
               <form class="login-form" action="admin.php" method="post" novalidate="novalidate"  onSubmit='//return cf()'>
               <input type='hidden' name='fwd' value='<?=$ref?>'>
               <?if ($msg!=''){?>				
@@ -278,7 +279,7 @@ body{
           <?}?>	
 				<br>
                 <div class="form-group">
-                  <label for="exampleInputEmail">ชื่อเข้าสู่ระบบ Username</label>
+                  <label for="exampleInputEmail" style='font-size: 16px;'>ชื่อเข้าสู่ระบบ Username</label>
                   <div class="input-group">
                     <div class="input-group-prepend bg-transparent">
                       <span class="input-group-text bg-transparent border-right-0">
@@ -326,7 +327,10 @@ body{
 
 
 <?	
-	} else {
+		exit;
+	} 
+	
+	
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -358,10 +362,10 @@ body{
           <div class="col-lg-6 d-flex align-items-center justify-content-center">
             <div class="auth-form-transparent text-left p-3">
               <div class="brand-logo">
-                <img src="inc/theme/images/logo.png" width='50px' alt="logo">
+                <img src="images/bam_logo.png" style='width:360px' alt="logo">
               </div>
-              <h4>ระบบบริหารความเสี่ยง </h4>
-              <h6 class="font-weight-light">Risk management system</h6>
+              <h4 style='font-size: 28px; font-weight: bold'>ระบบบริหารความเสี่ยง </h4>
+              <h6 class="font-weight-light" style='font-size: 20px'>Risk management system</h6>
               <form class="login-form" action="admin.php" method="post" novalidate="novalidate"  onSubmit='//return cf()'>
               <input type='hidden' name='fwd' value='<?=$ref?>'>
               <?if ($msg!=''){?>				
@@ -372,7 +376,7 @@ body{
           <?}?>	
 					<br>
                 <div class="form-group">
-                  <label for="exampleInputEmail">ชื่อเข้าสู่ระบบ Login name</label>
+                  <label for="exampleInputEmail" style='font-size: 16px;'>ชื่อเข้าสู่ระบบ Login name</label>
                   <div class="input-group">
                     <div class="input-group-prepend bg-transparent">
                       <span class="input-group-text bg-transparent border-right-0">
@@ -384,7 +388,7 @@ body{
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword">รหัสผ่าน Password</label>
+                  <label for="exampleInputPassword" style='font-size: 16px;'>รหัสผ่าน Password</label>
                   <div class="input-group">
                     <div class="input-group-prepend bg-transparent">
                       <span class="input-group-text bg-transparent border-right-0">
@@ -430,5 +434,3 @@ body{
   <!-- endinject -->
 </body>
 </html>
-
-<?	}?>

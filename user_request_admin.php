@@ -14,11 +14,12 @@ if ($edit_id>0) {
 	aut0.auth_request_type_name AS auth_request_type_name_old,
 	aut.auth_request_type_name,
 	(SELECT CONCAT(prefix, name, ' ', surname) FROM user u WHERE u.code = a.user_code) AS uname,
-	c.department_name AS csa_section_name,
+	d2.department_name AS csa_dep_name2,
 	d.department_name AS csa_dep_name
 	FROM auth_request a
 	JOIN csa_department c ON a.csa_department_id = c.csa_department_id
-	JOIN department d ON c.department_id = d.department_id
+	JOIN department d ON c.department_id3 = d.department_id
+	JOIN department d2 ON c.department_id2 = d2.department_id
 	LEFT JOIN auth_request_type aut0 ON a.auth_request_type_id_old = aut0.auth_request_type_id
 	LEFT JOIN auth_request_type aut ON a.auth_request_type_id = aut.auth_request_type_id
 	WHERE
@@ -58,7 +59,7 @@ if ($edit_id>0) {
 				</div>	
 				<div class="form-group">
 				  <label>ฝ่ายประเมินความเสี่ยง</label>
-				  <input type="text" class="form-control" readonly value='<?=$row2['csa_dep_name']?> <?=$row2['csa_section_name']?>'>
+				  <textarea rows='3' class="form-control" readonly><?=$row2['csa_dep_name2']?> - <?=$row2['csa_dep_name']?></textarea>
 				</div>	
 				<div class="form-group">
 				  <label>ประเภทคำขอ</label>

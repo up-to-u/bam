@@ -1,316 +1,563 @@
-<?php
-
-function work_method($m) {
-	switch ($m) {
-		case 0: return 'ไม่ระบุ';
-		case 1: return 'จัดซื้อจัดจ้าง';
-		case 2: return 'ให้ทุน';
-		case 3: return 'ร่วมโครงการ';
-		case 4: return 'ร่วมทุน';
-		case 5: return 'ดำเนินการเอง';
-	}
-}
-
-// report
-function result_env($s) {
-	if ($s<1.5) return 'ต้องปรับปรุงโดยเร่งด่วน';
-	if ($s<2.5) return 'ควรปรับปรุง';
-	if ($s<3.5) return 'ปานกลาง';
-	if ($s<4.5) return 'ดี';
-	return 'ดีมาก';
-	
-	/*if ($s<=1.4) return 'ต้องปรับปรุงโดยเร่งด่วน';
-	if ($s<=2.4) return 'ควรปรับปรุง';
-	if ($s<=3.4) return 'ปานกลาง';
-	if ($s<=4.4) return 'ดี';
-	return 'ดีมาก';	*/
-}
-
-function envi($t) {
-	switch ($t) {
-		case 1: return '1. สภาพแวดล้อมการควบคุม (Control Environment)';
-		case 2: return '2. การประเมินความเสี่ยง (Risk Assessment)'; 
-		case 3: return '3. กิจกรรมการควบคุม (Control Activities)';
-		case 4: return '4. สารสนเทศและการสื่อสาร (Information & Communication)';
-		case 5: return '5. การติดตาม (Monitoring)';
-	}	
-}
-// end report
-
-// include
-function level_frequency($v) {
-	switch ($v) {
-		case 1: return 'มีโอกาสเกิดน้อยกว่า 1% / 5 ปีต่อครั้ง';
-		case 2: return 'มีโอกาสเกิด 1.01-5% / 2-3 ปีต่อครั้ง';
-		case 3: return 'มีโอกาสเกิด 5.01-10% / 1 ปีต่อครั้ง';
-		case 4: return 'มีโอกาสเกิด 10.01-15% / 1-6 เดือนต่อครั้ง แต่ไม่เกิน 5 ครั้ง';
-		case 5: return 'มีโอกาสเกิดมากกว่า 15% / 1 เดือนต่อครั้งหรือมากกว่า';
-	}
-}
-
-function level_value($v) {
-	switch ($v) {
-		case 1: return 'น้อยมาก';
-		case 2: return 'น้อย';
-		case 3: return 'ปานกลาง';
-		case 4: return 'สูง';
-		case 5: return 'สูงมาก';
-	}
-}
-
-function test_env_report($s) {
-	if ($s<1.5) return 'ต้องปรับปรุงโดยเร่งด่วน';
-	if ($s<2.5) return 'ควรปรับปรุง';
-	if ($s<3.5) return 'ปานกลาง';
-	if ($s<4.5) return 'ดี';
-	return 'ดีมาก';
-	
-	/*if ($s<=1.4) return 'ต้องปรับปรุงโดยเร่งด่วน';
-	if ($s<=2.4) return 'ควรปรับปรุง';
-	if ($s<=3.4) return 'ปานกลาง';
-	if ($s<=4.4) return 'ดี';
-	return 'ดีมาก';
-	/*if ($s<=0.7) return 'ต้องปรับปรุงโดยเร่งด่วน';
-	if ($s<=1.2) return 'ควรปรับปรุง';
-	if ($s<=1.7) return 'ปานกลาง';
-	if ($s<=2.2) return 'ดี';
-	return 'ดีมาก';*/
-}
-
-function test_env($s) {
-	if ($s<=0.7) return 'ต้องปรับปรุงโดยเร่งด่วน';
-	if ($s<=1.2) return 'ควรปรับปรุง';
-	if ($s<=1.7) return 'ปานกลาง';
-	if ($s<=2.2) return 'ดี';
-	return 'ดีมาก';
-}
-
-function test_env2_report($s) {
-	if ($s<1.5) return 0;
-	if ($s<2.5) return 1;
-	if ($s<3.5) return 2;
-	if ($s<4.5) return 3;
-	return 4;
-	
-	/*if ($s<=0.7) return 0;
-	if ($s<=1.2) return 1;
-	if ($s<=1.7) return 2;
-	if ($s<=2.2) return 3;
-	return 4;	*/
-	
-	/*if ($s<=1.4) return 0;
-	if ($s<=2.4) return 1;
-	if ($s<=3.4) return 2;
-	if ($s<=4.4) return 3;
-	return 4;	*/
-	/*if ($s<=1.4) return 1;
-	if ($s<=2.4) return 2;
-	if ($s<=3.4) return 3;
-	if ($s<=4.4) return 4;
-	return 5;*/
-}
-
-function test_env2($s) {
-	if ($s<=0.7) return 0;
-	if ($s<=1.2) return 1;
-	if ($s<=1.7) return 2;
-	if ($s<=2.2) return 3;
-	return 4;
-}
-
-function control_approach ($t) {
-	switch ($t) {
-		case 1: return 'ยอมรับความเสี่ยง (ACCEPT/Take)';
-		case 2: return 'ลดความเสี่ยง (REDUCTION/Treat)';
-		case 3: return 'หลีกเลี่ยงความเสี่ยง (AVOID/Terminate)';
-		case 4: return 'โอนย้ายความเสี่ยง (SHARING/transfer)';
-	}
-}
-
-function control_approach_full ($t) {
-	switch ($t) {
-		case 1: return 'การยอมรับความเสี่ยงที่เกิดขึ้น (ACCEPT/Take)';
-		case 2: return 'การลด/การควบคุมความเสี่ยง (REDUCTION/Treat) เช่น แผนจัดการความเสี่ยง หรือการปรับปรุงระบบการทำงาน';
-		case 3: return 'หลีกเลี่ยงความเสี่ยง (AVOID/Terminate)';
-		case 4: return 'การถ่ายโอนความเสี่ยงให้ผู้อื่นช่วยแบ่งความรับผิดชอบ (SHARING/transfer) เช่น ทำประกัน จ้างผู้ให้บริการภายนอก';
-	}
-}
-
-function level_acceptable($t) {
-	switch ($t) {
-		case 1: return 'เกิดข้อผิดพลาดไม่เกิน 5% ของเรื่องที่ต้องการวัด';
-		case 2: return 'ระบบงานขัดข้องไม่สามารถปฏิบัติงานได้ ไม่เกิน 1 ชั่วโมง';
-		case 3: return 'ระบุเพิ่มเติมจากที่กำหนดข้างต้น';
-	}
-}
-
-function level_alert($t) {
-	switch ($t) {
-		case 1: return 'เกิดข้อผิดพลาด 5.01 - 10.01 % ของเรื่องที่ต้องการวัด';
-		case 2: return 'ระบบงานขัดข้องไม่สามารถปฏิบัติงานได้ มากกว่า 1 - 4 ชั่วโมง';
-		case 3: return 'ระบุเพิ่มเติมจากที่กำหนดข้างต้น';
-	}
-}
-
-function level_problem($t) {
-	switch ($t) {
-		case 1: return 'เกิดข้อผิดพลาดตั้งแต่ 10.01 % ขึ้นไป';
-		case 2: return 'ระบบงานขัดข้องไม่สามารถปฏิบัติงานได้ มากกว่า 8 ชั่วโมงขึ้นไป';
-		case 3: return 'ระบุเพิ่มเติมจากที่กำหนดข้างต้น';
-	}
-}
-
-function factor_int ($t) {
-	switch ($t) {
-		case 1: return 'ด้านกลยุทธ์และการแข่งขัน';
-		case 2: return 'ด้านการเงิน';
-		case 3: return 'ด้านการดำเนินการ';
-		case 4: return 'ด้านทรัพยากรบุคคล';
-	}
-}
-
-function factor_ext ($t) {
-	switch ($t) {
-		case 1: return 'ด้านพันธมิตร';
-		case 2: return 'ด้านกฎระเบียบข้อกฎหมาย';
-		case 3: return 'ด้านเศรษฐกิจ นโยบาย การเมือง';
-	}
-}
-
-function risk_event ($t) {
-	switch ($t) {
-		case 1: return 'การขาดความเข้าใจร่วมกันเกี่ยวกับเป้าหมายที่โครงการต้องการดำเนินการให้บรรลุผลสำเร็จ';
-		case 2: return 'การขาดความชัดเจนเกี่ยวกับผลลัพธ์พึงประสงค์จากโครงการ';
-		case 3: return 'การขาดรายละเอียดของผู้ที่จะได้รับผลประโยชน์จากโครงการ และการเข้าถึงผลผลิตของ';
-		case 4: return 'การขาดการรับรู้ว่า ถึงความสำเร็จของโครงการต่อองค์กร';
-		case 5: return 'การขาดการเตรียมการและความพร้อมในการเปลี่ยนแปลงวิธีการทำงานของบุคคล';
-		case 6: return 'การที่ไม่ได้เกิดการปรับตัวภายในองค์กรเพื่ออำนวยความสะดวกในการดำเนินโครงการ';
-		case 7: return 'ความไม่ลงรอยกันหรือความล่าช้าของการตัดสินใจกรณีที่ผู้บริหารที่สนับสนุนโครงการมีมากกว่า 2 คนขึ้นไป';
-		case 8: return 'ขาดกิจกรรมการมีส่วนร่วมอย่างสร้างสรรค์และทั่วถึงของผู้ที่เข้าร่วมประชุม';
-		case 9: return 'ไม่สามารถสร้างการรับรู้ถึงประโยชน์ที่จะเกิดกับผู้เข้าร่วมประชุมเกี่ยวกับตัวโครงการ';
-		case 10: return 'ไม่มีความเข้าใจหรือรับรู้ชัดเจนเกี่ยวกับความคาดหวังขององค์กรต่อผู้มีส่วนร่วมในโครงการ ';
-		case 11: return 'การสื่อสารทางเดียว ไม่ได้เปิดให้มีการแสดงหรือแลกเปลี่ยนความคิดเห็นจากผู้ที่ร่วมการประชุม เพื่อให้โครงการเป็นประโยชน์ต่อองค์กรมากที่สุด หรือแนวทางในการดำเนินงานโครงการให้ง่ายขึ้น หรือมีประสิทธิภาพมากขึ้น';
-		case 12: return 'ผู้บริหารที่เป็นผู้สนับสนุนโครงการ ไม่ได้เข้าร่วมรับฟังหรือการตัดสินใจในการประชุมตามความจำเป็น';
-		case 13: return 'เป็นการสื่อสารทางเดียว ไม่ได้เปิดให้มีการแสดงหรือแลกเปลี่ยนความคิดเห็นจากผู้ที่ร่วมการประชุม เพื่อให้โครงการเป็นประโยชน์ต่อองค์กรมากที่สุด หรือแนวทางในการดำเนินงานโครงการให้ง่ายขึ้น หรือมีประสิทธิภาพมากขึ้น';
-		case 14: return 'ผู้บริหารที่เป็นผู้สนับสนุนโครงการ (Project Sponsor)  ไม่ได้เข้าร่วมรับฟังหรือการตัดสินใจในการประชุมตามความจำเป็น';
-		case 15: return 'ผู้ที่ทำหน้าที่กำหนดกรอบตารางเวลาดำเนินโครงการขาดประสบการณ์ที่เพียงพอ';
-		case 16: return 'ขาดข้อมูลกรอบเวลาการดำเนินงานโครงการในอดีตเพื่อประกอบการพิจารณากำหนดกรอบเวลาของโครงการที่กำลังจะดำเนินการพิจารณาในปีงบประมาณปัจจุบัน';
-		case 17: return 'ผู้ที่ทำหน้าที่กำหนดกรอบตารางเวลาดำเนินโครงการขาดประสบการณ์ที่เพียงพอ';
-		case 18: return 'ขาดข้อมูลกรอบเวลาการดำเนินงานโครงการในอดีตเพื่อประกอบการพิจารณากำหนดกรอบเวลาของโครงการที่กำลังจะดำเนินการพิจารณาในปีงบประมาณปัจจุบัน';
-		case 19: return 'โครงการที่จะพิจารณาวางกรอบเวลาเป็นโครงการใหม่ที่ไม่คุ้นเคยหรือมีประสบการณ์มาก่อน';
-		case 20: return 'เทคโนโลยีที่ใช้ในโครงการเป็นเทคโนโลยีใหม่ ซึ่งอาจจะมีผลให้ตารางเวลาดำเนินงานโครงการแตกต่างจากโครงการที่เคยใช้เทคโนโลยีเดิม เพราะต้องการเวลาในการเรียนรู้และศึกษาเกี่ยวกับเทคโนโลยีใหม่เพิ่มเติม';
-		case 21: return 'ทีมงานที่ดำเนินโครงการเป็นทีมใหม่ที่ไม่มีบทเรียนหรือการเรียนรู้เกี่ยวกับตารางและเวลาในการดำเนินโครงการ';
-		case 22: return 'การเริ่มต้นและสิ้นสุดโครงการขึ้นกับปัจจัยภายนอกที่อยู่นอกเหนือการควบคุมของผู้รับผิดชอบและทีมงานโครงการ';
-		case 23: return 'ไม่สามารถสืบสาวย้อนหลังไปหาโครงการที่เคยดำเนินการมาแล้วเพื่อที่นำมาใช้เป็นข้อมูลพื้นฐานในการกำหนดตารางเวลาทำโครงการ';
-		case 24: return 'สมมติฐานการวางตารางเวลาการดำเนินโครงการเป็นการมองโลกในแง่ดีเกินไป (Over-optimistic side)';
-		case 25: return 'ขาดการทำการวิเคราะห์ความไวหรือความไหวตัว (Sensitivity Analysis) หรือการวิเคราะห์ฉากทัศน์ (Scenario Analysis) ก่อนการกำหนดตารางเวลาการดำเนินงานโครงการ';
-		case 26: return 'การจัดตารางเวลาการดำเนินโครงการถูกจำกัดด้วยงบประมาณ และ/หรือทรัพยากรที่จะใช้ในการดำเนินโครงการ';
-		case 27: return 'ไม่มีบรรทัดฐาน ค่าเฉลี่ยของอุตสาหกรรมหรือมาตรฐานเพื่อช่วยในการกำหนดตารางเวลาการดำเนินโครงการ';
-		case 28: return 'ขาดการมีส่วนร่วมของผู้ที่มีความรู้ และการดำเนินการจัดตารางเวลาดำเนินโครง ดำเนินการโดยบุคลากรเพียงไม่กี่คน';
-		case 29: return 'ขาดการสร้างบทเรียนความเสี่ยงจากโครงการที่ดำเนินการไปแล้วเพื่อใช้ในการเรียนรู้ซึ่งทำให้มีโอกาสที่จะผิดพลาดซ้ำๆ';
-		case 30: return 'ขาดการแบ่งปันแลกเปลี่ยนแนวทางการจัดการความเสี่ยงโครงการที่เคยมีการใช้มาแล้วทำให้ขาดความเท่าเทียมกันในศักยภาพและความพร้อมในการจัดการกับความเสี่ยง';
-		case 31: return 'ขาดข้อมูลความเสี่ยงและผลกระทบที่เกิดขึ้นจริงกับโครงการและองค์กร เพื่อจะได้กำหนดเกณฑ์ความเสี่ยงที่ยอมรับได้ และที่เกินกว่าเกณฑ์ที่ยอมรับได้';
-		case 32: return 'การขาดความเข้าใจอย่างเพียงพอว่าการสื่อสารควรจะเกิดในช่วงเวลาใดของโครงการบ้าง';
-		case 33: return 'ขาดความรู้ว่าประเด็นใดบ้างที่ควรจะมีการสื่อสารในโครงการ';
-		case 34: return 'ขาดการสร้างความพร้อมและการปรับทัศนคติให้ทีมงานในโครงการรับข้อมูลจากการสื่อสารแบบเปิดใจกว้าง';
-	}	
-}
-
-function risk_type ($t) {
-	switch ($t) {
-		case 1: return 'ความเสี่ยงด้านกลยุทธ์ (Strategic Risk)';
-		case 2: return 'ความเสี่ยงด้านการปฏิบัติการ (Operational Risk)';
-		case 3: return 'ความเสี่ยงด้านการเงินและรายงาน (Financial Risk)';
-		case 4: return 'ความเสี่ยงด้านกฎหมาย กฎเกณฑ์ต่างๆ (Compliance Risk)';
-		case 5: return 'การบริหารจัดการที่ดี (Good Governance)';
-		case 6: return 'ความเสี่ยงด้านการเทคโนโลยีสารสนเทศ (Information Technology Risk)';
-	}
-}
-
-function risk_category ($t) {
-	switch ($t) {
-		case 1: return 'การแข่งขันของตลาด';
-		case 2: return 'การไม่เข้าใจความต้องการของลูกค้า';
-		case 3: return 'นโยบายผิดพลาด';
-		case 4: return 'การเมืองแทรกแซง';
-		case 5: return 'บุคลากร - ความสามารถไม่เพียงพอ';
-		case 6: return 'บุคลากร - ประมาทเลินเล่อ';
-		case 7: return 'บุคลากร - ทุจริต';
-		case 8: return 'บุคลากร - พึ่งพาบุคลากรหลัก';
-		case 9: return 'การปฎบัติงาน - ความผิดพลาดจากวิธีการ';
-		case 10: return 'การปฎบัติงาน - ความผิดพลาดจากการทำรายการ';
-		case 11: return 'การปฎบัติงาน - การอนุมัติรายการ';
-		case 12: return 'เทคโนโลยี - ระบบงานขัดข้อง';
-		case 13: return 'เทคโนโลยี - ระบบการสื่อสารขัดข้อง';
-		case 14: return 'เทคโนโลยี - ความปลอดภัยของข้อมูล';
-		case 15: return 'เทคโนโลยี - Programming Error';
-		case 16: return 'ปัจจัยภายนอก - การปฎิบัติไม่เป็นไปตามสัญญาของ Vendor';
-		case 17: return 'ปัจจัยภายนอก - ภัยพิบัติต่างๆ';
-		case 18: return 'ขาดสภาพคล่อง';
-		case 19: return 'ขาดเครดิต';
-		case 20: return 'อัตราดอกเบี้ยรับ และผลตอบแทนต่ำลง';
-		case 21: return 'งบประมาณไม่เพียงพอ';
-		case 22: return 'การปฎิบัติที่ผิดกฎหมาย ระเบียบ ข้อบังคับ';
-		case 23: return 'การไม่ปฎิบัติตามมติ ครม.';
-		case 24: return 'การไม่ปฎิบัติตามสัญญา';
-	}
-}
-
-function regulation_status ($t) {
-	switch ($t) {
-		case 1: return 'เพียงพอ';
-		case 2: return 'เพียงพอแต่ไม่ปฎิบัติตาม';
-		case 3: return 'ไม่เพียงพอ';
-	}
-}
-
-function manage_selected_method ($t) {
-	switch ($t) {
-		case 1: return 'ยอมรับความเสี่ยง (ACCEPT/Take)';
-		case 2: return 'ลดความเสี่ยง (REDUCTION/Treat)';
-		case 3: return 'หลีกเลี่ยงความเสี่ยง (AVOID/Terminate)';
-		case 4: return 'โอนย้ายความเสี่ยง (SHARING/transfer)';
-	}
-}
-
-function risk_profile ($i, $f) {
-	$profile = array(
-		1 => array(0,19,20,21,24,25),
-		2 => array(0,12,13,15,22,23),
-		3 => array(0, 7, 8, 9,14,18),
-		4 => array(0, 3, 4, 6,11,17),
-		5 => array(0, 1, 2, 5,10,16)
-	);
-	return $profile[$f][$i];
-}
-
-function gen_riskprofile_url($pid, $current_id) {
-	global $connect;
-	$sql1="SELECT * FROM csa WHERE csa_id ='$pid' ";	
-	$result1=mysqli_query($connect, $sql1);	
-	$i=0;
-	$data = '';
-	while ($row1 = mysqli_fetch_array($result1)) {	
-		//$ch = chr(65+$i);
-		$ch = $row1['label'];
-		if ($row1['frequency']>0 && $row1['impact']>0) {
-			$s = risk_profile($row1['frequency'],6-$row1['impact']);
-			if ($current_id==$ch) { 
-				$data.=$ch.'.'.str_repeat('0', 2-strlen($s)).$s.'1'.'_';
-			} else {
-				$data.=$ch.'.'.str_repeat('0', 2-strlen($s)).$s.'0'.'_';
-			}
-		}
-		++$i;
-	}
-	return $data;
-}
-
-function htlm2text($h) {
-	$h = strip_tags($h);
-	//$h = str_replace("\n\n", "\n", $h);
-	$h = str_replace("\n", '<br>', $h);
-	$h = str_replace(' ', '&nbsp;', $h);
-	return $h;
-}
+<?php
+$email_from = 'rms@bam.co.th';
+function add_history($qx, $csa_department_id, $to_status, $remark) {	global $user_code, $user_id, $connect;		$sql = "INSERT INTO csa_department_change_history 	(csa_department_id, to_status, remark, user_id, user_code, create_date) 	VALUES 	('$csa_department_id', '$to_status', '$remark', '$user_id', '$user_code', now()) ";	$q = mysqli_query($connect, $sql);	$qx = ($qx and $q);			return $qx;}
+function send_confirm_head_notification($csa_department_id, $uid) {
+	global $email_from;
+	
+	$to = array($user_co_email);
+	$cc = array();						
+	$bcc = array();		
+	$subject = 'แจ้งอนุมัติผลการประเมิน';
+	$body = 'เรียน ฝ่ายบริหารความเสี่ยง ผลการประเมิน ฝ่ายงาน xxx<br>
+<br>
+ผู้อนุมัติของฝ่ายงาน xxx ได้ จัดอนุมัติผลการประเมินแล้ว<br>
+จึงแจ้งมายังท่านเพื่อโปรดดำเนินการต่อไป<br>
+<br>
+<a href="'.$host.'/csa_approve.php?" target="_new">แสดงข้อมูล</a> ';
+
+	$x = @mail_service($email_from, $to, $cc, $bcc, $subject, $body, $attach_name, $attach_location);		
+	if ($x) {
+		echo "<font color='#00aa00'><b>ระบบได้ส่งเมลแล้ว</b></font><br>";
+	} else {
+		echo "<font color='#aa0000'><b>เกิดข้อผิดพลาด ระบบไม่สามารถเมลได้</b></font><br>";
+	}	
+}
+
+function send_confirm_notification($csa_department_id, $uid) {
+	global $email_from;
+	
+	$to = array($user_co_email);
+	$cc = array();						
+	$bcc = array();		
+	$subject = 'แจ้งยืนยันผลการประเมิน';
+	$body = 'เรียน ผอ./ผู้อนุมัติ ผลการประเมิน ฝ่ายงาน xxx<br>
+<br>
+ผู้ทำแบบประเมินของฝ่ายงาน xxx ได้ จัดทำการประเมิน และยืนยันผลแล้ว<br>
+จึงแจ้งมายังท่านเพื่อโปรดดำเนินการต่อไป<br>
+<br>
+<a href="'.$host.'/csa_approve.php?" target="_new">แสดงข้อมูล</a> ';
+
+	$x = @mail_service($email_from, $to, $cc, $bcc, $subject, $body, $attach_name, $attach_location);		
+	if ($x) {
+		echo "<font color='#00aa00'><b>ระบบได้ส่งเมลแล้ว</b></font><br>";
+	} else {
+		echo "<font color='#aa0000'><b>เกิดข้อผิดพลาด ระบบไม่สามารถเมลได้</b></font><br>";
+	}	
+}
+function send_unlock_notification($csa_department_id, $uid, $reject_reason) {
+	global $email_from;
+	
+	$to = array($user_co_email);
+	$cc = array();						
+	$bcc = array();		
+	$subject = 'แจ้งขอให้แก้ไขผลการประเมิน';
+	$body = 'เรียน ผู้จัดทำการประเมิน ฝ่ายงาน xxx<br>
+<br>
+ตามที่ ผอ./ผู้อนุมัติผลการประเมินของฝ่ายงาน xxx ได้พิจารณาการประเมินของท่านแล้ว<br>
+พบว่ามีต้องแก้ไขดังนี้<br>
+'.$reject_reason.'<BR>
+<br>
+จึงแจ้งมายังท่านเพื่อโปรดดำเนินการแก้ไขให้ถูกต้อง และยืนยันนำส่งต่อไป<br>
+<br>
+<a href="'.$host.'/csa_user.php?" target="_new">แสดงข้อมูล</a> ';
+
+	$x = @mail_service($email_from, $to, $cc, $bcc, $subject, $body, $attach_name, $attach_location);		
+	if ($x) {
+		echo "<font color='#00aa00'><b>ระบบได้ส่งเมลแล้ว</b></font><br>";
+	} else {
+		echo "<font color='#aa0000'><b>เกิดข้อผิดพลาด ระบบไม่สามารถเมลได้</b></font><br>";
+	}	
+}
+
+function get_head_csa_uid($csa_department_id) {
+	global $connect;
+	$sql = "SELECT 
+			u.user_id
+		FROM csa_department c
+		LEFT JOIN department d1 ON c.department_id = d1.department_id
+		LEFT JOIN department d2 ON c.department_id2 = d2.department_id
+		LEFT JOIN user u ON u.department_id = d2.department_id AND u.auth_csa=2
+		WHERE 
+			c.csa_department_id = ? ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $csa_department_id);
+		$stmt->execute();
+		$result1 = $stmt->get_result();
+		if ($row1 = mysqli_fetch_assoc($result1)) {	
+			return $row1['user_id'];
+		}
+	}	
+	return 0;
+}
+function get_head_csa_ucode($csa_department_id) {
+	global $connect;
+	$u_list = array();
+	$sql = "SELECT 
+			u.code
+		FROM csa_department c
+		LEFT JOIN department d1 ON c.department_id = d1.department_id
+		LEFT JOIN department d2 ON c.department_id2 = d2.department_id
+		LEFT JOIN user u ON u.department_id = d2.department_id AND u.auth_csa=2
+		WHERE 
+			c.csa_department_id = ? ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $csa_department_id);
+		$stmt->execute();
+		$result1 = $stmt->get_result();
+		while ($row1 = mysqli_fetch_assoc($result1)) {	
+			$u_list[] = $row1['code'];
+		}
+	}	
+	return $u_list;
+}
+
+function get_user_csa_uid($csa_department_id) {
+	global $connect;
+	$u_list = array();
+	$sql = "SELECT 
+			u.user_id
+		FROM csa_department c
+		LEFT JOIN department d3 ON c.department_id3 = d3.department_id
+		LEFT JOIN user u ON u.department_id = d3.department_id AND u.auth_csa=1
+		WHERE 
+			c.csa_department_id = ? ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $csa_department_id);
+		$stmt->execute();
+		$result1 = $stmt->get_result();
+		while ($row1 = mysqli_fetch_assoc($result1)) {	
+			$u_list[] = $row1['user_id'];
+		}
+	}	
+	return $u_list;
+}
+function get_user_csa_ucode($csa_department_id) {
+	global $connect;
+	$u_list = array();
+	$sql = "SELECT 
+			u.code
+		FROM csa_department c
+		LEFT JOIN department d3 ON c.department_id3 = d3.department_id
+		LEFT JOIN user u ON u.department_id = d3.department_id AND u.auth_csa=1
+		WHERE 
+			c.csa_department_id = ? ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $csa_department_id);
+		$stmt->execute();
+		$result1 = $stmt->get_result();
+		while ($row1 = mysqli_fetch_assoc($result1)) {	
+			$u_list[] = $row1['code'];
+		}
+	}	
+	return $u_list;
+}
+
+function get_head_loss_uid($csa_department_id) {
+	global $connect;
+	$sql = "SELECT 
+			u.user_id
+		FROM csa_department c
+		LEFT JOIN department d1 ON c.department_id = d1.department_id
+		LEFT JOIN department d2 ON c.department_id2 = d2.department_id
+		LEFT JOIN department d3 ON c.department_id3 = d3.department_id
+		LEFT JOIN user u ON u.department_id = d2.department_id AND u.auth_loss=2
+		WHERE 
+			c.csa_department_id = ? ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $csa_department_id);
+		$stmt->execute();
+		$result1 = $stmt->get_result();
+		if ($row1 = mysqli_fetch_assoc($result1)) {	
+			return $row1['user_id'];
+		}
+	}	
+	return 0;
+}
+
+function get_head_csa_email($csa_department_id) {
+	$head_uid = get_head_csa_uid($csa_department_id);
+	return get_user_email($head_uid);
+}
+function get_head_loss_email($csa_department_id) {
+	$head_uid = get_head_loss_uid($csa_department_id);
+	return get_user_email($head_uid);
+}
+function get_user_email($user_id) {
+	global $connect;
+	
+	$sql = "SELECT email FROM user WHERE user_id = ? ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $user_id);
+		$stmt->execute();
+		$result2 = $stmt->get_result();
+		if ($row2 = mysqli_fetch_assoc($result2)) {
+			return $row2['email'];
+		}
+	}		
+	return '';
+}
+function get_user_profile_array($uid) {
+	global $connect;
+	$u_list = array();
+	$sql = "SELECT * FROM user WHERE user_id IN (".implode(',', $uid).") ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $uid);
+		$stmt->execute();
+		$result2 = $stmt->get_result();
+		while ($row2 = mysqli_fetch_assoc($result2)) {
+			$u_list[] = array($row2['prefix'].$row2['name'].' '.$row2['surname'], $row2['department_id'], $row2['email']);
+		}
+	}	
+	return $u_list;
+}
+
+function get_user_profile($uid) {
+	global $connect;
+
+	if ($uid>0) {
+		$sql = "SELECT * FROM user WHERE user_id = ? ";
+		$stmt = $connect->prepare($sql);
+		if ($stmt) {					
+			$stmt->bind_param('i', $uid);
+			$stmt->execute();
+			$result2 = $stmt->get_result();
+			if ($row2 = mysqli_fetch_assoc($result2)) {
+				return array($row2['prefix'].$row2['name'].' '.$row2['surname'], $row2['department_id'], $row2['email']);
+			}
+		}	
+	}		
+	return array();
+}
+
+function gen_risk_mat() {
+	global $connect;
+	
+	$d = array();
+	$sql2="SELECT * FROM `csa_risk_matrix` ";
+	$result1=mysqli_query($connect, $sql2);
+	while ($row1 = mysqli_fetch_array($result1)) {
+		$d[$row1['csa_impact_id']][$row1['csa_likelihood_id']] = $row1['csa_risk_level']; 
+	}
+	$lv = array();
+	for ($i=1; $i<=5; $i++) {
+		$lv[] = risk_level_name($i);
+	}
+?>			
+<div class='row'>
+<div class='col-md-6'>
+<table class='' border='0'>
+<tr>
+	<td colspan='8' align='center'><b>ตารางแสดงผลการวัดระดับความเสี่ยง (Risk Matrix)</b><br><br></td>
+</tr>
+<tr>
+  <td rowspan='6' width='100'><img src='images/risk_matrix_axis_y.png'></td>
+  <td width='60' align='center' style='text-align:center'></td>
+  <td width='400' colspan='5' align='center' style='text-align:center'></td>
+</tr>
+<?
+	$axis_y = array('Insignificant<br>1', 'Minor<br>2', 'Moderate<br>3', 'Major<br>4', 'Catastrophic<br>5');
+	for ($i=5; $i>=1; $i--) {
+?>
+<tr>
+	<td width='60' align='center' style='font-size:11px'><?=$axis_y[$i-1]?></td>
+<?		for ($j=1; $j<=5; $j++) {
+			$l = $d[$i][$j];
+			$b = '#444444';
+?>	
+	<td width='80' align='center' bgcolor='<?=risk_level_color($l)?>' style='border: 1px solid <?=$b?>; height: 70px; font-weight:bold; font-size: 13px' ><?=risk_level_name($l)?></td>
+<?		}?>	
+</tr>
+<?
+	}	
+?>
+<tr style='font-size:11px' align='center'>
+  <td></td>
+  <td></td>
+  <td>1<br>Very Low</td>
+  <td>2<br>Low</td>
+  <td>3<br>Medium</td>
+  <td>4<br>High</td>
+  <td>5<br>Very High</td>
+</tr>
+<tr>
+  <td></td>
+  <td></td>
+  <td colspan='5' align='center'><img src='images/risk_matrix_axis_x.png'></td>
+</tr>
+</table>
+<br>
+</div>
+</div>
+<?	
+}
+
+function gen_job_function($dep_id, $csa_dep_id, $csa_year) {
+	global $connect;
+	
+	$j_id_list = array();
+	$j_list = array();
+	$j_detail_list = array();
+	$is_pass_all = false;
+	$sql = "SELECT job_function_id FROM csa WHERE csa_year = '$csa_year' AND mark_del = '0' AND csa_department_id = '$csa_dep_id' ";
+	$result2 = mysqli_query($connect, $sql);
+	while ($row2 = mysqli_fetch_array($result2)) {
+		$j_list[] = $row2['job_function_id'];
+	}
+
+	$sql = "SELECT 
+		* 
+	FROM
+		job_function 
+	WHERE 
+		(is_require = '1') AND
+		mark_del = '0' AND 
+		department_id3 = '$dep_id' 
+	ORDER BY 
+		job_function_no, job_function_id";
+	$result2 = mysqli_query($connect, $sql);
+	if (mysqli_num_rows($result2)>0) {
+		$is_pass_all = true; 
+		while ($row2 = mysqli_fetch_array($result2)) {
+			if (in_array($row2['job_function_id'], $j_list)) { 
+				$j_detail_list[] = '<font color="green"><i class="fa fa-check"></i></font> '.$row2['job_function_no'].' '.$row2['job_function_name'].'<BR>';
+			} else {
+				$j_detail_list[] = '<font color="red"><i class="fa fa-times"></i></font> '.$row2['job_function_no'].' '.$row2['job_function_name'].'<BR>';
+				$is_pass_all = false;
+				$j_id_list[] = $row2['job_function_id'];
+			}
+		}
+?>
+	<div class='row'>
+	<div class='col-md-8'>					
+	<div class='note note-<?=($is_pass_all==true) ? 'success' : 'danger'?>' style='font-size:13px'>
+	<b>Job Function ที่จำเป็นต้องประเมิน</b><br>
+<?					
+		foreach ($j_detail_list as $j) {
+			echo $j;
+		}
+?>
+	</div>
+	</div>
+	<div class='col-md-4'>					
+	<div style='font-size:13px'>
+	ความหมายสัญลักษณ์ :<br>
+	<font color="green"><i class="fa fa-check"></i></font> : สร้างรายการประเมินแล้ว<br>
+	<font color="red"><i class="fa fa-times"></i></font> : ยังไม่ได้สร้างรายการประเมิน
+	</div>
+	</div>
+	</div>
+<?					
+	}
+	return $is_pass_all;
+}
+
+function gen_audit_history($csa_dep_id) {
+	global $connect;
+	$sql = "SELECT * FROM csa_department c WHERE c.csa_department_id = ? AND c.mark_del = '0' ";
+	$stmt = $connect->prepare($sql);
+	if ($stmt) {					
+		$stmt->bind_param('i', $csa_dep_id);
+		$stmt->execute();
+		$result2 = $stmt->get_result();
+		if ($row2 = mysqli_fetch_assoc($result2)) {	
+			$csa_year = $row2['csa_year'];	
+			$department_id3 = $row2['department_id3'];				
+?>
+<style>
+table.change_history thead tr td{
+	font-weight: bold;
+}	
+table.change_history tr td{
+	font-size: 12px;
+}
+.table-sm tbody tr td{
+	padding: 5px;
+}
+.tr_sm tr, .tr_sm td {
+	padding: 2px !important;
+}
+</style>
+<div class='row'>
+<div class='col-xl-10 col-lg-10 col-md-10 col-sm-12'>	
+<b>รายงานผลการตรวจสอบ</b><br>
+<table class='table table-hover change_history'>
+<thead>
+<tr>
+  <td width='15%'>วันที่ตรวจ</td>
+  <td width='50%'>รายงานผลการตรวจสอบ</td>
+  <td width='30%'>ผู้ตรวจสอบ</td>
+  <td width='5%'>ปิดแล้ว</td>
+</tr>
+</thead>
+<tbody>
+<?
+	$i = 1;
+	$sql2="SELECT 
+		d.*,
+		d1.department_name AS dep1,
+		d2.department_name AS dep2,
+		d3.department_name AS dep3
+	FROM `csa_audit` d
+	LEFT JOIN `department` d1 ON  d.department_id = d1.department_id AND d1.mark_del = '0'
+	LEFT JOIN `department` d2 ON  d.department_id2 = d2.department_id AND d2.mark_del = '0'
+	LEFT JOIN `department` d3 ON  d.department_id3 = d3.department_id AND d3.mark_del = '0'
+	WHERE 
+		d.csa_year = '$csa_year' AND
+		d.department_id3 = '$department_id3' AND
+		d.mark_del = '0' 
+	ORDER BY 
+		audit_date";
+	$result1=mysqli_query($connect, $sql2);
+	if (mysqli_num_rows($result1)>0) {
+		while ($row1 = mysqli_fetch_array($result1)) {
+			if ($row1['auditor']==3) 
+				$auditor = 'อื่นๆ : '.$row1['auditor_other'];
+			else
+				$auditor = auditor_name($row1['auditor']);
+?>
+<tr class='tr_sm'>
+	<td width='15' did='<?=$row1['csa_audit_id']?>' class='csa_editable'><?=mysqldate2th_date($row1['audit_date'])?></td>
+	<td width='50' did='<?=$row1['csa_audit_id']?>' class='csa_editable'><?=$row1['audit_desc']?></td>
+	<td width='30%' did='<?=$row2['csa_audit_id']?>' class='csa_editable'><?=$auditor?></td>
+	<td width='5%' did='<?=$row2['csa_audit_id']?>' class='csa_editable'><?if ($row1['is_close']==1) echo '<i class="fa fa-check"></i>'?></td>
+</tr>
+<?
+		}
+	} else {
+		echo '<tr><td colspan="2">-ไม่มีข้อมูล-</td></tr>';
+	}	
+?>
+</tbody>
+</table>	
+</div>			
+</div>
+<?	
+		}
+	}
+}
+
+function gen_change_history($csa_dep_id) {
+	global $connect;
+
+?>
+
+<style>
+table.change_history thead tr td{
+	font-weight: bold;
+}	
+table.change_history tr td{
+	font-size: 12px;
+}
+.table-sm tbody tr td{
+	padding: 5px;
+}
+.tr_sm tr, .tr_sm td {
+	padding: 2px !important;
+}
+</style>		
+		<div class='row'><div class='col-xl-6 col-lg-8 col-md-10 col-sm-12'>		
+			<b>ประวัติการเปลี่ยนแปลง</b><br>
+			<table class='table table-hover change_history'>
+			<thead>
+			<tr>
+				<td width='28%'>การดำเนินการ</td>				<td width='27%'>สถานะ</td>
+				<td width='20%'>วันที่</td>
+				<td width='25%'>ผู้ดำเนินการ</td>
+			</tr>
+			</thead>
+			<tbody>		
+<?
+		$sql = "SELECT 
+			csa_department_change_history.*,
+			s2.csa_department_status_id as s2_code,
+			s2.csa_department_status_name as s2_name,
+			u.code AS ucode,			CONCAT(u.prefix, u.name, ' ', u.surname) AS uname
+		FROM csa_department_change_history
+		JOIN csa_department_status s2 ON csa_department_change_history.to_status = s2.csa_department_status_id
+		LEFT JOIN user u ON csa_department_change_history.user_id = u.user_id
+		WHERE csa_department_id = '$csa_dep_id' 
+		ORDER BY csa_department_change_history.create_date";
+		$result2 = mysqli_query($connect, $sql);
+		if (mysqli_num_rows($result2)>0) {
+			while ($row2 = mysqli_fetch_array($result2)) {
+?>
+		<tr class='tr_sm'>
+			<td><?=$row2['remark']?></td>			<td><?=$row2['s2_name']?></td>
+			<td><?=mysqldate2th_datetime($row2['create_date'])?></td>
+			<td><?=$row2['ucode']?> <?=$row2['uname']?></td>
+		</tr>
+<?
+			}
+		} else {
+			echo '<tr><td colspan="4">-ไม่มี-</td></tr>';
+		}
+?>							
+			</tbody>
+			</table></div>			</div>			
+<?
+}
+
+
+
+function htlm2text($h) {
+	$h = strip_tags($h);
+	$h = str_replace("\n", '<br>', $h);
+	$h = str_replace(' ', '&nbsp;', $h);
+	return $h;
+}
+
+
+function csa_status($r) {
+	switch ($r) {
+		case 0: return 'อยู่ระหว่างจัดทำ';
+		case 1: return 'ประเมินแล้ว';
+	}
+}
+function csa_status_color($r) {
+	switch ($r) {
+		case 0: return 'red';
+		case 1: return 'green';
+	}
+}
+
+
+function risk_level_color($r) {
+	switch ($r) {
+		case 0: return '';
+/*		case 1: return '#9dff9c';
+		case 2: return '#f5ff9c';
+		case 3: return '#ffd29c';
+		case 4: return '#ff9c9c';*/
+		case 1: return '#00ff00';
+		case 2: return '#ffff00';
+		case 3: return '#ff9900';
+		case 4: return '#ff0000';
+	}
+}
+function risk_level_name($r) {
+	switch ($r) {
+		case 0: return '';
+		case 1: return 'ต่ำ';
+		case 2: return 'ปานกลาง';
+		case 3: return 'สูง';
+		case 4: return 'สูงมาก';
+	}
+}
+
+
+function auditor_name($n) {
+	switch ($n) {
+		case 0: return 'Internal Audit';
+		case 1: return 'BOT';
+		case 2: return 'EY';
+		case 3: return 'Others';
+	}
+}
 ?>
