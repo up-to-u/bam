@@ -50,124 +50,39 @@ if ($_POST['submitLossDoc'] == 'submitLossDoc') {
 
 		}
 }
-if ($_POST['submitLossDataList'] == 'submitLossDataList') {
-	$loss_data_doc_id = $_POST['loss_data_doc_id'];
-	$happen_date = $_POST['happen_date'];
-	$checked_date = $_POST['checked_date'];
-	$incidence = $_POST['incidence'];
-	$incidence_detail = $_POST['incidence_detail'];
-	$cause = $_POST['cause'];
-	$user_effect = $_POST['user_effect'];
-	$damage_type = $_POST['damage_type'];
-	$incidence_type = $_POST['incidence_type'];
-	$loss_type = $_POST['loss_type'];
-	$control = $_POST['control'];
-	$loss_value = $_POST['loss_value'];
-	$chance = $_POST['chance'];
-	$effect = $_POST['effect'];
-	$damageLevel = $_POST['effect'] . $_POST['chance'];
-	$dep_id_1 = $_POST['dep_id_1'];
-	$dep_id_2 = $_POST['dep_id_2'];
-	$dep_id_3 = $_POST['dep_id_3'];
+if ($_POST['submitLossUpdate'] == 'submitLossUpdate') {
+	$loss_data_doc_id = $_POST['date_id'];
+	$comment_app = $_POST['comment_app'];
+	$approved_date = date('YYYY-mm-dd');
+		$qx = true;
 
-	$attech_name = ($_FILES["attech_name"]["name"]);
-	$uploadOk = 1;
-	if ($attech_name != "" || $attech_name != null) {
-		$target_dir = "attech_file/";
-		$target_file = $target_dir . basename($_FILES["attech_name"]["name"]);
-		$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-		$new_name = $user_id. '_ATTECH'.date('Ymdhis').'.'.$imageFileType;
-		$target_file = $target_dir.$new_name;
-		$check = getimagesize($_FILES["attech_name"]["tmp_name"]);
-		$attech_name= $new_name ;
-
-		if ($_FILES["attech_name"]["size"] > 50000000) {
-			echo "Sorry, your file is too large. ";
-			$uploadOk = 0;
-		}
-		// Check if $uploadOk is set to 0 by an error
-		if ($uploadOk == 0) {
-			echo "Sorry, your file was not uploaded. ";
-			// if everything is ok, try to upload file
-		} else {
-
-			if (move_uploaded_file($_FILES["attech_name"]["tmp_name"], $target_file)) {
-			} else {
-				echo "Sorry, there was an error uploading your file. ";
-			}
-		}
-	}
-
-	if ($uploadOk != 0) {
-		$qx = true;	
-		$stmt = $connect->prepare("INSERT INTO loss_data_doc_list
-		(`loss_data_doc_id`,
-		`happen_date`,
-		`checked_date`,
-		`incidence`,
-		`incidence_detail`,
-		`cause`,
-		`user_effect`,
-		`damage_type`,
-		`incidence_type`,
-		`loss_type`,
-		`control`,
-		`loss_value`,
-		`chance`,
-		`effect`,
-		`damageLevel`,
-		`dep_id_1`,
-		`dep_id_2`,
-		`dep_id_3`,
-		`attech_name`,
-		`doclist_user_id`) 
-		VALUES
-		(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		$stmt = $connect->prepare("UPDATE loss_data_doc_list SET
+		comment_app=?,approved_date=now()
+		WHERE loss_data_doc_list_id=? ");
 
 		if ($stmt) {
 			$stmt->bind_param(
-				'issssssiiisiiisiiisi',
-				$loss_data_doc_id,
-				$happen_date,
-				$checked_date,
-				$incidence,
-				$incidence_detail,
-				$cause,
-				$user_effect,
-				$damage_type,
-				$incidence_type,
-				$loss_type,
-				$control,
-				$loss_value,
-				$chance,
-				$effect,
-				$damageLevel,
-				$dep_id_1,
-				$dep_id_2,
-				$dep_id_3,
-				$attech_name,
-				$user_id
+				'si',
+				$comment_app,
+				$loss_data_doc_id
 			);
 			$q = $stmt->execute();
 			$qx = ($qx and $q);
-		
+
 			if ($qx) {
 				$connect->commit();
+
 				echo "<script>alert('ระบบได้บันทึกข้อมูลของท่านแล้ว');
-				document.location.href('loss_data.php');
+				window.location.href='loss_data_approve.php?statusListId=1';
 				</script>";
-				
-			
 			} else {
 				$connect->rollback();
 			}
-		//	$stmt->close();
-		//	$conn->close();
-		} else {
-			$error = "<script>alert('เกิดข้อผิดพลาด ระบบไม่สามารถบันทึกข้อมูลได้');
-			document.location.href('loss_data.php');</script>";
-		}	
+			//	$stmt->close();
+			//	$conn->close();
+		
 	}
+	
 }
 
 if($action=='approve'){
@@ -265,7 +180,7 @@ $(function () {
 			</div>
 			<div class="row">
 				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-					<div class="dashboard-stat dashboard-stat-v2 green">
+					<div class="dashboard-stat dashboard-stat-v2 blue">
 						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
 						<div class="details">
 							<div class="number"> <span data-counter="counterup">รอการอนุมัติ
@@ -282,14 +197,14 @@ $(function () {
 									}
 									?>
 									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_approve.php?statusListId=0">
+							<div class="desc" style="margin-top: 13px;"><a href="loss_data_approve.php?statusListId=0"  style="color: #FFFFFF;">
 									<< เรียกดูข้อมูลเพิ่มเติม>>
 								</a></div>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-					<div class="dashboard-stat dashboard-stat-v2 green">
+					<div class="dashboard-stat dashboard-stat-v2 red">
 						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
 						<div class="details">
 							<div class="number"> <span data-counter="counterup">ส่งกลับแก้ไข 
@@ -306,7 +221,7 @@ $(function () {
 								}
 																								?>
 									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_approve.php?statusListId=2">
+							<div class="desc" style="margin-top: 13px;"><a href="loss_data_approve.php?statusListId=2"  style="color: #FFFFFF;">
 									<< เรียกดูข้อมูลเพิ่มเติม>>
 								</a></div>
 						</div>
@@ -330,7 +245,7 @@ $(function () {
 									}
 									?>
 									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_approve.php?statusListId=1">
+							<div class="desc" style="margin-top: 13px;"><a href="loss_data_approve.php?statusListId=1"  style="color: #FFFFFF;">
 									<< เรียกดูข้อมูลเพิ่มเติม>>
 								</a></div>
 						</div>
@@ -453,7 +368,7 @@ if($statusListId!=NULL){?>
 											
 												<td width="250">
 
-													<button name='submit' class="btn btn-success showDetailData" data-happen_date="<?= $row['happen_date']; ?>" data-checked_date="<?= $row['checked_date']; ?>" data-incidence="<?= $row['incidence']; ?>" data-incidence_detail="<?= $row['incidence_detail']; ?>" data-cause="<?= $row['cause']; ?>" data-user_effect="<?= $row['user_effect']; ?>" data-damage_type="<?= $row['damage_type']; ?>" data-incidence_type="<?= $row['incidence_type']; ?>" data-loss_type="<?= $row['loss_type']; ?>" data-control="<?= $row['control']; ?>" data-loss_value="<?= $row['loss_value']; ?>" data-chance="<?= $row['chance']; ?>" data-effect="<?= $row['effect']; ?>" data-damageLevel="<?= $row['damageLevel']; ?>" data-related_dep_id="<?= $row['related_dep_id']; ?>" data-dep_id_1="<?= $row['dep_id_1']; ?>" data-dep_id_2="<?= $row['dep_id_2']; ?>" data-dep_id_3="<?= $row['dep_id_3']; ?>" data-comment_app="<?= $row['comment_app']; ?>" data-approved_date="<?= $row['approved_date']; ?>" data-status_approve="<?= $row['status_approve']; ?>" data-comment_risk="<?= $row['comment_risk']; ?>" data-status_risk_approve="<?= $row['status_risk_approve']; ?>" data-riskcomment_date="<?= $row['riskcomment_date']; ?>" data-attech_name="<?= $row['attech_name']; ?>" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-list-alt'></i> รายละเอียด</button>
+													<button name='submit' class="btn btn-success showDetailData" date-id="<?= $row['loss_data_doc_list_id']; ?>" data-happen_date="<?= $row['happen_date']; ?>" data-checked_date="<?= $row['checked_date']; ?>" data-incidence="<?= $row['incidence']; ?>" data-incidence_detail="<?= $row['incidence_detail']; ?>" data-cause="<?= $row['cause']; ?>" data-user_effect="<?= $row['user_effect']; ?>" data-damage_type="<?= $row['damage_type']; ?>" data-incidence_type="<?= $row['incidence_type']; ?>" data-loss_type="<?= $row['loss_type']; ?>" data-control="<?= $row['control']; ?>" data-loss_value="<?= $row['loss_value']; ?>" data-chance="<?= $row['chance']; ?>" data-effect="<?= $row['effect']; ?>" data-damageLevel="<?= $row['damageLevel']; ?>" data-related_dep_id="<?= $row['related_dep_id']; ?>" data-dep_id_1="<?= $row['dep_id_1']; ?>" data-dep_id_2="<?= $row['dep_id_2']; ?>" data-dep_id_3="<?= $row['dep_id_3']; ?>" data-comment_app="<?= $row['comment_app']; ?>" data-approved_date="<?= $row['approved_date']; ?>" data-status_approve="<?= $row['status_approve']; ?>" data-comment_risk="<?= $row['comment_risk']; ?>" data-status_risk_approve="<?= $row['status_risk_approve']; ?>" data-riskcomment_date="<?= $row['riskcomment_date']; ?>" data-attech_name="<?= $row['attech_name']; ?>" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-list-alt'></i> รายละเอียด</button>
 													<?if($status_approve=='0'){?>
 													<form action="loss_data_approve.php?action=approve" method="post" target="_blank" style="display: inline;">
 													<input type="hidden" name="loss_data_doc_list_id" value="<?= $row['loss_data_doc_list_id']; ?>">
@@ -496,187 +411,190 @@ if($statusListId!=NULL){?>
 
 <?}?>
 <!-- start modal -->
-<form method='post' action='loss_data.php' enctype="multipart/form-data">
-	<div id="myModalSendCase" class="modal fade" role="dialog">
-		<div class="modal-dialog  modal-lg">
 
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header" style="background-color:#004C85;color:#FFFFFF;">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title" style="font-family: 'Prompt', sans-serif;"> <span class="glyphicon glyphicon-list-alt"></span> รายงานความเสียหาย</h4>
-				</div>
-				<div class="modal-body" align="left">
+<div id="myModalSendCase" class="modal fade" role="dialog">
+	<div class="modal-dialog  modal-lg">
 
-					<form method='post' action='loss_data.php' enctype="multipart/form-data">
-						<div class="form-group">
-							<div class="row">
-								<div class="col-lg-12 col-xs-12">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header" style="background-color:#27A4B0;color:#FFFFFF;">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title" style="font-family: 'Prompt', sans-serif;"> <span class="glyphicon glyphicon-list-alt"></span> รายละเอียด</h4>
+			</div>
+			<div class="modal-body" align="left">
 
-									<div class="form-group">
-										<div class="row">
-											<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่เกิดเหตุการณ์</label><input type="text" class="form-control datepicker" name='happen_date' readonly id='happen_date'></div>
-											<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่ตรวจพบ</label><input type="text" class="form-control datepicker" name='checked_date' readonly id='checked_date'></div>
-											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">เหตุการณ์</label><input type="text" class="form-control" name='incidence' id='incidence'></div>
-											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">รายละเอียดเหตุการณ์<span style="color: red;">*</span></label><textarea id="incidence_detail" class="form-control" name="incidence_detail" rows="3" cols="50" style="min-height:80px;"></textarea></div>
-											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">สาเหตุ<span style="color: red;">*</span></label><textarea id="cause" class="form-control" name="cause" rows="3" cols="50" style="min-height:80px;"></textarea></div>
-											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><input type="text" class="form-control" name='user_effect' id='user_effect'></div>
-											<div class="col-lg-3"> <label class="margins-top-10">ประเภทความเสียหาย<span style="color: red;">*</span></label><select name='damage_type' id='damage_type' class="form-control">
-													<option value="0">- - - เลือก - - - </option>
-													<?
-													$iFactor1 = 1;
-													$makdel1 = 0;
-													$sqlFactor = "SELECT * FROM loss_factor Where parent_id =? and mark_del =?";
-													$stmt = $connect->prepare($sqlFactor);
-													$stmt->bind_param("ii", $iFactor1, $makdel1);
-													$stmt->execute();
-													$result = $stmt->get_result();
-													while ($row1 = mysqli_fetch_array($result)) {
-													?>
-														<option value="<?= $row1['loss_factor_id'] ?>"><?= $row1['factor'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-3"><label class="margins-top-10">ประเภทเหตุการณ์ความเสียหาย<span style="color: red;">*</span></label><select name='incidence_type' id='incidence_type' class="form-control">
-													<option value="0">- - - เลือก - - - </option>
-													<?
-													$iFactor2 = 2;
-													$makdel2 = 0;
-													$sqlFactor = "SELECT * FROM loss_factor Where parent_id =? and mark_del =?";
-													$stmt = $connect->prepare($sqlFactor);
-													$stmt->bind_param("ii", $iFactor2, $makdel2);
-													$stmt->execute();
-													$result = $stmt->get_result();
-													while ($row1 = mysqli_fetch_array($result)) {
-													?>
-														<option value="<?= $row1['loss_factor_id'] ?>"><?= $row1['factor'] ?></option>
-													<?		} ?>
-												</select></div>
+				<form method='post' action='loss_data_approve.php' enctype="multipart/form-data">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-lg-12 col-xs-12">
 
-											<div class="col-lg-2"> <label class="margins-top-10 col-xs-12" style="margin-left: -13px;">Loss : </label><label class="radio-inline"><input type="radio" name="loss_type" value="1"> Actual Loss
-												</label></div>
-											<div class="col-lg-2"> <label style="height:44px;"></label><label class="radio-inline"><input type="radio" name="loss_type" value="2"> Potential Loss
-												</label></div>
-											<div class="col-lg-2"> <label style="height:44px;"></label><label class="radio-inline"><input type="radio" name="loss_type" value="3"> Near-Missed
-												</label></div>
+								<div class="form-group">
+									<div class="row">
+										<div class="col-lg-6 col-xs-12"><label class="margins-top-10">วันที่เกิดเหตุการณ์</label><input type="text" class="form-control datepicker" name='happen_date' disabled readonly id='happen_date' style="cursor: default;"></div>
+										<div class="col-lg-6 col-xs-12"><label class="margins-top-10">วันที่ตรวจพบ<span style="color: red;">*</span></label><input type="text" class="form-control datepicker" disabled name='checked_date' readonly id='checked_date' style="cursor: default;"></div>
+										<div class="col-lg-12 col-xs-12"><label class="margins-top-10">เหตุการณ์<span style="color: red;">*</span></label><input type="text" class="form-control" name='incidence' id='incidence' style="background-color: #EEF1F5;cursor: default;" readonly></div>
+										<div class="col-lg-12 col-xs-12"><label class="margins-top-10">รายละเอียดเหตุการณ์<span style="color: red;">*</span></label><textarea id="incidence_detail" class="form-control" name="incidence_detail" rows="3" cols="50" style="min-height:80px; background-color: #EEF1F5;cursor: default;" readonly></textarea></div>
+										<div class="col-lg-12 col-xs-12"><label class="margins-top-10">สาเหตุ<span style="color: red;">*</span></label><textarea id="cause" class="form-control" name="cause" rows="3" cols="50" style="min-height:80px;background-color: #EEF1F5;cursor: default;" readonly></textarea></div>
+										<div class="col-lg-12 col-xs-12"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><input type="text" class="form-control" name='user_effect' id='user_effect' style="background-color: #EEF1F5;cursor: default;" readonly></div>
+										<div class="col-lg-12"> <label class="margins-top-10">ประเภทความเสียหาย<span style="color: red;">*</span></label><select name='damage_type' id='damage_type' class="form-control" style="background-color: #EEF1F5; cursor: default;" readonly disabled>
+												<option value="0">- - - เลือก - - - </option>
+												<?
+												$iFactor1 = 1;
+												$makdel1 = 0;
+												$sqlFactor = "SELECT * FROM loss_factor Where parent_id =? and mark_del =?";
+												$stmt = $connect->prepare($sqlFactor);
+												$stmt->bind_param("ii", $iFactor1, $makdel1);
+												$stmt->execute();
+												$result = $stmt->get_result();
+												while ($row1 = mysqli_fetch_array($result)) {
+												?>
+													<option value="<?= $row1['loss_factor_id'] ?>"><?= $row1['factor'] ?></option>
+												<?		} ?>
+											</select></div>
+										<div class="col-lg-12"><label class="margins-top-10">ประเภทเหตุการณ์ความเสียหาย<span style="color: red;">*</span></label><select name='incidence_type' id='incidence_type' class="form-control" style="background-color: #EEF1F5; cursor: default;" readonly disabled>
+												<option value="0">- - - เลือก - - - </option>
+												<?
+												$iFactor2 = 2;
+												$makdel2 = 0;
+												$sqlFactor = "SELECT * FROM loss_factor Where parent_id =? and mark_del =?";
+												$stmt = $connect->prepare($sqlFactor);
+												$stmt->bind_param("ii", $iFactor2, $makdel2);
+												$stmt->execute();
+												$result = $stmt->get_result();
+												while ($row1 = mysqli_fetch_array($result)) {
+												?>
+													<option value="<?= $row1['loss_factor_id'] ?>"><?= $row1['factor'] ?></option>
+												<?		} ?>
+											</select></div>
 
-											<div class="col-lg-6"><label class="margins-top-10">การควบคุมที่มีอยู่<span style="color: red;">*</span></label><input type="text" class="form-control" name='control' id='control'></div>
-											<div class="col-lg-4"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" name='loss_value' id='loss_value'></div>
-											<div class="col-lg-4"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='chance' id='chance' class="form-control">
-													<option value="0">- - - เลือก - - - </option>
-													<?
-													$iFactor4 = 4;
-													$makdel4 = 0;
-													$sqlFactor = "SELECT * FROM loss_factor Where parent_id =?  and mark_del =?";
-													$stmt = $connect->prepare($sqlFactor);
-													$stmt->bind_param("ii", $iFactor4, $makdel4);
-													$stmt->execute();
-													$result = $stmt->get_result();
-													while ($row1 = mysqli_fetch_array($result)) {
+										<div class="col-lg-3"> <label class="margins-top-10 col-xs-12" style="margin-left: -13px;">Loss : <span style="color: red;">*</span></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type1" value="1" disabled> Actual Loss
+											</label></div>
+										<div class="col-lg-3"> <label style="height:44px;"></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type2" value="2" disabled> Potential Loss
+											</label></div>
+										<div class="col-lg-3"> <label style="height:44px;"></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type3" value="3" disabled> Near-Missed
+											</label></div>
 
-													?>
-														<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
-													<? } ?>
-												</select></div>
-											<div class="col-lg-4"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='effect' id='effect' class="form-control">
-													<option value="0">- - - เลือก - - - </option>
-													<?
-													$iFactor3 = 3;
-													$makdel3 = 0;
-													$sqlFactor = "SELECT * FROM loss_factor Where parent_id =? and mark_del =?";
+										<div class="col-lg-12"><label class="margins-top-10">การควบคุมที่มีอยู่<span style="color: red;">*</span></label><input type="text" class="form-control" style="cursor: default;" name='control' id='control' disabled></div>
+										<div class="col-lg-3"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" style="cursor: default;" name='loss_value' id='loss_value' disabled></div>
+										<div class="col-lg-3"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='chance' id='chance' class="form-control" style="cursor: default;" disabled>
+												<option value="0">- - - เลือก - - - </option>
+												<?
+												$iFactor4 = 4;
+												$makdel4 = 0;
+												$sqlFactor = "SELECT * FROM loss_factor Where parent_id =?  and mark_del =?";
+												$stmt = $connect->prepare($sqlFactor);
+												$stmt->bind_param("ii", $iFactor4, $makdel4);
+												$stmt->execute();
+												$result = $stmt->get_result();
+												while ($row1 = mysqli_fetch_array($result)) {
 
-													$z = 0;
-													$stmt = $connect->prepare($sqlFactor);
-													$stmt->bind_param("ii", $iFactor3, $makdel3);
-													$stmt->execute();
-													$result = $stmt->get_result();
-													while ($row1 = mysqli_fetch_array($result)) {
+												?>
+													<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
+												<? } ?>
+											</select></div>
+										<div class="col-lg-3"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='effect' id='effect' class="form-control" style="cursor: default;" disabled>
+												<option value="0">- - - เลือก - - - </option>
+												<?
+												$iFactor3 = 3;
+												$makdel3 = 0;
+												$sqlFactor = "SELECT * FROM loss_factor Where parent_id =? and mark_del =?";
 
-													?>
-														<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
-													<?		} ?>
-												</select></div>
+												$z = 0;
+												$stmt = $connect->prepare($sqlFactor);
+												$stmt->bind_param("ii", $iFactor3, $makdel3);
+												$stmt->execute();
+												$result = $stmt->get_result();
+												while ($row1 = mysqli_fetch_array($result)) {
 
-											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 1</label><select name='dep_id_1' id='dep_id_1' class="form-control">
-													<option value="0"> - - - -</option>
-													<?
+												?>
+													<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
+												<?		} ?>
+											</select></div>
+											<div class="col-lg-3" id="showPerformance" style="margin-top:35px;">
 
-													$sql = "SELECT * FROM department 
+</div>
+										<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 1</label><select name='dep_id_1' id='dep_id_1' class="form-control" style="cursor: default;" disabled>
+												<option value="0"> - - - -</option>
+												<?
+
+												$sql = "SELECT * FROM department 
 													WHERE 
 														department.mark_del = 0 
 													ORDER BY 
 														department.is_branch, 
 														department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
-													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 2</label><select name='dep_id_2' id='dep_id_2' class="form-control">
-													<option value="0"> - - - -</option>
-													<?
+												$result1 = mysqli_query($connect, $sql);
+												while ($row1 = mysqli_fetch_array($result1)) {
+												?>
+													<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
+												<?		} ?>
+											</select></div>
+										<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 2</label><select name='dep_id_2' id='dep_id_2' class="form-control" style="cursor: default;" disabled>
+												<option value="0"> - - - -</option>
+												<?
 
-													$sql = "SELECT * FROM department 
+												$sql = "SELECT * FROM department 
 													WHERE 
 														department.mark_del = 0 
 													ORDER BY 
 														department.is_branch, 
 														department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
-													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 3</label><select name='dep_id_3' id='dep_id_3' class="form-control">
-													<option value="0"> - - - -</option>
-													<?
-													$sql = "SELECT * FROM department 
+												$result1 = mysqli_query($connect, $sql);
+												while ($row1 = mysqli_fetch_array($result1)) {
+												?>
+													<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
+												<?		} ?>
+											</select></div>
+										<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 3</label><select name='dep_id_3' id='dep_id_3' class="form-control" style="cursor: default;" disabled>
+												<option value="0"> - - - -</option>
+												<?
+												$sql = "SELECT * FROM department 
 													WHERE 
 														department.mark_del = 0 
 													ORDER BY 
 														department.is_branch, 
 														department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
-													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-12"><label class="margins-top-10"><br> ดาวน์โหลดเอกสารแนบ  >> เปิดไฟล์ << </label>
-												<input type='hidden' name='loss_data_doc_id' id='loss_data_doc_id'>
-											</div>
-											<div class="col-lg-12"><label class="margins-top-10">ความเห็นผู้มีอำนาจอนุมัติ</label><textarea id="comment_app" class="form-control" name="comment_app" rows="3" cols="50" style="min-height:80px;" ></textarea></div>
-											<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่ปิดรายการ</label><input type="text" class="form-control datepicker" name='end_date' readonly id='end_date'></div>
-											<div class="col-lg-12"><label class="margins-top-10">ความเห็นฝ่ายบริหารความเสี่ยง</label><textarea id="comment_risk" class="form-control" name="comment_risk" rows="3" cols="50" style="min-height:80px;" readonly ></textarea></div>
-											
-											
+												$result1 = mysqli_query($connect, $sql);
+												while ($row1 = mysqli_fetch_array($result1)) {
+												?>
+													<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
+												<?		} ?>
+											</select></div>
+										<div class="col-lg-12"><label class="margins-top-10"><br><a href="#" id="attech_name" style="text-decoration: none;"><span class="glyphicon glyphicon-download-alt" style="margin-left: 20px;"></span> >> ดาวน์โหลดเอกสาร << </label></a>
+
 										</div>
-										<div align="center" style="margin-top: 30px;">
-
-											<button type='submit' name='submitLossDataList' value="submitLossDataList" class="btn btn-danger"><i class='fa fa-save'></i> บันทึก</button>
-										</div>
-
+										<? if ($status_approve != '0') { ?>
+											<div class="col-lg-12"><label class="margins-top-10" style="color:#27A4B0;">ความเห็นผู้มีอำนาจอนุมัติ</label><textarea id="comment_app" class="form-control" name="comment_app" rows="3" cols="50" style="min-height:80px;border-color:#27A4B0;" ></textarea></div>
+											<? if ($status_risk_approve == '3') { ?>
+												<div class="col-lg-3 col-xs-12"><label class="margins-top-10">วันที่ปิดรายการ</label><input type="text" class="form-control datepicker" name='end_date' readonly id='end_date'></div>
+											<? } ?>
+											<div class="col-lg-12"><label class="margins-top-10" >ความเห็นฝ่ายบริหารความเสี่ยง</label><textarea id="comment_risk" class="form-control" name="comment_risk" rows="3" cols="50" style="min-height:80px;" readonly ></textarea></div>
+										<? } ?>
 
 									</div>
+
+									<div align="center" style="margin-top: 30px;">
+<input type="hidden" id="date_id" name="date_id">
+<button type='submit' name='submitLossUpdate' value="submitLossUpdate" class="btn btn-danger"><i class='fa fa-save'></i> บันทึก</button>
+</div>
+
 								</div>
 							</div>
 						</div>
-				</div>
+					</div>
+				</form>
 			</div>
-</form>
+		</div>
 
 
-</div>
 
-</div>
+	</div>
 
-</div>
 </div>
 </form>
 
 
-
+<? echo template_footer(); ?>
 
 <script>
 	$(document).ready(function() {
@@ -696,6 +614,7 @@ if($statusListId!=NULL){?>
 		new $.fn.dataTable.FixedHeader(table);
 	});
 	$(".showDetailData").on("click", function() {
+		var dateId = $(this).attr('date-id');
 		var happen_dates = $(this).attr('data-happen_date');
 		var checked_dates = $(this).attr('data-checked_date');
 		var incidences = $(this).attr('data-incidence');
@@ -722,7 +641,26 @@ if($statusListId!=NULL){?>
 		var riskcomment_dates = $(this).attr('data-riskcomment_date');
 		var attech_names = $(this).attr('data-attech_name');
 
+		
+		if (chances != 0 && effects != 0) {
+			var strCheck = chances + effects
+			document.getElementById("showPerformance").innerHTML = "";
+			if (checkLossLevel(strCheck) == 1) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
+			} else if (checkLossLevel(strCheck) == 2) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
+			} else if (checkLossLevel(strCheck) == 3) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+			} else if (checkLossLevel(strCheck) == 4) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
+			}
+		}else  {
+			var strCheck = chances + effects
+			document.getElementById("showPerformance").innerHTML = "";
+			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
+		}
 
+		$('#date_id').val(dateId);
 		$('#happen_date').val(happen_dates);
 		$('#checked_date').val(checked_dates);
 		$('#incidence').val(incidences);
@@ -761,6 +699,65 @@ if($statusListId!=NULL){?>
 
 	});
 </script>
+<script>
+	function checkLossLevel($parameters) {
+		
+		if ($parameters == '00') {
+			return 0;
+		}else if ($parameters == 11) {
+			return 1;
+		} else if ($parameters == 12) {
+			return 1;
+		} else if ($parameters == 13) {
+			return 2;
+		} else if ($parameters == 14) {
+			return 2;
+		} else if ($parameters == 15) {
+			return 2;
+		} else if ($parameters == 21) {
+			return 1;
+		} else if ($parameters == 22) {
+			return 1;
+		} else if ($parameters == 23) {
+			return 2;
+		} else if ($parameters == 24) {
+			return 2;
+		} else if ($parameters == 25) {
+			return 3;
+		} else if ($parameters == 31) {
+			return 2;
+		} else if ($parameters == 32) {
+			return 2;
+		} else if ($parameters == 33) {
+			return 3;
+		} else if ($parameters == 34) {
+			return 3;
+		} else if ($parameters == 35) {
+			return 3;
+		} else if ($parameters == 41) {
+			return 3;
+		} else if ($parameters == 42) {
+			return 3;
+		} else if ($parameters == 43) {
+			return 3;
+		} else if ($parameters == 44) {
+			return 4;
+		} else if ($parameters == 45) {
+			return 4;
+		} else if ($parameters == 51) {
+			return 3;
+		} else if ($parameters == 52) {
+			return 3;
+		} else if ($parameters == 53) {
+			return 3;
+		} else if ($parameters == 54) {
+			return 4;
+		} else if ($parameters == 55) {
+			return 4;
+		} else {
+			return 0;
+		}
+	}
+</script>
 
 
-<? echo template_footer(); ?>

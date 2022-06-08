@@ -7,14 +7,15 @@ header('Content-Type: text/html; charset=utf-8');
 ob_end_clean();
 require('PHPPdf/fpdf.php');
 require('inc/connect.php');
-require('inc/function.inc.php');
+require('inc/functionLoss.inc.php');
 define('PHPPdf/FPDF_FONTPATH','font/');
 
-										$sql = "SELECT * FROM loss_data_doc_list WHERE loss_data_doc_list_id = '".$_POST["loss_data_doc_list_id"]."'";
+										$sql = "SELECT * FROM loss_data_doc_list join loss_data_doc ON loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id  WHERE loss_data_doc_list.loss_data_doc_list_id = '".$_POST["loss_data_doc_list_id"]."'";
 										$stmt = $connect->prepare($sql);
 										$stmt->execute();
 										$result = $stmt->get_result();
 										while ($row = mysqli_fetch_array($result)) {
+                                         
                                             $happen_date = $row['happen_date'];
                                             $checked_date = $row['checked_date'];
                                             $incidence = $row['incidence'];
@@ -22,7 +23,6 @@ define('PHPPdf/FPDF_FONTPATH','font/');
                                             $cause = $row['cause'];
                                             $user_effect = $row['user_effect'];
                                             $damage_type = $row['damage_type'];
-                                      
                                             $control = $row['control'];
                                             $loss_value = $row['loss_value'];
                                             $chance = $row['chance'];
@@ -45,7 +45,14 @@ define('PHPPdf/FPDF_FONTPATH','font/');
                                             $dep_id_3 = deptName($row['dep_id_3']);
                                             $deptsArray = array( $dep_id_1,  $dep_id_2,  $dep_id_3);
                                             $aboutDept = implode(', ',$deptsArray);
-                                
+                                            $approveNames = approveName($row['user_id']); 
+                                            $positionApprove = positionName($row['user_id']); 
+                                            $createNames = createName($row['doclist_user_id']); 
+                                            $positionCreate = positionName($row['doclist_user_id']);
+                                            $deptNames = deptName($row['loss_dep']);  
+                                            $loss_month = month_name($row['loss_data_doc_month']);
+                                            $loss_year = $row['loss_year'];
+                                            
                                         }
                                        
 
@@ -54,8 +61,8 @@ define('PHPPdf/FPDF_FONTPATH','font/');
 	$pdf->AddFont('angsa','','angsa.php');
 	$pdf->SetFont('angsa','',16);
 	$pdf->Cell(0,20,iconv( 'UTF-8','TIS-620','รายงานเหตุการการณ์ความเสียหายที่เกิดจากความเสี่ยงด้านการปฏิบัติการ'),0,1,"C");
-    $pdf->Cell(0,15,iconv( 'UTF-8','TIS-620','ประจำเดือน .............. พ.ศ...........'),0,1,"C");
-    $pdf->Cell(0,0,iconv( 'UTF-8','TIS-620','สาย.......ฝ่าย.........กลุ่ม............'),0,1,"C");
+    $pdf->Cell(0,15,iconv( 'UTF-8','TIS-620','ประจำเดือน '.$loss_month.' พ.ศ.'.$loss_year.''),0,1,"C");
+    $pdf->Cell(0,0,iconv( 'UTF-8','TIS-620','ฝ่าย '.$deptNames.''),0,1,"C");
     $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','                       '),0,1);
     $pdf->Cell(0,15,iconv( 'UTF-8','TIS-620','        วันที่เกิดเหตุการณ์              :  '.$happen_date),0,1);
     $pdf->Cell(0,0,iconv( 'UTF-8','TIS-620','        วันที่ตรวจพบ                      :  '.$checked_date),0,1);
@@ -73,8 +80,8 @@ define('PHPPdf/FPDF_FONTPATH','font/');
     $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','                       '),0,1);
     $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','( ................................................ )                                   ( ................................................ )'),0,1,"C");
     $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','ผู้จัดทำ                                                                           ผุ้อนุมัติ'),0,1,"C"); 
-    $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','......................................................                                 ...................................................... '),0,1,"C");
-    $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','ตำแหน่ง ............................................                           ตำแหน่ง............................................. '),0,1,"C");
+    $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','................'.$createNames.'..................                            ..................'.$approveNames.'................. '),0,1,"C");
+    $pdf->Cell(0,10,iconv( 'UTF-8','TIS-620','ตำแหน่ง .............'.$positionCreate.'...............                             ตำแหน่ง...........'. $positionApprove.'.............. '),0,1,"C");
 
 
 	// $pdf->Output("MyPDF/MyPDF.pdf","F");

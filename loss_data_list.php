@@ -553,8 +553,8 @@ if ($action == 'approve') {
 											</label></div>
 
 										<div class="col-lg-12"><label class="margins-top-10">การควบคุมที่มีอยู่<span style="color: red;">*</span></label><input type="text" class="form-control" style="cursor: default;" name='control' id='control' disabled></div>
-										<div class="col-lg-4"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" style="cursor: default;" name='loss_value' id='loss_value' disabled></div>
-										<div class="col-lg-4"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='chance' id='chance' class="form-control" style="cursor: default;" disabled>
+										<div class="col-lg-3"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" style="cursor: default;" name='loss_value' id='loss_value' disabled></div>
+										<div class="col-lg-3"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='chance' id='chance' class="form-control" style="cursor: default;" disabled>
 												<option value="0">- - - เลือก - - - </option>
 												<?
 												$iFactor4 = 4;
@@ -570,7 +570,7 @@ if ($action == 'approve') {
 													<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 												<? } ?>
 											</select></div>
-										<div class="col-lg-4"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='effect' id='effect' class="form-control" style="cursor: default;" disabled>
+										<div class="col-lg-3"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='effect' id='effect' class="form-control" style="cursor: default;" disabled>
 												<option value="0">- - - เลือก - - - </option>
 												<?
 												$iFactor3 = 3;
@@ -588,7 +588,9 @@ if ($action == 'approve') {
 													<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 												<?		} ?>
 											</select></div>
+											<div class="col-lg-3" id="showPerformance" style="margin-top:35px;">
 
+</div>
 										<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 1</label><select name='dep_id_1' id='dep_id_1' class="form-control" style="cursor: default;" disabled>
 												<option value="0"> - - - -</option>
 												<?
@@ -714,6 +716,24 @@ if ($action == 'approve') {
 		var riskcomment_dates = $(this).attr('data-riskcomment_date');
 		var attech_names = $(this).attr('data-attech_name');
 
+		if (chances != 0 && effects != 0) {
+			var strCheck = chances + effects
+			document.getElementById("showPerformance").innerHTML = "";
+			if (checkLossLevel(strCheck) == 1) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
+			} else if (checkLossLevel(strCheck) == 2) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
+			} else if (checkLossLevel(strCheck) == 3) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+			} else if (checkLossLevel(strCheck) == 4) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
+			}
+		}else  {
+			var strCheck = chances + effects
+			document.getElementById("showPerformance").innerHTML = "";
+			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
+		}
+
 
 		$('#happen_date').val(happen_dates);
 		$('#checked_date').val(checked_dates);
@@ -738,6 +758,8 @@ if ($action == 'approve') {
 		$('#loss_value').val(loss_values);
 		$('#chance').val(chances);
 		$('#effect').val(effects);
+
+		
 		$('#damageLevel').val(damageLevels);
 		$('#related_dep_id').val(related_dep_ids);
 		$('#dep_id_1').val(dep_id_1s);
@@ -871,5 +893,65 @@ if ($action == 'approve') {
 			return false;
 		}
 		return true;
+	}
+</script>
+<script>
+	function checkLossLevel($parameters) {
+		
+		if ($parameters == '00') {
+			return 0;
+		}else if ($parameters == 11) {
+			return 1;
+		} else if ($parameters == 12) {
+			return 1;
+		} else if ($parameters == 13) {
+			return 2;
+		} else if ($parameters == 14) {
+			return 2;
+		} else if ($parameters == 15) {
+			return 2;
+		} else if ($parameters == 21) {
+			return 1;
+		} else if ($parameters == 22) {
+			return 1;
+		} else if ($parameters == 23) {
+			return 2;
+		} else if ($parameters == 24) {
+			return 2;
+		} else if ($parameters == 25) {
+			return 3;
+		} else if ($parameters == 31) {
+			return 2;
+		} else if ($parameters == 32) {
+			return 2;
+		} else if ($parameters == 33) {
+			return 3;
+		} else if ($parameters == 34) {
+			return 3;
+		} else if ($parameters == 35) {
+			return 3;
+		} else if ($parameters == 41) {
+			return 3;
+		} else if ($parameters == 42) {
+			return 3;
+		} else if ($parameters == 43) {
+			return 3;
+		} else if ($parameters == 44) {
+			return 4;
+		} else if ($parameters == 45) {
+			return 4;
+		} else if ($parameters == 51) {
+			return 3;
+		} else if ($parameters == 52) {
+			return 3;
+		} else if ($parameters == 53) {
+			return 3;
+		} else if ($parameters == 54) {
+			return 4;
+		} else if ($parameters == 55) {
+			return 4;
+		} else {
+			return 0;
+		}
 	}
 </script>

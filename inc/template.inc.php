@@ -292,7 +292,7 @@ function generate_menu($d, $current_filename) {
 function menu_item_newUI($p, $current_filename) {
 	global $user_id, $dep_id, $company_id, $menu_count, $connect;
 
-	if ($p==2) { 
+	
 	
 		$item = array();
 		$item[] = array(
@@ -308,8 +308,8 @@ function menu_item_newUI($p, $current_filename) {
 		);
 		generate_menu($item,$current_filename);  
 		
-	} 
-	else if ($p==3) { 
+	
+	if ($p==3) { 
 		
 		$item = array();
 		$item[] = array(
