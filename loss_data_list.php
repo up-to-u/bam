@@ -373,8 +373,8 @@ if ($action == 'approve') {
 											</label></div>
 
 										<div class="col-lg-12"><label class="margins-top-10">การควบคุมที่มีอยู่<span style="color: red;">*</span></label><input type="text" class="form-control" name='edit_control' id='edit_control'></div>
-										<div class="col-lg-4"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" name='edit_loss_value' id='edit_loss_value'></div>
-										<div class="col-lg-4"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='edit_chance' id='edit_chance' class="form-control">
+										<div class="col-lg-3"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" name='edit_loss_value' id='edit_loss_value'></div>
+										<div class="col-lg-3"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='edit_chance' id='edit_chance' class="form-control">
 												<option value="0">- - - เลือก - - - </option>
 												<?
 												$iFactor4 = 4;
@@ -390,7 +390,7 @@ if ($action == 'approve') {
 													<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 												<? } ?>
 											</select></div>
-										<div class="col-lg-4"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='edit_effect' id='edit_effect' class="form-control">
+										<div class="col-lg-3"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='edit_effect' id='edit_effect' class="form-control">
 												<option value="0">- - - เลือก - - - </option>
 												<?
 												$iFactor3 = 3;
@@ -408,7 +408,9 @@ if ($action == 'approve') {
 													<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 												<?		} ?>
 											</select></div>
+											<div class="col-lg-3" id="showPerformance" style="margin-top:35px;">
 
+</div>
 										<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 1</label><select name='edit_dep_id_1' id='edit_dep_id_1' class="form-control">
 												<option value="0"> - - - -</option>
 												<?
@@ -588,7 +590,7 @@ if ($action == 'approve') {
 													<option value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 												<?		} ?>
 											</select></div>
-											<div class="col-lg-3" id="showPerformance" style="margin-top:35px;">
+											<div class="col-lg-3" id="showPerformanceDetail" style="margin-top:35px;">
 
 </div>
 										<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 1</label><select name='dep_id_1' id='dep_id_1' class="form-control" style="cursor: default;" disabled>
@@ -718,20 +720,20 @@ if ($action == 'approve') {
 
 		if (chances != 0 && effects != 0) {
 			var strCheck = chances + effects
-			document.getElementById("showPerformance").innerHTML = "";
+			document.getElementById("showPerformanceDetail").innerHTML = "";
 			if (checkLossLevel(strCheck) == 1) {
-				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
+				$("#showPerformanceDetail").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
 			} else if (checkLossLevel(strCheck) == 2) {
-				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
+				$("#showPerformanceDetail").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
 			} else if (checkLossLevel(strCheck) == 3) {
-				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+				$("#showPerformanceDetail").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
 			} else if (checkLossLevel(strCheck) == 4) {
-				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
+				$("#showPerformanceDetail").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
 			}
 		}else  {
 			var strCheck = chances + effects
-			document.getElementById("showPerformance").innerHTML = "";
-			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
+			document.getElementById("showPerformanceDetail").innerHTML = "";
+			$("#showPerformanceDetail").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
 		}
 
 
@@ -806,7 +808,24 @@ if ($action == 'approve') {
 		var edit_status_risk_approves = $(this).attr('edit-data-status_risk_approve');
 		var edit_riskcomment_dates = $(this).attr('edit-data-riskcomment_date');
 		var edit_attech_names = $(this).attr('edit-data-attech_name');
-
+		
+		if (edit_chances != 0 && edit_effects != 0) {
+			var strCheck = edit_chances + edit_effects
+			document.getElementById("showPerformance").innerHTML = "";
+			if (checkLossLevel(strCheck) == 1) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
+			} else if (checkLossLevel(strCheck) == 2) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
+			} else if (checkLossLevel(strCheck) == 3) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+			} else if (checkLossLevel(strCheck) == 4) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
+			}
+		}else  {
+			var strCheck = edit_chances + edit_effects
+			document.getElementById("showPerformance").innerHTML = "";
+			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
+		}
 
 		$('#edit_data_id').val(edit_data_ids);
 		$('#edit_happen_date').val(edit_happen_dates);
@@ -894,6 +913,50 @@ if ($action == 'approve') {
 		}
 		return true;
 	}
+
+
+	$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
+	$('#edit_chance').on('change', function() {
+		if ($('#edit_chance').val() != 0 && $('#edit_effect').val() != 0) {
+			var strCheck = $('#edit_chance').val() + $('#edit_effect').val()
+			document.getElementById("showPerformance").innerHTML = "";
+			if (checkLossLevel(strCheck) == 1) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
+			} else if (checkLossLevel(strCheck) == 2) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
+			} else if (checkLossLevel(strCheck) == 3) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+			} else if (checkLossLevel(strCheck) == 4) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
+			}
+		}else  {
+			var strCheck = $('#edit_chance').val() + $('#edit_effect').val()
+			document.getElementById("showPerformance").innerHTML = "";
+			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
+		}
+
+
+	});
+
+	$('#edit_effect').on('change', function() {
+		if ($('#edit_chance').val() != 0 && $('#edit_effect').val() != 0) {
+			var strCheck = $('#edit_chance').val() + $('#edit_effect').val()
+			document.getElementById("showPerformance").innerHTML = "";
+			if (checkLossLevel(strCheck) == 1) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
+			} else if (checkLossLevel(strCheck) == 2) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
+			} else if (checkLossLevel(strCheck) == 3) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+			} else if (checkLossLevel(strCheck) == 4) {
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
+			} 
+		}else  {
+			var strCheck = $('#edit_chance').val() + $('#edit_effect').val()
+			document.getElementById("showPerformance").innerHTML = "";
+			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
+		}
+	});
 </script>
 <script>
 	function checkLossLevel($parameters) {
