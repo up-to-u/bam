@@ -1,11 +1,18 @@
 <?php
 session_start();
+$ldap_server = 'ldap://hostname';  /* 'ldap://192.168.222.31'; */
 
-$ldap_server = 'ldap://smepc22231.smebank.local'; //'ldap://192.168.222.31';
-$eservice_smtp_server = 'smeinf054.smebank.local'; //'192.168.155.54';	
-$eservice_email = 'coreportal@smebank.co.th';
-$eservice_email_password = '12QWaszx';
-$eservice_email_name = 'coreportal@smebank.co.th';
+/*
+$eservice_smtp_server = 'smtp.bamdns.local';  // 'หรือ IP : 10.2.1.15 ;	 
+$eservice_email = 'rms@bam.co.th';
+$eservice_email_password = 'asdf1234';
+$eservice_email_name = 'rms@bam.co.th';
+
+$eservice_smtp_server = 'smtp.gmail.com'; 
+$eservice_email = 'moooping@hotmail.com';
+$eservice_email_password = '';
+$eservice_email_name = 'moooping@hotmail.com';*/
+
 
 $actual_path = (dirname($_SERVER['PHP_SELF']) != '\\') ? dirname($_SERVER['PHP_SELF']) : "";
 $actual_link = $http . "" . $_SERVER['SERVER_NAME'] . "" . $actual_path . "/";
@@ -88,7 +95,7 @@ function get_auto_id($table)
 
 function mail_service($from, $to, $cc, $bcc, $subject, $message, $attach_name = '', $attach_location = '', $is_urgent = false)
 {
-	global $debug;
+	global $debug, $eservice_email_authen, $eservice_email_ssl;
 
 	if ($debug == 1) {
 		echo "<div style='background: #ffcc99'>";
@@ -102,7 +109,7 @@ function mail_service($from, $to, $cc, $bcc, $subject, $message, $attach_name = 
 		return true;
 	} else {
 		$subject = '=?utf-8?B?' . base64_encode($subject) . '?=';
-		$x = phpmailer($to, $cc, $subject, $message, $from, false, false, $is_urgent);
+		$x = phpmailer($to, $cc, $subject, $message, $from, $eservice_email_ssl, $eservice_email_authen, $is_urgent);
 		if ($x) {
 			return true;
 		}
@@ -110,11 +117,23 @@ function mail_service($from, $to, $cc, $bcc, $subject, $message, $attach_name = 
 	return false;
 }
 
-function phpmailer($to, $cc, $subject, $body, $from, $is_ssl = false, $is_auten = false, $is_urgent = false)
-{
-	global $eservice_email, $eservice_email_password, $eservice_smtp_server, $eservice_email_name;
-	require_once('phpmailer/PHPMailerAutoload.php');
-	$mail = new PHPMailer();
+function phpmailer($to, $cc, $subject, $body, $from, $is_ssl = false, $is_auten = false, $is_urgent = false) {
+	global $eservice_email, $eservice_email_password, $eservice_smtp_server, $eservice_email_default_name;
+
+/*	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\Exception;*/
+	/*require_once('phpmailer/PHPMailerAutoload.php');*/
+	/*require 'phpmailer2/Exception.php';
+	require 'phpmailer2/PHPMailer.php';
+	require 'phpmailer2/SMTP.php';*/
+	/*require_once('phpmailer2/PHPMailer.php');*/
+
+	require_once 'phpmailer2/Exception.php';
+	require_once 'phpmailer2/PHPMailer.php';
+	require_once 'phpmailer2/SMTP.php';
+	
+	$mail = new PHPMailer\PHPMailer\PHPMailer();
+
 	$mail->IsSMTP();                      // telling the class to use SMTP
 	$mail->SMTPDebug = 0;
 	$mail->CharSet = 'text/html; charset=UTF-8;';
@@ -154,7 +173,7 @@ function phpmailer($to, $cc, $subject, $body, $from, $is_ssl = false, $is_auten 
 	if ($from != '') {
 		$mail->SetFrom($from, $from);
 	} else {
-		$mail->SetFrom($eservice_email_name, $eservice_email_name);
+		$mail->SetFrom($eservice_email_default_name, $eservice_email_default_name);
 	}
 	$mail->Subject = $subject;
 	$mail->IsHTML(true);
@@ -1004,8 +1023,7 @@ function set_person_logout($t = 'cookie')
 }
 
 
-function set_login($user_id, $user_code, $dep_id, $dep_code, $hash, $t = 'cookie')
-{
+function set_login($user_id, $user_code, $dep_id, $dep_code, $hash, $t = 'cookie') {
 	global $domain;
 
 	if ($t == 'cookie') {
@@ -1031,8 +1049,30 @@ function set_login($user_id, $user_code, $dep_id, $dep_code, $hash, $t = 'cookie
 	}
 }
 
-function set_dep_id($did, $t = 'cookie')
-{
+function set_password_expire($is_expire, $t='cookie') {
+	global $domain;
+	if ($t=='cookie') {
+		$login_time = time() + (60 * 60 * 24);
+		setcookie('password_exired', $is_expire, $login_time, '/', $domain);
+		$_COOKIE['password_exired'] = $is_expire;
+	} else {
+		session_start();
+		$_SESSION['password_exired'] = $is_expire;
+	}
+	//echo 'set=['.$is_expire.'].['.$_COOKIE['password_exired'].']';
+}
+
+function get_password_expire($t='cookie') {
+	if ($t=='cookie') {
+		if ($_COOKIE['password_exired']=='1') return true;
+	} else {
+		session_start();
+		if ($_SESSION['password_exired']=='1') return true;		
+	}
+	return false;
+}
+
+function set_dep_id($did, $t = 'cookie') {
 	global $domain;
 
 	if ($t == 'cookie') {
@@ -1045,8 +1085,7 @@ function set_dep_id($did, $t = 'cookie')
 	}
 }
 
-function set_login_log($uid)
-{
+function set_login_log($uid) {
 	if ($uid == 0) $uid = get_user_id();
 	if ($uid > 0) {
 		$ip = getIp();
@@ -1525,5 +1564,16 @@ function checkLossLevel($parameters)
 		return 0;
 	}
 }
+function get_user_division_name($uid)
+{
+	global $connect;
+	$sql = "SELECT division_name FROM user WHERE user_id = '$uid' ";
+	$qry = mysqli_query($connect, $sql);
+	if ($row = mysqli_fetch_array($qry)) {
+		return $row['division_name'];
+	}
+	return 0;
+}
+
 
 ?>

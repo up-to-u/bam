@@ -1,18 +1,48 @@
-<?
+﻿<?
 include('inc/include.inc.php');
 echo template_header();
+$view_year = intval($_GET['view_year']);
+$today = date("Y-m-d");
 
-$sql = "SELECT department_id,department_name, group_name,division_name FROM user WHERE user_id=?";
+
+
+if ($_GET['view_year'] == 0 || $_GET['view_year'] == NULL ) {
+	$view_year = date('Y') + 543;
+}
+
+
+$view_month = intval($_GET['view_month']);
+if ($_GET['view_month'] == 0) {
+	$view_month = 'ALL';
+}
+
+
+$sql = "SELECT user.*,department.department_name,department.department_level_id, user.group_name,user.division_name,user.auth_loss 
+FROM user 
+join department on  department.department_id = user.department_id 
+WHERE user.user_id=?";
 $stmt = $connect->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $res1 = $stmt->get_result();
 if ($row_mem = $res1->fetch_assoc()) {
+	$department_level_id = $row_mem['department_level_id'];
 	$department_name = $row_mem['department_name'];
 	$groupName = $row_mem['group_name'];
 	$division_name = $row_mem['division_name'];
-	$department_id = $row_mem['department_id'];
+	$department_id = ($row_mem['department_id']);
+	/*if ($department_level_id == '5') {
+	//echo	$department_id = getParentID($row_mem['department_id']);
+	echo	$department_id = ($row_mem['department_id']);
+	} elseif ($department_level_id == '4') {
+		$department_id = ($row_mem['department_id']);
+	}*/
+
+	$auth_loss = $row_mem['auth_loss'];
 }
+
+
+
 
 if ($_POST['submitLossDoc'] == 'submitLossDoc') {
 	$loss_data_doc_month = $_POST['loss_data_doc_month'];
@@ -40,17 +70,67 @@ if ($_POST['submitLossDoc'] == 'submitLossDoc') {
 				$loss_data_doc_month,
 				$loss_year,
 				$loss_have,
-				$loss_dep,
+				($loss_dep),
 				$approve_id,
 				$approve_name,
 				$user_id,
 			);
 			$q = $stmt->execute();
 			$qx = ($qx and $q);
+			$insert_id = mysqli_insert_id($connect);
 
 			if ($qx) {
 				$connect->commit();
-				echo "<script>alert('ระบบได้บันทึกข้อมูลของท่านแล้ว');</script>";
+
+				if ($loss_have == "1" && $connect) {
+
+
+					$sqlCount1 = "SELECT loss_data_doc_id FROM loss_data_doc WHERE  user_id = ? and loss_create = CURRENT_DATE() ORDER BY  loss_data_doc_id DESC  LIMIT 1";
+					$stmt = $connect->prepare($sqlCount1);
+					$stmt->bind_param("i", $user_id);
+					$stmt->execute();
+					$res = $stmt->get_result();
+					if ($rows = $res->fetch_assoc()) {
+						$select_doclist_id = $rows['loss_data_doc_id'];
+					}
+
+					echo "<script>
+					jQuery(document).ready(function(e) {
+						
+						jQuery('#myModalSendCase').modal();
+					});
+					</script>";
+				} else if ($loss_have == "0" && $connect) {
+					echo "<script>alert('ระบบได้บันทึกข้อมูลของท่านแล้ว');</script>";
+					savelog('LOSS-USER-ADD-LossReport|loss_data_doc_id|' . $insert_id . '|');
+
+
+					$sql1 = "SELECT user_id FROM user 
+						where department_id =$department_id and auth_loss ='2'";
+					$result1 = mysqli_query($connect, $sql1);
+					while ($row1 = mysqli_fetch_array($result1)) {
+						$mailapprove = getEmail($row1['user_id']);
+						if ($mailapprove != '') {
+							$email_from = 'noreply-lossdata@bam.co.th';
+							$cc = array();
+							$bcc = array();
+							$to = array($mailapprove);
+
+							$subject = 'ท่านมีรายงานเหตุการณ์ความเสียหายรออนุมัติใหม่ [LOSS DATA]';
+							$body = 'เรียน ผู้อนุมัติเหตุการณ์ความเสียหาย ' . $department_name . '<br><br>
+						เนื่องจากวันที่ ' . mysqldate2th_date($today) . 'ฝ่ายของท่านมีการรายงานเหตุการณ์ความเสียหาย กรุณาเข้าสู่ระบบเพื่อดำเนินการตรวจสอบและอนุมัติรายการ
+						<br>จึงแจ้งมายังท่านเพื่อมราบ โปรดดำเนินและการอนุมัติต่อไป<br><br><a href="' . $url_prefix . '/loss_data_approve.php" target="_new"> คลิกเพื่อเข้าสู่ระบบ</a> ';
+							$x = @mail_service($email_from, $to, $cc, $bcc, $subject, $body, $attach_name, $attach_location);
+							if ($x) {
+								echo "<font color='#00aa00'><b>ระบบได้ส่ง E-mail เรียบร้อยแล้ว</b></font><br>";
+							} else {
+								echo "<font color='#aa0000'><b>เกิดข้อผิดพลาด ระบบไม่สามารส่ง E-mail ได้</b></font><br>";
+							}
+						} else {
+							echo "<font color='#aa0000'><b>เกิดข้อผิดพลาด ไม่พบ Email ผู้อนุมัติ กรุณาติดต่อเจ้าหน้าที่ฝ่ายบริหารความเสี่ยง</b></font><br>";
+						}
+					}
+				}
 			} else {
 				$connect->rollback();
 			}
@@ -60,7 +140,13 @@ if ($_POST['submitLossDoc'] == 'submitLossDoc') {
 	}
 }
 if ($_POST['submitLossDataList'] == 'submitLossDataList') {
-	$loss_data_doc_id = $_POST['loss_data_doc_id'];
+	$loss_data_doc_id_auto = $_POST['loss_data_doc_id_auto'];
+	if ($loss_data_doc_id_auto != "") {
+		$loss_data_doc_id = $loss_data_doc_id_auto;
+	} else {
+		$loss_data_doc_id = $_POST['loss_data_doc_id'];
+	}
+
 	$happen_date = $_POST['happen_date'];
 	$checked_date = $_POST['checked_date'];
 	$incidence = $_POST['incidence'];
@@ -72,10 +158,13 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 	$incidence_type = $_POST['incidence_type'];
 	$loss_type = $_POST['loss_type'];
 	$control = $_POST['control'];
-	$loss_value = $_POST['loss_value'];
-	$chance = $_POST['chance'];
-	$effect = $_POST['effect'];
-	$damageLevel = $_POST['effect'] . $_POST['chance'];
+	$loss_values = $_POST['loss_value'];
+	$loss_value = str_replace(",", "", $loss_values);
+	$chance = $_POST['csa_likelihood_id1'];
+	$effect = $_POST['csa_impact_id1'];
+
+	$damageLevel = $effect . $chance;
+	$displayRisk = $_POST['loss_text_level'];
 	$dep_id_1 = $_POST['dep_id_1'];
 	$dep_id_2 = $_POST['dep_id_2'];
 	$dep_id_3 = $_POST['dep_id_3'];
@@ -86,29 +175,58 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 		$target_dir = "attech_file/";
 		$target_file = $target_dir . basename($_FILES["attech_name"]["name"]);
 		$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-		$new_name = $user_id . '_ATTECH' . date('Ymdhis') . '.' . $imageFileType;
+		$new_name = $user_id . '1_ATTECH' . date('Ymdhis') . '.' . $imageFileType;
 		$target_file = $target_dir . $new_name;
 		$check = getimagesize($_FILES["attech_name"]["tmp_name"]);
 		$attech_name = $new_name;
 
 		if ($_FILES["attech_name"]["size"] > 50000000) {
-			echo "Sorry, your file is too large. ";
+			echo "Sorry, your file1 is too large. ";
 			$uploadOk = 0;
 		}
 		// Check if $uploadOk is set to 0 by an error
 		if ($uploadOk == 0) {
-			echo "Sorry, your file was not uploaded. ";
+			echo "Sorry, your file1 was not uploaded. ";
 			// if everything is ok, try to upload file
 		} else {
 
 			if (move_uploaded_file($_FILES["attech_name"]["tmp_name"], $target_file)) {
 			} else {
-				echo "Sorry, there was an error uploading your file. ";
+				echo "Sorry, there was an error uploading your file1. ";
 			}
 		}
 	}
 
-	if ($uploadOk != 0) {
+	$attech_name2 = ($_FILES["attech_name2"]["name"]);
+	$uploadOk2 = 1;
+	if ($attech_name2 != "" || $attech_name2 != null) {
+		$target_dir2 = "attech_file/";
+		$target_file2 = $target_dir2 . basename($_FILES["attech_name2"]["name"]);
+		$imageFileType2 = strtolower(pathinfo($target_file2, PATHINFO_EXTENSION));
+		$new_name2 = $user_id . '2_ATTECH' . date('Ymdhis') . '.' . $imageFileType2;
+		$target_file2 = $target_dir . $new_name2;
+		$check2 = getimagesize($_FILES["attech_name2"]["tmp_name"]);
+		$attech_name2 = $new_name2;
+
+		if ($_FILES["attech_name2"]["size"] > 50000000) {
+			echo "Sorry, your file2 is too large. ";
+			$uploadOk2 = 0;
+		}
+		// Check if $uploadOk is set to 0 by an error
+		if ($uploadOk2 == 0) {
+			echo "Sorry, your file2 was not uploaded. ";
+			// if everything is ok, try to upload file
+		} else {
+
+			if (move_uploaded_file($_FILES["attech_name2"]["tmp_name"], $target_file2)) {
+			} else {
+				echo "Sorry, there was an error uploading your file2. ";
+			}
+		}
+	}
+
+
+	if ($uploadOk != 0 || $uploadOk2 != 0) {
 		$qx = true;
 		$stmt = $connect->prepare("INSERT INTO loss_data_doc_list
 		(`loss_data_doc_id`,
@@ -125,18 +243,20 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 		`loss_value`,
 		`chance`,
 		`effect`,
+		`displayRisk`,
 		`damageLevel`,
 		`dep_id_1`,
 		`dep_id_2`,
 		`dep_id_3`,
 		`attech_name`,
+		`attech_name2`,
 		`doclist_user_id`) 
 		VALUES
-		(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		if ($stmt) {
 			$stmt->bind_param(
-				'issssssiiisiiisiiisi',
+				'issssssiiisdiissiiissi',
 				$loss_data_doc_id,
 				$happen_date,
 				$checked_date,
@@ -151,21 +271,75 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 				$loss_value,
 				$chance,
 				$effect,
+				$displayRisk,
 				$damageLevel,
 				$dep_id_1,
 				$dep_id_2,
 				$dep_id_3,
 				$attech_name,
+				$attech_name2,
 				$user_id
 			);
 			$q = $stmt->execute();
 			$qx = ($qx and $q);
+			$insert_id = mysqli_insert_id($connect);
 
 			if ($qx) {
 				$connect->commit();
 				echo "<script>alert('ระบบได้บันทึกข้อมูลของท่านแล้ว');
 				document.location.href('loss_data.php');
 				</script>";
+
+				savelog('LOSS-USER-ADD-LossListReport|loss_data_doc_list_id|' . $insert_id . '|');
+
+
+				$sql1 = "SELECT user_id FROM user 
+						where department_id =$department_id and auth_loss ='2'";
+				$result1 = mysqli_query($connect, $sql1);
+				while ($row1 = mysqli_fetch_array($result1)) {
+					$mailapprove = getEmail($row1['user_id']);
+					if ($mailapprove != '') {
+						$email_from = 'noreply-lossdata@bam.co.th';
+						$cc = array();
+						$bcc = array();
+						$to = array($mailapprove);
+
+						$subject = 'ท่านมีรายงานเหตุการณ์ความเสียหายรออนุมัติใหม่ [LOSS DATA]';
+						$body = 'เรียน ผู้อนุมัติเหตุการณ์ความเสียหาย ' . $department_name . '<br><br>
+						เนื่องจากวันที่ ' . mysqldate2th_date($today) . 'ฝ่ายของท่านมีการรายงานเหตุการณ์ความเสียหาย กรุณาเข้าสู่ระบบเพื่อดำเนินการตรวจสอบและอนุมัติรายการ
+						<br>จึงแจ้งมายังท่านเพื่อมราบ โปรดดำเนินและการอนุมัติต่อไป<br><br><a href="' . $host . '/loss_data_approve.php" target="_new"> คลิ๊กเพื่อเข้าสู่ระบบ</a> ';
+						$x = @mail_service($email_from, $to, $cc, $bcc, $subject, $body, $attach_name, $attach_location);
+						if ($x) {
+							echo "<font color='#00aa00'><b>ระบบได้ส่ง E-mail เรียบร้อยแล้ว</b></font><br>";
+						} else {
+							echo "<font color='#aa0000'><b>เกิดข้อผิดพลาด ระบบไม่สามารส่ง E-mail ได้</b></font><br>";
+						}
+					} else {
+						echo "<font color='#aa0000'><b>เกิดข้อผิดพลาด ไม่พบ Email ผู้อนุมัติ กรุณาติดต่อเจ้าหน้าที่ฝ่ายบริหารความเสี่ยง</b></font><br>";
+					}
+				}
+
+				$qx = true;
+				$loss_have = 1;
+				$stmt = $connect->prepare("UPDATE loss_data_doc SET
+					loss_have=?
+					WHERE loss_data_doc_id=? ");
+
+				if ($stmt) {
+					$stmt->bind_param(
+						'ii',
+						$loss_have,
+						$loss_data_doc_id
+					);
+					$q = $stmt->execute();
+					$qx = ($qx and $q);
+
+
+					if ($qx) {
+						$connect->commit();
+						savelog('LOSS-USER-UPDATELossList|loss_data_doc_id|' . $loss_data_doc_id . '|');
+					}
+				}
 			} else {
 				$connect->rollback();
 			}
@@ -180,6 +354,11 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 
 ?>
 <style>
+	h4 {
+		font-family: "prompt", sans-serif !important;
+
+	}
+
 	.margins-3 {
 		margin-top: 15px;
 		margin-bottom: 15px;
@@ -187,6 +366,173 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 
 	.margins-top-10 {
 		margin-top: 10px;
+	}
+
+	body {
+		letter-spacing: 0.7px;
+		background-color: #eee;
+	}
+
+	.container {
+		margin-top: 100px;
+		margin-bottom: 100px;
+	}
+
+	p {
+		font-size: 14px;
+	}
+
+	.btn-primary {
+		background-color: #42A5F5 !important;
+		border-color: #42A5F5 !important;
+	}
+
+	.cursor-pointer {
+		cursor: pointer;
+		color: #42A5F5;
+	}
+
+	.pic {
+		margin-top: 30px;
+		margin-bottom: 20px;
+	}
+
+	.card-block {
+		width: 200px;
+
+		border-radius: 5px !important;
+		background-color: #FAFAFA;
+		margin: 50px;
+
+
+	}
+
+	.card-body.show {
+		display: block;
+	}
+
+	.card {
+		padding-bottom: 20px;
+		box-shadow: 2px 2px 6px 0px rgb(200, 167, 216);
+
+	}
+
+	.radio {
+		display: inline-block;
+		border-radius: 0;
+		box-sizing: border-box;
+		cursor: pointer;
+		color: #000;
+		font-weight: 500;
+		-webkit-filter: grayscale(0%);
+		-moz-filter: grayscale(0%);
+		-o-filter: grayscale(0%);
+		-ms-filter: grayscale(0%);
+		filter: grayscale(0%);
+
+	}
+
+	input[type="radio"] {
+		-ms-transform: scale(2);
+		/* IE 9 */
+		-webkit-transform: scale(2);
+		/* Chrome, Safari, Opera */
+		transform: scale(2);
+	}
+
+	.radio:hover {
+		box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+	}
+
+	.radio.selected {
+		box-shadow: 0px 8px 16px 0px #EEEEEE;
+		-webkit-filter: grayscale(0%);
+		-moz-filter: grayscale(0%);
+		-o-filter: grayscale(0%);
+		-ms-filter: grayscale(0%);
+		filter: grayscale(0%);
+
+	}
+
+	.radio1.selected {
+		box-shadow: 0px 8px 16px 0px #EEEEEE;
+		-webkit-filter: grayscale(0%);
+		-moz-filter: grayscale(0%);
+		-o-filter: grayscale(0%);
+		-ms-filter: grayscale(0%);
+		filter: grayscale(0%);
+		border: 4px solid #56c024;
+
+	}
+
+	.radio2.selected {
+		box-shadow: 0px 8px 16px 0px #EEEEEE;
+		-webkit-filter: grayscale(0%);
+		-moz-filter: grayscale(0%);
+		-o-filter: grayscale(0%);
+		-ms-filter: grayscale(0%);
+		filter: grayscale(0%);
+		border: 4px solid #e7505a;
+
+	}
+
+	.selected {
+		background-color: #eff5fa;
+	}
+
+	.a {
+		justify-content: center !important;
+	}
+
+
+	.btn {
+		border-radius: 0px;
+
+	}
+
+	.btn,
+	.btn:focus,
+	.btn:active {
+		outline: none !important;
+		box-shadow: none !important;
+	}
+
+	.label-main {
+		font-weight: bold;
+		color: #004C85;
+	}
+
+	.dashboard-stat.green {
+		background-color: #26c281 !important;
+	}
+
+	.font-green {
+		color: #261ecd !important;
+	}
+
+	.portlet.light>.portlet-title>.caption>.caption-subject {
+		font-size: 20px !important;
+	}
+
+	.modal .modal-header {
+		border-bottom: 1px solid #EFEFEF !important;
+		background-color: #004C85 !important;
+	}
+
+	.box-matrix {
+		width: 70px;
+		height: 70px;
+		align-items: center;
+		text-align: center;
+	}
+
+	.box-matrix-border {
+		border: solid 1px #323233;
+	}
+
+	.text-matrix {
+		font-size: 14px;
+		font-weight: 700;
 	}
 </style>
 
@@ -208,6 +554,20 @@ if ($_POST['submitLossDataList'] == 'submitLossDataList') {
 		});
 	});
 </script>
+<script>
+	$(function() {
+
+		$(".r1").mousedown(function() {
+			$(this).attr('previous-value', $(this).prop('checked'));
+		});
+
+		$(".r1").click(function() {
+			var previousValue = $(this).attr('previous-value');
+			if (previousValue == 'true')
+				$(this).prop('checked', false);
+		});
+	});
+</script>
 <?
 $sql13 = "SELECT month_year_id as yid2 FROM loss_time";
 $result13 = mysqli_query($connect, $sql13);
@@ -220,7 +580,7 @@ if ($yid2 == '') {
 ?>
 
 <div class="row">
-	<label style="color:gray; font-size:10px;" class="pull-right"> Loss Data V1 - 31/05/65</label>
+	<label style="color:gray; font-size:10px;" class="pull-right"> Loss Data V1 - 14/06/65</label>
 	<div class="col-lg-12 col-lg-12 col-sm-12">
 		<div class="portlet light tasks-widget bordered">
 			<div class="portlet-title">
@@ -232,20 +592,138 @@ if ($yid2 == '') {
 			</div>
 			<!---------------->
 			<div class="row" style="margin-top: 20px;margin-bottom: 20px;">
-				<div class="col-lg-3">
-				</div>
-				<div class="col-lg-3">
+
+				<div class="col-lg-4">
 
 					<b>สายงาน :</b> <?= $division_name; ?>
 				</div>
-				<div class="col-lg-3">
-					<b>ฝ่าย :</b> <?= $department_name; ?>
+				<div class="col-lg-4">
+					<b>ฝ่าย :</b> <?= str_replace('ฝ่าย', '', $department_name); ?>
 				</div>
-				<div class="col-lg-3">
+				<div class="col-lg-4">
 					<b>กลุ่มงาน :</b> <?= $groupName; ?>
 				</div>
 			</div>
-			<div class="row">
+			<form method='post' action='loss_data.php' enctype="multipart/form-data">
+				<div class="row justify-content-center">
+
+					<div class="col-xs-12 col-lg-6">
+
+						<select class='form-control input-lg' id='loss_data_doc_month' name='loss_data_doc_month' required style="display: inline;">
+							<option value=''>--- เดือน ---</option>
+
+							<? $sql1 = "SELECT *	FROM month 
+												JOIN loss_time ON loss_time.month_time_id =  month.month_id
+												ORDER BY 	month.month_id  ";
+							$result1 = mysqli_query($connect, $sql1);
+							while ($row1 = mysqli_fetch_array($result1)) {	?>
+								<option value='<?= $row1['month_id'] ?>'><?= $row1['month_name'] ?> </option>
+							<?	} ?>
+						</select>
+						<input type='hidden' name='loss_year' value='<?= $month_year ?>'>
+						<input type="hidden" name="loss_dep" value="<?= $department_id; ?>">
+
+					</div>
+
+					<div class="col-xs-12 col-lg-6">
+
+						<select class='form-control input-lg' id='' name='' style="display: inline;">
+							<option value=''><?= $month_year ?></option>
+						</select>
+
+					</div>
+
+					<div class="col-xs-12 col-lg-12">
+						<div class="card-body show " style="min-height: 320px;">
+							<div class="radio-group row justify-content-between px-3 text-center a">
+								<div class="col-auto mr-sm-2 mx-1 card-block  py-0 text-center radio radio1 ">
+									<label>
+										<div class="flex-row">
+											<div class="col">
+												<div class="pic"><input type="radio" name='loss_have' value='0' required class="img-checker r1"> <img class="irc_mut img-fluid" src="images/ok.png" width="100" height="100"> </div>
+												<p style='font-size: 20px;'><b><u>
+															<font color='green'>ไม่พบ</font>
+														</u>เหตุการณ์</b></p>
+											</div>
+										</div>
+									</label>
+								</div>
+								<div class="col-auto ml-sm-2 mx-1 card-block  py-0 text-center radio radio2 ">
+									<label>
+										<div class="flex-row">
+											<div class="col">
+												<div class="pic"><input type="radio" name='loss_have' value='1' required class="img-checker r1"> <img class="irc_mut img-fluid" src="images/risks.png" width="100" height="100"> </div>
+												<p style='font-size: 20px;'><b><u>
+															<font color='red'>พบ</font>
+														</u>เหตุการณ์</b></p>
+											</div>
+										</div>
+									</label>
+								</div>
+							</div>
+
+
+						</div>
+						<div class="col-xs-12 col-lg-12">
+							<button type='submit' name='submitLossDoc' value='submitLossDoc' class="btn btn-info btn-lg btn-block "><i class='fa fa-save'></i> บันทึก</button>
+						</div>
+					</div>
+
+				</div>
+			</form>
+
+
+
+		</div>
+	</div>
+
+	<!---->
+
+	<div class="col-lg-12 col-lg-12 col-sm-12">
+		<table>
+			<tr>
+				<td>แสดงข้อมูล </td>
+				<td width='15'></td>
+				<td>
+					<select class='form-control input-lg' id='loss_data_doc_month' onChange='document.location="loss_data.php?view_year=<?= $_GET["view_year"] ?>&view_month="+this.value'>
+						<option value='ALL'>--- เดือนทั้งหมด ---</option>
+
+						<? $sql1 = "SELECT * FROM month  ORDER BY 	month.month_id  ";
+						$result1 = mysqli_query($connect, $sql1);
+						while ($row1 = mysqli_fetch_array($result1)) {	?>
+							<option value='<?= $row1['month_id'] ?>' <? if ($_GET['view_month'] == $row1['month_id']) {
+																			echo " selected";
+																		} ?>><?= $row1['month_name'] ?></option>
+						<?	} ?>
+					</select>
+
+				</td>
+				<td width='30'></td>
+				<td>
+					<select name='view_year' class="form-control input-lg" onChange='document.location="loss_data.php?view_month=<?= $_GET["view_month"] ?>&view_year="+this.value'>
+						<option value='<?= $view_year - 2 ?>'><?= $view_year - 2 ?></option>
+						<option value='<?= $view_year - 1 ?>'><?= $view_year - 1 ?></option>
+						<option value='<?= $view_year ?>' selected><?= $view_year ?></option>
+						<option value='<?= $view_year + 1 ?>'><?= $view_year + 1 ?></option>
+						<option value='<?= $view_year + 2 ?>'><?= $view_year + 2 ?></option>
+						<select>
+				</td>
+			</tr>
+		</table>
+		<br>
+	</div>
+	<div class="col-lg-12 col-lg-12 col-sm-12">
+		<div class="portlet light tasks-widget bordered">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-share font-dark hide"></i>
+					<span class="caption-subject font-green sbold uppercase">รายการเหตุการณ์ความเสียหาย</span>
+					<span class="caption-helper"></span>
+				</div>
+			</div>
+			<!---------------->
+
+			<!-- <div class="row">
 				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
 					<div class="dashboard-stat dashboard-stat-v2 blue">
 						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
@@ -254,9 +732,9 @@ if ($yid2 == '') {
 									<?php $i1 = 0;
 									$sqlCount1 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
 									join loss_data_doc on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
-									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ?";
+									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ? and loss_data_doc.loss_year=?";
 									$stmt = $connect->prepare($sqlCount1);
-									$stmt->bind_param("ii", $i1, $department_id);
+									$stmt->bind_param("iii", $i1, $department_id, $view_year);
 									$stmt->execute();
 									$res = $stmt->get_result();
 									if ($rows = $res->fetch_assoc()) {
@@ -264,9 +742,15 @@ if ($yid2 == '') {
 									}
 									?>
 									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=0" style="color: #FFFFFF;">
-									<< เรียกดูข้อมูลเพิ่มเติม>>
-								</a></div>
+							<div class="desc" style="margin-top: 13px;">
+								<form action="loss_data_list.php?statusListId=0" method="post" style="display: inline;">
+									<input type="hidden" value="<?= $listId; ?>" name="listId" id="listId">
+									<input type="hidden" value="<?= $m; ?>" name="m" id="m">
+									<input type="hidden" value="<?= $y; ?>" name="y" id="y">
+									<button type='submit' class="btn btn-success"> Click ดูข้อมูลเพิ่มเติม</button>
+								</form>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -278,9 +762,9 @@ if ($yid2 == '') {
 									<?php $i2 = 2;
 									$sqlCount2 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
 									join loss_data_doc on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
-									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ?";
+									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ? and loss_data_doc.loss_year=? ";
 									$stmt = $connect->prepare($sqlCount2);
-									$stmt->bind_param("ii", $i2, $department_id);
+									$stmt->bind_param("iii", $i2, $department_id, $view_year);
 									$stmt->execute();
 									$res = $stmt->get_result();
 									if ($rows = $res->fetch_assoc()) {
@@ -288,9 +772,14 @@ if ($yid2 == '') {
 									}
 									?>
 									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=2" style="color: #FFFFFF;">
-									<< เรียกดูข้อมูลเพิ่มเติม>>
-								</a></div>
+							<div class="desc" style="margin-top: 13px;">
+								<form action="loss_data_list.php?statusListId=2" method="post" style="display: inline;">
+									<input type="hidden" value="<?= $listId; ?>" name="listId" id="listId">
+									<input type="hidden" value="<?= $m; ?>" name="m" id="m">
+									<input type="hidden" value="<?= $y; ?>" name="y" id="y">
+									<button type='submit' class="btn btn-danger"> Click ดูข้อมูลเพิ่มเติม</button>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -298,13 +787,13 @@ if ($yid2 == '') {
 					<div class="dashboard-stat dashboard-stat-v2 green">
 						<div class="visual"> <i class="fa fa-shopping-cart"></i> </div>
 						<div class="details">
-							<div class="number"> <span data-counter="counterup">รายการอนุมัติแล้ว
+							<div class="number"> <span data-counter="counterup">อนุมัติแล้ว
 									<?php $i3 = 1;
 									$sqlCount3 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
 									join loss_data_doc on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
-									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ?";
+									WHERE loss_data_doc_list.status_approve =? and loss_data_doc.loss_dep = ? and loss_data_doc.loss_year=?";
 									$stmt = $connect->prepare($sqlCount3);
-									$stmt->bind_param("ii", $i3, $department_id);
+									$stmt->bind_param("iii", $i3, $department_id, $view_year);
 									$stmt->execute();
 									$res = $stmt->get_result();
 									if ($rows = $res->fetch_assoc()) {
@@ -312,154 +801,173 @@ if ($yid2 == '') {
 									}
 									?>
 									คำขอ</span> </div>
-							<div class="desc" style="margin-top: 13px;"><a href="loss_data_list.php?statusListId=1" style="color: #FFFFFF;">
-									<< เรียกดูข้อมูลเพิ่มเติม>>
-								</a></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!---------------->
+							<div class="desc" style="margin-top: 13px;">
+								<form action="loss_data_list.php?statusListId=1" method="post" style="display: inline;">
+									<input type="hidden" value="<?= $listId; ?>" name="listId" id="listId">
+									<input type="hidden" value="<?= $m; ?>" name="m" id="m">
+									<input type="hidden" value="<?= $y; ?>" name="y" id="y">
 
-			<form method='post' action='loss_data.php' enctype="multipart/form-data">
-				<div class="form-group" style="margin-top: 21px;">
-					<div class="row">
-
-						<div class="col-lg-12 col-xs-12">
-							<div class='well'>
-
-								<div class='row'>
-									<div class="col-lg-2 margins-3" style="margin-left: 16px;background-color:#E7505A;padding: 7px;border-radius: 3px;color:#FFFFFF;">
-										<label class="radio-inline" style="padding-top: 2px;"><input type="radio" name="loss_have" value="1"> พบเหตุการณ์ความเสียหาย
-										</label>
-									</div>
-									<div class="col-lg-2 margins-3" style="margin-left: 16px;background-color: #004C85;padding: 7px;border-radius: 3px;color:#FFFFFF;">
-										<label class="radio-inline" style="padding-top: 2px;"><input type="radio" name="loss_have" value="0" checked> ไม่พบเหตุการณ์ความเสียหาย
-										</label>
-									</div>
-									<div class="col-lg-1 margins-3">
-									</div>
-									<div class="col-lg-3 margins-3">
-										<div class="form-group">
-											<label for="username" class="col-xs-12 col-lg-6 control-label " style="margin-top: 8px;">รายงานประจำเดือน </label>
-											<div class="col-xs-12 col-lg-6">
-
-												<select class='form-control' id='loss_data_doc_month' name='loss_data_doc_month' style="display: inline;">
-													<? $sql1 = "SELECT *	FROM month 
-												JOIN loss_time ON loss_time.month_time_id =  month.month_id
-												ORDER BY 	month.month_id  ";
-													$result1 = mysqli_query($connect, $sql1);
-													while ($row1 = mysqli_fetch_array($result1)) {	?>
-														<option value='<?= $row1['month_id'] ?>'><?= $row1['month_name'] ?></option>
-													<?	} ?>
-												</select>
-
-											</div>
-										</div>
-
-									</div>
-									<div class="col-lg-2 margins-3">
-										<div class="form-group">
-											<label for="username" class="col-xs-12 col-lg-3 control-label " style="margin-top: 8px;">ปี </label>
-											<div class="col-xs-12 col-lg-9">
-												<select name='loss_year' id='loss_year' class="form-control" style="margin-bottom:5px;">
-													<option value='<?= $month_year ?>'><?= $month_year ?></option>
-
-												</select>
-											</div>
-										</div>
-
-									</div>
-
-
-
-									<div class="col-lg-1 margins-3 " align="center">
-										<input type="hidden" name="loss_dep" value="<?= $department_id; ?>">
-										<button type='submit' name='submitLossDoc' value='submitLossDoc' class="btn btn-danger"><i class='fa fa-save'></i> บันทึก
-										</button>
-									</div>
-
-
-								</div>
+									<button type='submit' class="btn btn-danger" style='background-color: #51dca2; border-color: #51dca2;'> Click ดูข้อมูลเพิ่มเติม</button>
+								</form>
 							</div>
 						</div>
 					</div>
 				</div>
-			</form>
+			</div> -->
 
-			<div class="form-group" style="margin-top: -30px;">
-				<div class="row">
+			<div class="row" style="margin-top: 20px;margin-bottom: 20px;">
+				<div class="form-group">
+
 					<div class="col-lg-12 col-xs-12">
-						<div class='well'>
-							<div class='row' style="margin-left: 3px;margin-right: 3px;">
-								<!-- start table -->
-								<table id="exampleDataTable" class="table table-striped table-bordered" style="width:100%">
-									<thead>
-										<tr>
-											<th style='width:20%'>ช่วงเหตุการณ์</th>
-											<th style='width:30%'>ผลการรายงาน</th>
-											<th style='width:10%'>รายงานโดย</th>
-											<th style='width:10%'>วันที่บันทึก</th>
-											<th style='width:30%'>จัดการ</th>
-										</tr>
-									</thead>
-									<tbody>
 
-										<?php
-										$sql = "SELECT * FROM loss_data_doc where loss_dep= ? order by loss_create DESC";
-										$stmt = $connect->prepare($sql);
-										$stmt->bind_param("i", $department_id);
-										$stmt->execute();
-										$result = $stmt->get_result();
-										while ($row = mysqli_fetch_array($result)) {
-										?>
-											<tr>
-												<td style="vertical-align: middle;"><?= ' ' . month_name($row['loss_data_doc_month']) . ' พ.ศ. ' . $row['loss_year']; ?></td>
+						<!-- start table -->
+						<table id="exampleDataTable" class="table table-striped table-bordered" style="width:100%">
+							<thead>
+								<tr>
+									<th style='width:15%'>ช่วงเหตุการณ์</th>
+									<th style='width:20%'>ผลการรายงาน</th>
 
-												<td style="vertical-align: middle;"><?php $row['loss_have'];
-																					if ($row['loss_have'] == '0') { ?>
-														<div style="background-color: #E7505A;width:200px; border-radius: 3px;"> <span class="glyphicon glyphicon-exclamation-sign" style="color: #E31D2D;padding-top:2px; color:#FFFFFF; margin-left:5px;"></span><span style="color:#FFFFFF;"> พบเหตุการณ์ความเสียหาย</span></div>
+									<th style='width:10%'>จำนวนรายการ</th>
+									<th style='width:10%'>สถานะรายงาน</th>
+									<th style='width:30%'>จัดการ</th>
+								</tr>
+							</thead>
+							<tbody>
 
-													<?php } else if ($row['loss_have'] == '1') {  ?>
-														<div style="background-color: #004C85;width:200px; border-radius: 3px;"> <span class="glyphicon glyphicon-ok-sign" style="color: #E31D2D;padding-top:2px; color:#FFFFFF; margin-left:5px;"></span><span style="color: #FFFFFF;"> ไม่พบเหตุการณ์ความเสียหาย</span></div>
-													<?php }  ?>
-												</td>
-												<td style="vertical-align: middle;"><?= get_user_name($row['user_id']) ?></td>
-												<td style="vertical-align: middle;"><?= mysqldate2th_date($row['loss_create']); ?></td>
-												<td style="vertical-align: middle;" width="300">
-													<button class="btn btn-primary confirmSendCase" data-doc-id="<?= $row['loss_data_doc_id']; ?>" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-share'></i> รายงานเหตุการณ์</button>
-													<?php if (checkLossList($row['loss_data_doc_id']) > 0) { ?>
-														<form action="loss_data_list.php" methed="post" style="display: inline;">
-															<input type="hidden" value="<?= $row['loss_data_doc_id']; ?>" name="listId" id="listId">
-															<input type="hidden" value="<?= $row['loss_data_doc_month']; ?>" name="m" id="m">
-															<input type="hidden" value="<?= $row['loss_year']; ?>" name="y" id="y">
-															<button type='submit' class="btn btn-success"><i class="glyphicon glyphicon-list-alt"></i> รายการเพิ่มเติม</button>
-														</form>
-													<?php } else {  ?>
-														<button disabled type='submit' class="btn btn-dark" style="background-color: #949596; color:#FFFFFF;"><i class="glyphicon glyphicon-list-alt"></i> รายการเพิ่มเติม</button>
-													<?php } ?>
+								<?php
 
-												</td>
+								$sql = "SELECT * FROM loss_data_doc where loss_dep= ? and loss_year=? ";
+								if ($view_month != 'ALL') {
+									$sql = $sql . "and loss_data_doc_month='$view_month'";
+								}
+								$sql = $sql . " order by loss_data_doc_month ASC";
 
-											</tr>
+								//echo $sql;
+								$stmt = $connect->prepare($sql);
+								$stmt->bind_param("ii", $department_id, $view_year);
+								$stmt->execute();
+								$result = $stmt->get_result();
+								while ($row = mysqli_fetch_array($result)) {
+									$loss_data_doc_id  = $row['loss_data_doc_id'];
+								?>
+									<tr>
+										<td style="vertical-align: middle;"><?= ' ' . month_name($row['loss_data_doc_month']) . ' พ.ศ. ' . $row['loss_year']; ?></td>
 
-										<?php } ?>
 
-									</tbody>
-
-								</table>
-
-								<!-- end table -->
-
-							</div>
-						</div>
+										<? if ($row['loss_have'] == '1') { ?>
+											<td style="vertical-align: middle; ">
+												<span class="glyphicon glyphicon-exclamation-sign" style="color:#f56a75; margin-left:5px;"></span><span style="color:#f56a75;"><b> พบเหตุการณ์ความเสียหาย</b></span>
+											<? } else if ($row['loss_have'] == '0') {  ?>
+											<td style="vertical-align: middle; ">
+												<span class="glyphicon glyphicon-ok-sign" style="padding-top:2px; color:#1bcf84; margin-left:5px;"></span><span style="color: #1bcf84;"><b> ไม่พบเหตุการณ์ความเสียหาย</b></span>
 					</div>
+				<? }  ?>
+				</td>
+
+				<td style="vertical-align: middle;">
+					<? $i = 0;
+									$sqlCount3 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
+													join loss_data_doc  on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
+													WHERE  loss_data_doc.loss_data_doc_id = ? and loss_data_doc_list.status_approve =? ";
+									$stmt = $connect->prepare($sqlCount3);
+									$stmt->bind_param("ii", $loss_data_doc_id, $i);
+									$stmt->execute();
+									$res = $stmt->get_result();
+									if ($rows = $res->fetch_assoc()) {
+										$c0 =  $rows['num'];
+									}
+					?>
+					<? $i2 = 2;
+									$sqlCount3 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
+													join loss_data_doc  on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
+													WHERE  loss_data_doc.loss_data_doc_id = ? and loss_data_doc_list.status_approve =? ";
+									$stmt = $connect->prepare($sqlCount3);
+									$stmt->bind_param("ii", $loss_data_doc_id, $i2);
+									$stmt->execute();
+									$res = $stmt->get_result();
+									if ($rows = $res->fetch_assoc()) {
+										$c2 =  $rows['num'];
+									}
+					?>
+					<? $i1 = 1;
+									$sqlCount3 = "SELECT COUNT(*) AS num FROM loss_data_doc_list 
+													join loss_data_doc  on loss_data_doc.loss_data_doc_id = loss_data_doc_list.loss_data_doc_id 
+													WHERE  loss_data_doc.loss_data_doc_id = ? and loss_data_doc_list.status_approve =? ";
+									$stmt = $connect->prepare($sqlCount3);
+									$stmt->bind_param("ii", $loss_data_doc_id, $i1);
+									$stmt->execute();
+									$res = $stmt->get_result();
+									if ($rows = $res->fetch_assoc()) {
+										$c1 =  $rows['num'];
+									}
+					?>
+					<form action="loss_data_list.php" method="post" style="display: inline;">
+						<input type="hidden" value="<?= $row['loss_data_doc_id']; ?>" name="listId" id="listId">
+						<input type="hidden" value="<?= $row['loss_data_doc_month']; ?>" name="m" id="m">
+						<input type="hidden" value="<?= $row['loss_year']; ?>" name="y" id="y">
+						<input type="hidden" value="y" name="checkStatus" id="checkStatus">
+
+						<button type="submit" name="submit0" value="0" class="btn btn-primary btn-block" style='text-align: left;'><span class="badge"><?= $c0; ?></span> รออนุมัติ </button>
+						<button type="submit" name="submit2" value="2" class="btn btn-danger btn-block" style='text-align: left;'><span class="badge"><?= $c2; ?></span> แก้ไข </button>
+						<button type="submit" name="submit1" value="1" class="btn btn-success btn-block" style='background-color: #26c281; border-color: #26c281; text-align: left;'><span class="badge"><?= $c1; ?></span> อนุมัติแล้ว </button>
+					</form>
+				</td>
+				<td style="vertical-align: middle;">
+					<? if ($row['status_lossapprove'] == '1') {
+										echo "<font color='#1bcf84'><b> อนุมัติแล้ว<br>วันที่ " . mysqldate2th_date($row['approveddate']);
+									} else {
+										echo " <font color='red'><b> รอการอนุมัติ ";
+									} ?></b></font>
+				</td>
+				<td style="vertical-align: middle;" width="300">
+
+					<?php $i1 = 0;
+									$sqlCount1 = "SELECT COUNT(*) AS num FROM loss_time
+														WHERE month_time_id =? and month_year_id =?";
+									$stmt = $connect->prepare($sqlCount1);
+									$stmt->bind_param("ii", $row['loss_data_doc_month'], $view_year);
+									$stmt->execute();
+									$res = $stmt->get_result();
+									if ($rows = $res->fetch_assoc()) {
+										$num = $rows['num'];
+									}
+					?>
+
+
+					<? if ($num > 0) { ?><button class="btn btn-primary confirmSendCase" data-doc-id="<?= $row['loss_data_doc_id']; ?>" data-toggle="modal" data-target="#myModalSendCase"><i class='glyphicon glyphicon-plus'></i> รายงานเหตุการณ์</button> <? } ?>
+					<?php if (checkLossList($row['loss_data_doc_id']) > 0) { ?>
+						<form action="loss_data_list.php" method="post" style="display: inline;">
+							<input type="hidden" value="<?= $row['loss_data_doc_id']; ?>" name="listId" id="listId">
+							<input type="hidden" value="<?= $row['loss_data_doc_month']; ?>" name="m" id="m">
+							<input type="hidden" value="<?= $row['loss_year']; ?>" name="y" id="y">
+							<button type='submit' class="btn btn-success"><i class="glyphicon glyphicon-list-alt"></i> ดูเพิ่มเติม</button>
+						</form>
+					<?php } else {  ?>
+						<button disabled type='submit' class="btn btn-dark" style="background-color: #949596; color:#FFFFFF;"><i class="glyphicon glyphicon-list-alt"></i> ดูเพิ่มเติม</button>
+					<?php } ?>
+
+				</td>
+
+				</tr>
+
+			<?php } ?>
+
+			</tbody>
+
+			</table>
+
+			<!-- end table -->
+
 				</div>
 			</div>
-
 		</div>
 	</div>
 </div>
+</div>
+<!---------------->
+
+
+
 <!-- start modal -->
 <form method='post' onsubmit="return validateForm()" action='loss_data.php' enctype="multipart/form-data">
 	<div id="myModalSendCase" class="modal fade" role="dialog">
@@ -480,13 +988,14 @@ if ($yid2 == '') {
 
 									<div class="form-group">
 										<div class="row">
-											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">วันที่เกิดเหตุการณ์</label><input type="text" class="form-control datepicker" name='happen_date' readonly id='happen_date'></div>
-											<div class="col-lg-6 col-xs-12"><label class="margins-top-10">วันที่ตรวจพบ<span style="color: red;">*</span></label><input type="text" class="form-control datepicker" name='checked_date' readonly id='checked_date'></div>
-											<div class="col-lg-12 col-xs-12"><label class="margins-top-10">เหตุการณ์<span style="color: red;">*</span></label><input type="text" class="form-control" name='incidence' id='incidence'></div>
-											<div class="col-lg-12 col-xs-12"><label class="margins-top-10">รายละเอียดเหตุการณ์<span style="color: red;">*</span></label><textarea id="incidence_detail" class="form-control" name="incidence_detail" rows="3" cols="50" style="min-height:80px;"></textarea></div>
-											<div class="col-lg-12 col-xs-12"><label class="margins-top-10">สาเหตุ<span style="color: red;">*</span></label><textarea id="cause" class="form-control" name="cause" rows="3" cols="50" style="min-height:80px;"></textarea></div>
-											<div class="col-lg-12 col-xs-12"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><input type="text" class="form-control" name='user_effect' id='user_effect'></div>
-											<div class="col-lg-12"> <label class="margins-top-10">ประเภทความเสียหาย<span style="color: red;">*</span></label><select name='damage_type' id='damage_type' class="form-control">
+											<input type="hidden" name="loss_data_doc_id_auto" id="loss_data_doc_id_auto" value="<?= $select_doclist_id; ?>">
+											<div class="col-lg-6 col-xs-12"><label class="margins-top-10 label-main">วันที่เกิดเหตุการณ์<span style="color: red;">*</span> </label><input type="text" class="form-control datepicker" required name='happen_date' readonly id='happen_date'></div>
+											<div class="col-lg-6 col-xs-12"><label class="margins-top-10 label-main">วันที่ตรวจพบ</label><input type="text" class="form-control datepicker" name='checked_date' readonly id='checked_date'></div>
+											<div class="col-lg-12 col-xs-12"><label class="margins-top-10 label-main">เหตุการณ์<span style="color: red;">*</span></label><textarea class="form-control" name='incidence' id='incidence' rows="2" cols="50" style="min-height:80px;"></textarea> </div>
+											<div class="col-lg-12 col-xs-12"><label class="margins-top-10 label-main">รายละเอียดเหตุการณ์<span style="color: red;">*</span></label><textarea id="incidence_detail" class="form-control" name="incidence_detail" rows="2" cols="50" style="min-height:80px;"></textarea></div>
+											<div class="col-lg-12 col-xs-12"><label class="margins-top-10 label-main">สาเหตุ<span style="color: red;">*</span></label><textarea id="cause" class="form-control" name="cause" rows="2" cols="50" style="min-height:80px;"></textarea></div>
+											<div class="col-lg-12 col-xs-12"><label class="margins-top-10 label-main">ผลกระทบ<span style="color: red;">*</span></label><textarea class="form-control" name='user_effect' id='user_effect' rows="2" cols="50" style="min-height:80px;"></textarea></div>
+											<div class="col-lg-12"> <label class="margins-top-10 label-main">ประเภทความเสียหาย<span style="color: red;">*</span></label><select name='damage_type' id='damage_type' class="form-control">
 													<option value="0">- - - เลือก - - - </option>
 													<?
 													$iFactor1 = 1;
@@ -501,7 +1010,7 @@ if ($yid2 == '') {
 														<option value="<?= $row1['loss_factor_id'] ?>@<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 													<?		} ?>
 												</select></div>
-											<div class="col-lg-12"><label class="margins-top-10">ประเภทเหตุการณ์ความเสียหาย<span style="color: red;">*</span></label><select name='incidence_type' id='incidence_type' class="form-control">
+											<div class="col-lg-12"><label class="margins-top-10 label-main">ประเภทเหตุการณ์ความเสียหาย<span style="color: red;">*</span></label><select name='incidence_type' id='incidence_type' class="form-control">
 													<option value="0">- - - เลือก - - - </option>
 													<?
 													$iFactor2 = 2;
@@ -516,17 +1025,18 @@ if ($yid2 == '') {
 														<option value="<?= $row1['loss_factor_id'] ?>"><?= $row1['factor'] ?></option>
 													<?		} ?>
 												</select></div>
+											<div class="col-lg-12"><label class="margins-top-10  label-main">ความเสียหาย<span style="color: red;">*</span> </label>
+												<div class="col-lg-12"><label style="height:20px;"></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type1" value="1" checked>&nbsp; <b>Actual Loss : </b> ความเสียหายที่เกิดขึ้นจริงทั้งที่เป็นตัวเงิน และไม่เป็นตัวเงิน
+													</label></div>
+												<div class="col-lg-12"> <label style="height:20px;"></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type2" value="2">&nbsp; <b> Potential Loss : </b>ความเสียหายที่อาจเกิดขึ้น
 
-											<div class="col-lg-3"> <label class="margins-top-10 col-xs-12" style="margin-left: -13px;">Loss :<span style="color: red;">*</span> </label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type1" value="1" checked> Actual Loss
-												</label></div>
-											<div class="col-lg-3"> <label style="height:44px;"></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type2" value="2"> Potential Loss
-												</label></div>
-											<div class="col-lg-3"> <label style="height:44px;"></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type3" value="3"> Near-Missed
-												</label></div>
-
-											<div class="col-lg-12"><label class="margins-top-10">การควบคุมที่มีอยู่<span style="color: red;">*</span></label><input type="text" class="form-control" name='control' id='control'></div>
-											<div class="col-lg-3"><label class="margins-top-10">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="number" value="0" class="form-control" name='loss_value' id='loss_value'></div>
-											<div class="col-lg-3"><label class="margins-top-10">โอกาส<span style="color: red;">*</span></label><select name='chance' id='chance' class="form-control">
+													</label></div>
+												<div class="col-lg-12"> <label style="height:20px;"></label><label class="radio-inline"><input type="radio" name="loss_type" id="loss_type3" value="3">&nbsp; <b> Near-Missed : </b>ความเสียหายที่เกิดขึ้น หรืออาจเกิดขึ้น แต่สามารถป้องกันความเสียหายไว้ได้
+													</label></div>
+											</div>
+											<div class="col-lg-12"><label class="margins-top-10 label-main">การควบคุมที่มีอยู่<span style="color: red;">*</span></label><textarea class="form-control" name='control' id='control' rows="2" cols="50" style="min-height:80px;"></textarea></div>
+											<div class="col-lg-3"><label class="margins-top-10 label-main">มูลค่าความเสียหาย (บาท)<span style="color: red;">*</span></label><input type="text" class="form-control" name='loss_value' id='loss_value' oninput="validate(this)" onkeyup="javascript:this.value=Comma(this.value);" onkeypress="return CheckNumeric()" placeholder="0.00"></div>
+											<!-- <div class="col-lg-3"><label class="margins-top-10 label-main">โอกาส<span style="color: red;">*</span></label><select name='chance' id='chance' class="form-control">
 													<option value="0">- - - เลือก - - - </option>
 													<?
 													$iFactor4 = 4;
@@ -552,7 +1062,7 @@ if ($yid2 == '') {
 														<option style="background-color: <?= $bColor ?>; color:#FFFFFF;" value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 													<? } ?>
 												</select></div>
-											<div class="col-lg-3"><label class="margins-top-10">ผลกระทบ<span style="color: red;">*</span></label><select name='effect' id='effect' class="form-control">
+											<div class="col-lg-3"><label class="margins-top-10 label-main">ผลกระทบ<span style="color: red;">*</span></label><select name='effect' id='effect' class="form-control">
 													<option value="0">- - - เลือก - - - </option>
 													<?
 													$iFactor3 = 3;
@@ -579,61 +1089,75 @@ if ($yid2 == '') {
 													?>
 														<option style="background-color: <?= $bColor ?>; color:#FFFFFF;" value="<?= $row1['factor_no'] ?>"><?= $row1['factor'] ?></option>
 													<?		} ?>
-												</select></div>
+												</select></div> -->
+											<div class="col-lg-3"><label class="margins-top-10 label-main">โอกาส<span style="color: red;">*</span></label>
 
-											<div class="col-lg-3" id="showPerformance" style="margin-top:35px;">
-
+												<select name='csa_likelihood_id1' id='csa_likelihood_id1' class="form-control">
+													<option value=''>--- เลือก ---</option>
+													<?
+													$sql = "SELECT * FROM csa_likelihood";
+													$result1 = mysqli_query($connect, $sql);
+													while ($row1 = mysqli_fetch_array($result1)) {
+														if ($row1['csa_likelihood_id'] == '1') {
+															$bColor = "#5FB9A1";
+														} else if ($row1['csa_likelihood_id'] == '2') {
+															$bColor = "#FFC11E";
+														} else if ($row1['csa_likelihood_id'] == '3') {
+															$bColor = "#FF7A38";
+														} else if ($row1['csa_likelihood_id'] == '4') {
+															$bColor = "#EF4F51";
+														} else if ($row1['csa_likelihood_id'] == '5') {
+															$bColor = "#C11115";
+														}
+													?>
+														<option style="background-color: <?= $bColor ?>; color:#FFFFFF;" value='<?= $row1['csa_likelihood_id'] ?>'><?= $row1['csa_likelihood_name'] ?></option>
+													<?
+													}
+													?>
+												</select>
 											</div>
-											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 1</label><select name='dep_id_1' id='dep_id_1' class="form-control">
-													<option value="0"> - - - -</option>
-													<?
+											<div class="col-lg-3"><label class="margins-top-10 label-main">ผลกระทบ<span style="color: red;">*</span></label>
 
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 AND department_level_id = '4'
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
-													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 2</label><select name='dep_id_2' id='dep_id_2' class="form-control">
-													<option value="0"> - - - -</option>
-													<?
 
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 AND department_level_id = '4'
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
-													$result1 = mysqli_query($connect, $sql);
-													while ($row1 = mysqli_fetch_array($result1)) {
-													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-4"><label class="margins-top-10">ฝ่ายงานที่เกี่ยวข้อง 3</label><select name='dep_id_3' id='dep_id_3' class="form-control">
-													<option value="0"> - - - -</option>
+												<select name='csa_impact_id1' id='csa_impact_id1' class="form-control" <?= $lock_tag ?>>
+													<option value=''>--- เลือก ---</option>
 													<?
-													$sql = "SELECT * FROM department 
-WHERE 
-	department.mark_del = 0 AND department_level_id = '4'
-ORDER BY 
-	department.is_branch, 
-	department.department_name";
+													$sql = "SELECT * FROM csa_impact";
 													$result1 = mysqli_query($connect, $sql);
 													while ($row1 = mysqli_fetch_array($result1)) {
+														if ($row1['csa_impact_id'] == '1') {
+															$bColor = "#5FB9A1";
+														} else if ($row1['csa_impact_id'] == '2') {
+															$bColor = "#FFC11E";
+														} else if ($row1['csa_impact_id'] == '3') {
+															$bColor = "#FF7A38";
+														} else if ($row1['csa_impact_id'] == '4') {
+															$bColor = "#EF4F51";
+														} else if ($row1['csa_impact_id'] == '5') {
+															$bColor = "#C11115";
+														}
 													?>
-														<option value="<?= $row1['department_id'] ?>" <? if ($row1['department_id'] == $row2['department_id']) echo 'selected' ?>><?= $row1['department_name'] ?></option>
-													<?		} ?>
-												</select></div>
-											<div class="col-lg-12"><label class="margins-top-10">เอกสารแนบ</label>
-												<input type="file" class="form-control" name='attech_name'>
+														<option style="background-color: <?= $bColor ?>; color:#FFFFFF;" value='<?= $row1['csa_impact_id'] ?>'><?= $row1['csa_impact_name'] ?></option>
+													<?
+													}
+													?>
+												</select>
+											</div>
+											<div class="col-lg-2" style="margin-top:35px;">
+												<div class='alert' id='risk_level_1_div' style='background:#ffffff; padding: 10px; height: 40px; font-weight: bold; border: 1px solid #eeeeee'></div>
+												<div id="risk_level_1_div_name"></div>
+											</div>
+											<div class="col-lg-1" style="margin-top:45px;">
+												<span class="glyphicon glyphicon-search " style="color: #004C85; cursor: pointer;" data-toggle="modal" data-target="#myModalMatrixEdit"></span>
+											</div>
+
+											<div class="col-lg-6"><label class="margins-top-10 label-main">เอกสารแนบ 1 <span style="color: red;">*</span></label>
+												<input type="file" required class="form-control" name='attech_name'>
 												<input type='hidden' name='loss_data_doc_id' id='loss_data_doc_id'>
+											</div>
+											<div class="col-lg-6"><label class="margins-top-10 label-main">เอกสารแนบ 2 (ถ้ามี)</label>
+												<input type="file"  class="form-control" name='attech_name2'>
+												<input type='hidden' name='loss_data_doc_id2' id='loss_data_doc_id2'>
 											</div>
 										</div>
 										<div align="center" style="margin-top: 30px;">
@@ -658,10 +1182,541 @@ ORDER BY
 </div>
 </div>
 </form>
+<!-- Start Modal -->
+<div id="myModalMatrixEdit" class="modal fade" role="dialog" style="z-index: 99999999;">
+	<div class="modal-dialog">
 
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title" style="color:#EFEFEF;">ตารางแสดงผลการวัดระดับความเสี่ยง (Risk Matrix)</h4>
+			</div>
+			<div class="modal-body" align="center">
+				<div id="modalPopupEdit"></div>
+				<table>
+	<tr>
+		<td>
+		<b>เกณฑ์พิจารณาระดับความรุนแรงของผลกระทบ</b><br>
+<b>ที่มีมูลค่าความเสียหายเป็นตัวเงิน</b><br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		1 = น้อยมาก ความเสียหาย <= 10,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		2 = น้อย ความเสียหาย > 10,000 - 100,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		3 = ปานกลาง ความเสียหาย > 100,000 - 500,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		4 = สูง ความเสียหาย > 500,000 - 1,000,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		5 = สูงมาก ความเสียหาย > 1,000,000 บาท<br>
+											</td>
+											</tr>
+											</table>
+	 <br>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal -->
+<!-- Modal -->
+<div id="myModalMatrix" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title" style="color:#EFEFEF;">ตารางแสดงผลการวัดระดับความเสี่ยง (Risk Matrix)</h4>
+			</div>
+			<div class="modal-body" align="center">
+				<div id="showMatrix">
+
+				</div>
+				<table>
+	<tr>
+		<td>
+		<b>เกณฑ์พิจารณาระดับความรุนแรงของผลกระทบ</b><br>
+<b>ที่มีมูลค่าความเสียหายเป็นตัวเงิน</b><br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		1 = น้อยมาก ความเสียหาย <= 10,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		2 = น้อย ความเสียหาย > 10,000 - 100,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		3 = ปานกลาง ความเสียหาย > 100,000 - 500,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		4 = สูง ความเสียหาย > 500,000 - 1,000,000 บาท<br>
+											</td>
+											</tr>
+											<tr>
+		<td>
+		5 = สูงมาก ความเสียหาย > 1,000,000 บาท<br>
+											</td>
+											</tr>
+											</table>
+	 <br>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>
 <? echo template_footer(); ?>
-
 <script>
+	$(".modalMatrix").on("click", function() {
+
+		document.getElementById("showMatrix").innerHTML = "";
+		var xEffect = $('#effect').val();
+		var ychance = $('#chance').val();
+
+		var dataMitrix = "";
+		dataMitrix = `<table align="center">
+		   <tr>
+			   <td rowspan="7"><img src="images/risk_matrix_axis_y.png"></td>
+			   <td class="box-matrix" align="center" style="font-size: 10px; ">Catastrophic<br>5</td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400; ">`;
+		if (xEffect == "5" && ychance == "1") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400; ">`;
+		if (xEffect == "5" && ychance == "2") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400; ">`;
+
+		if (xEffect == "5" && ychance == "3") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF0000; ">`;
+
+		if (xEffect == "5" && ychance == "4") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูงมาก</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF0000; ">`;
+
+		if (xEffect == "5" && ychance == "5") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+
+		dataMitrix += `<p class="text-matrix">สูงมาก</p></td>
+		   </tr>`;
+		dataMitrix += `<tr>
+		   <td class="box-matrix" align="center" style="font-size: 10px;">Major<br>4</td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400;">`;
+		if (xEffect == "4" && ychance == "1") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400;">`;
+
+		if (xEffect == "4" && ychance == "2") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400;">`;
+
+		if (xEffect == "4" && ychance == "3") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF0000;">`;
+
+		if (xEffect == "4" && ychance == "4") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูงมาก</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF0000;">`;
+
+		if (xEffect == "4" && ychance == "5") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">สูงมาก</p></td>
+		   </tr>
+		   <tr>
+			    <td class="box-matrix" align="center" style="font-size: 10px;">Moderate<br>3</td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FFFF00;">`;
+
+		if (xEffect == "3" && ychance == "1") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+
+		dataMitrix += `<p class="text-matrix">ปานกลาง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FFFF00;">`;
+		if (xEffect == "3" && ychance == "2") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+		dataMitrix += `<p class="text-matrix">ปานกลาง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400;">`;
+		if (xEffect == "3" && ychance == "3") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400;">`;
+		if (xEffect == "3" && ychance == "4") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400;">`;
+		if (xEffect == "3" && ychance == "5") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+		dataMitrix += `<p class="text-matrix">สูง</p></td>
+		   </tr>
+		   <tr>`;
+		dataMitrix += `<td class="box-matrix" align="center" style="font-size: 10px;">Minor<br>2</td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #00B050;">`;
+		if (xEffect == "2" && ychance == "1") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+
+		dataMitrix += `<p class="text-matrix">ต่ำ</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #00B050;">`;
+		if (xEffect == "2" && ychance == "2") {
+			dataMitrix += ` <div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+		dataMitrix += `<p class="text-matrix">ต่ำ</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FFFF00;">`;
+		if (xEffect == "2" && ychance == "3") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+		dataMitrix += `<p class="text-matrix">ปานกลาง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FFFF00;">`;
+		if (xEffect == "2" && ychance == "4") {
+			dataMitrix += `<div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+		dataMitrix += `<p class="text-matrix">ปานกลาง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FF9400;">`;
+		if (xEffect == "2" && ychance == "5") {
+			dataMitrix += ` <div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+
+		}
+
+		dataMitrix += `
+			   <p class="text-matrix">สูง</p></td>
+		   </tr>`;
+		dataMitrix += `<tr>
+			    <td class="box-matrix" align="center" style="font-size: 10px;">Insignificant<br>1</td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #00B050;">`;
+		if (xEffect == "1" && ychance == "1") {
+			dataMitrix += ` <div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">ต่ำ</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #00B050;">`;
+		if (xEffect == "1" && ychance == "2") {
+			dataMitrix += ` <div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">ต่ำ</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FFFF00;">`;
+		if (xEffect == "1" && ychance == "3") {
+			dataMitrix += ` <div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">ปานกลาง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FFFF00;">`;
+		if (xEffect == "1" && ychance == "4") {
+			dataMitrix += ` <div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">ปานกลาง</p></td>
+			   <td class="box-matrix box-matrix-border" style="background-color: #FFFF00;">`;
+		if (xEffect == "1" && ychance == "5") {
+			dataMitrix += ` <div style="position: absolute; width:70px;height:70px; margin-top:-5px; border: 3px; border:  5px solid; border-color: #ffffff;"  ></div>`;
+		}
+
+		dataMitrix += `<p class="text-matrix">ปานกลาง</p></td>
+		   </tr>
+		   <tr>
+			  <td></td>
+		   <td align="center" style="font-size: 10px;" >1<br>Very Low</td>
+  <td align="center" style="font-size: 10px;">2<br>Low</td>
+  <td align="center" style="font-size: 10px;">3<br>Medium</td>
+  <td align="center" style="font-size: 10px;">4<br>High</td>
+  <td align="center" style="font-size: 10px;">5<br>Very High</td>
+		   </tr>
+		   <tr>
+		  
+		   </tr>
+		   <tr>
+		   <td colspan="7" align="right" ><img src="images/risk_matrix_axis_x.png" style="margin-right: 20px;"></td>
+
+		   </tr>
+	   </table>`;
+		$("#showMatrix").append(dataMitrix);
+
+	});
+</script>
+<script>
+	$(document).ready(function() {
+		$('.numeric').numeric({
+			altDecimal: ".",
+			negative: true,
+			decimalPlaces: 2
+		});
+	});
+	! function(e) {
+		"function" == typeof define && define.amd ? define(["jquery"], e) : e(window.jQuery)
+	}(function(e) {
+		e.fn.numeric = function(t, n) {
+			"boolean" == typeof t && (t = {
+				decimal: t,
+				negative: !0,
+				decimalPlaces: -1
+			}), void 0 === (t = t || {}).negative && (t.negative = !0);
+			var i = !1 === t.decimal ? "" : t.decimal || ".",
+				a = !1 === t.altDecimal ? "" : t.altDecimal || i,
+				r = !0 === t.negative,
+				c = void 0 === t.decimalPlaces ? -1 : t.decimalPlaces;
+			return n = "function" == typeof n ? n : function() {}, this.data("numeric.decimal", i).data("numeric.altDecimal", a).data("numeric.negative", r).data("numeric.callback", n).data("numeric.decimalPlaces", c).keypress(e.fn.numeric.keypress).keyup(e.fn.numeric.keyup).blur(e.fn.numeric.blur)
+		}, e.fn.numeric.keypress = function(t) {
+			var n = e.data(this, "numeric.decimal"),
+				i = e.data(this, "numeric.negative"),
+				a = e.data(this, "numeric.decimalPlaces"),
+				r = e.data(this, "numeric.altDecimal"),
+				c = t.charCode ? t.charCode : t.keyCode ? t.keyCode : 0;
+			if (13 == c && "input" == this.nodeName.toLowerCase()) return !0;
+			if (13 == c) return !1;
+			if (35 == c || 36 == c || 37 == c) return !1;
+			var l = !1;
+			if (t.ctrlKey && 97 == c || t.ctrlKey && 65 == c) return !0;
+			if (t.ctrlKey && 120 == c || t.ctrlKey && 88 == c) return !0;
+			if (t.ctrlKey && 99 == c || t.ctrlKey && 67 == c) return !0;
+			if (t.ctrlKey && 122 == c || t.ctrlKey && 90 == c) return !0;
+			if (t.ctrlKey && 118 == c || t.ctrlKey && 86 == c || t.shiftKey && 45 == c) return !0;
+			if (c < 48 || c > 57) {
+				var u = e(this).val();
+				if (0 !== e.inArray("-", u.split("")) && i && 45 == c && (0 === u.length || 0 === parseInt(e.fn.getSelectionStart(this), 10))) return !0;
+				n && c == n.charCodeAt(0) && -1 != e.inArray(n, u.split("")) && (l = !1), 8 != c && 9 != c && 13 != c && 35 != c && 36 != c && 37 != c && 39 != c && 46 != c ? l = !1 : void 0 !== t.charCode && (t.keyCode == t.which && 0 !== t.which ? (l = !0, 46 == t.which && (l = !1)) : 0 !== t.keyCode && 0 === t.charCode && 0 === t.which && (l = !0)), (n && c == n.charCodeAt(0) || r && c == r.charCodeAt(0)) && (l = -1 == e.inArray(n, u.split("")))
+			} else if (l = !0, n && a > 0) {
+				var s = e.fn.getSelectionStart(this),
+					d = e.fn.getSelectionEnd(this),
+					o = e.inArray(n, e(this).val().split(""));
+				s === d && o >= 0 && s > o && e(this).val().length > o + a && (l = !1)
+			}
+			return l
+		}, e.fn.numeric.keyup = function(t) {
+			var n = e(this).val();
+			if (n && n.length > 0) {
+				var i = e.fn.getSelectionStart(this),
+					a = e.fn.getSelectionEnd(this),
+					r = e.data(this, "numeric.decimal"),
+					c = e.data(this, "numeric.negative"),
+					l = e.data(this, "numeric.decimalPlaces"),
+					u = e.data(this, "numeric.altDecimal");
+				if ("" !== r && null !== r) 0 === (g = e.inArray(r, n.split(""))) && (this.value = "0" + n, i++, a++), 1 == g && "-" == n.charAt(0) && (this.value = "-0" + n.substring(1), i++, a++), n = this.value;
+				for (var s = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "-", r], d = n.length, o = d - 1; o >= 0; o--) {
+					var f = n.charAt(o);
+					0 !== o && "-" == f ? n = n.substring(0, o) + n.substring(o + 1) : 0 !== o || c || "-" != f || (n = n.substring(1));
+					for (var m = !1, h = 0; h < s.length; h++)
+						if (f == s[h]) {
+							m = !0;
+							break
+						} m || f != u || (n = n.substring(0, o) + r + n.substring(o + 1), m = !0), m && " " != f || (n = n.substring(0, o) + n.substring(o + 1))
+				}
+				var g, v = e.inArray(r, n.split(""));
+				if (v > 0)
+					for (var y = d - 1; y > v; y--) {
+						n.charAt(y) == r && (n = n.substring(0, y) + n.substring(y + 1))
+					}
+				if (r && l > 0)(g = e.inArray(r, n.split(""))) >= 0 && (n = n.substring(0, g + l + 1), a = Math.min(n.length, a));
+				this.value = n, e.fn.setSelection(this, [i, a])
+			}
+		}, e.fn.numeric.blur = function() {
+			var t = e.data(this, "numeric.decimal"),
+				n = e.data(this, "numeric.callback"),
+				i = e.data(this, "numeric.negative"),
+				a = this.value;
+			"" !== a && (new RegExp("^" + (i ? "-?" : "") + "\\d+$|^" + (i ? "-?" : "") + "\\d*" + t + "\\d+$").exec(a) || n.apply(this))
+		}, e.fn.removeNumeric = function() {
+			return this.data("numeric.decimal", null).data("numeric.altDecimal", null).data("numeric.negative", null).data("numeric.callback", null).data("numeric.decimalPlaces", null).unbind("keypress", e.fn.numeric.keypress).unbind("keyup", e.fn.numeric.keyup).unbind("blur", e.fn.numeric.blur)
+		}, e.fn.getSelectionStart = function(e) {
+			if ("number" !== e.type) {
+				if (e.createTextRange && document.selection) {
+					var t = document.selection.createRange().duplicate();
+					return t.moveEnd("character", e.value.length), "" == t.text ? e.value.length : Math.max(0, e.value.lastIndexOf(t.text))
+				}
+				try {
+					return e.selectionStart
+				} catch (e) {
+					return 0
+				}
+			}
+		}, e.fn.getSelectionEnd = function(e) {
+			if ("number" !== e.type) {
+				if (e.createTextRange && document.selection) {
+					var t = document.selection.createRange().duplicate();
+					return t.moveStart("character", -e.value.length), t.text.length
+				}
+				return e.selectionEnd
+			}
+		}, e.fn.setSelection = function(e, t) {
+			if ("number" == typeof t && (t = [t, t]), t && t.constructor == Array && 2 == t.length)
+				if ("number" === e.type) e.focus();
+				else if (e.createTextRange) {
+				var n = e.createTextRange();
+				n.collapse(!0), n.moveStart("character", t[0]), n.moveEnd("character", t[1] - t[0]), n.select()
+			} else {
+				e.focus();
+				try {
+					e.setSelectionRange && e.setSelectionRange(t[0], t[1])
+				} catch (e) {}
+			}
+		}
+	});
+
+	$('#happen_date').on('change', function() {
+		if ($('#happen_date').val() != '') {
+			var today = new Date();
+			var lastDayOfMonths = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+			var conver = lastDayOfMonths.toString().split(" ");
+			var dateNew = today.toLocaleDateString("en-US").split("/");
+			var currentYearPie = dateNew[2];
+			var currentMonthPie = dateNew[0].padStart(2, '0');
+			var currentDayPie = dateNew[1].padStart(2, '0');
+			var lastDayOfMonth = conver[2];
+
+			var currentYear = new Date().getFullYear();
+			var currentMonth = String(new Date().getMonth()).padStart(2, '0');
+			var currentDay = currentDayPie;
+
+			var d1 = $("#happen_date").val().split("-");
+			var dCurrent = new Date(currentYear, currentMonth, currentDay);
+			var dd1 = new Date(d1[0], d1[1] - 1, d1[2]);
+			if (dd1 > dCurrent) {
+				alert("กรุณาตรวจสอบวันที่เกิดเหตุการณ์ : ไม่สามารถรายงานวันที่ล่วงหน้าได้ !");
+				$('#happen_date').val('');
+			}
+		}
+	});
+
+	$('#checked_date').on('change', function() {
+		if ($('#checked_date').val() != '') {
+
+			var today = new Date();
+			var lastDayOfMonths = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+			var conver = lastDayOfMonths.toString().split(" ");
+			var dateNew = today.toLocaleDateString("en-US").split("/");
+			var currentYearPie = dateNew[2];
+			var currentMonthPie = dateNew[0].padStart(2, '0');
+			var currentDayPie = dateNew[1].padStart(2, '0');
+			var lastDayOfMonth = conver[2];
+
+			var currentYear = new Date().getFullYear();
+			var currentMonth = String(new Date().getMonth()).padStart(2, '0');
+			var currentDay = currentDayPie;
+
+			var d2 = $("#checked_date").val().split("-");
+			var dCurrent = new Date(currentYear, currentMonth, currentDay);
+			//alert(dCurrent);
+			var dd2 = new Date(d2[0], d2[1] - 1, d2[2]);
+			if (dd2 > dCurrent) {
+				alert("กรุณาตรวจสอบวันที่พบเหตุการณ์ : ไม่สามารถรายงานวันที่ล่วงหน้าได้ !");
+				$('#checked_date').val('');
+			}
+		}
+	});
+
+
+	$('#happen_date,#checked_date').on('change', function() {
+		if ($('#happen_date').val() != '' && $('#checked_date').val() != '') {
+
+			var today = new Date();
+			var lastDayOfMonths = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+			var conver = lastDayOfMonths.toString().split(" ");
+			var dateNew = today.toLocaleDateString("en-US").split("/");
+			var currentYearPie = dateNew[2];
+			var currentMonthPie = dateNew[0].padStart(2, '0');
+			var currentDayPie = dateNew[1].padStart(2, '0');
+			var lastDayOfMonth = conver[2];
+
+			var currentYear = new Date().getFullYear();
+			var currentMonth = String(new Date().getMonth()).padStart(2, '0');
+			var currentDay = currentDayPie;
+
+
+
+			var d1 = $("#happen_date").val().split("-");
+			var d2 = $("#checked_date").val().split("-");
+			var dCurrent = new Date(currentYear, currentMonth, currentDay);
+			var dd1 = new Date(d1[0], d1[1] - 1, d1[2]);
+			var dd2 = new Date(d2[0], d2[1] - 1, d2[2]);
+			if (dd2 < dd1) {
+				alert("กรุณาตรวจสอบวันที่เกิดเหตุการณ์และวันที่ตรวจพบ");
+				$('#checked_date').val('');
+			}
+
+		}
+	});
+
+	$("textarea").keyup(function(e) {
+		if ($(this).val() != '') {
+			while ($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
+				$(this).height($(this).height() + 1);
+			};
+		}
+	}).keyup();
+
+	$(document).ready(function() {
+		$('.radio-group .radio').click(function() {
+			$('.selected .fa').removeClass('fa-check');
+			$('.radio').removeClass('selected');
+			$(this).addClass('selected');
+		});
+	});
+
 	$(document).ready(function() {
 		var table = $('#exampleDataTable').DataTable({
 			responsive: true
@@ -671,7 +1726,22 @@ ORDER BY
 	});
 	$(".confirmSendCase").on("click", function() {
 		var docId = $(this).attr('data-doc-id');
+
+		$('#loss_data_doc_id_auto').val("");
 		$('#loss_data_doc_id').val(docId);
+
+		cal_level("1");
+		var impact_id = $('#csa_impact_id1').val();
+		var likelihood_id = $('#csa_likelihood_id1').val();
+
+		$.post("loss_data_matrix.php", {
+				action: 'loss_data_matrix',
+				data1: impact_id,
+				data2: likelihood_id
+			})
+			.done(function(data) {
+				$("#modalPopupEdit").html(data);
+			});
 
 	});
 
@@ -679,8 +1749,8 @@ ORDER BY
 	function validateForm() {
 		selected = document.querySelector('input[name="loss_type"]:checked').value;
 
-		if ($('#checked_date').val() == '') {
-			alert("กรุณาระบุวันที่ตรวจพบ");
+		if ($('#happen_date').val() == '') {
+			alert("กรุณาระบุวันที่เกิดเหตุการณ์");
 			return false;
 		} else if ($('#happen_date').val() > $('#checked_date').val()) {
 			alert("กรุณาตรวจสอบวันที่เกิดเหตุการณ์และวันที่ตรวจพบ");
@@ -757,19 +1827,19 @@ ORDER BY
 	$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
 	$('#chance').on('change', function() {
 		if ($('#chance').val() != 0 && $('#effect').val() != 0) {
-			var strCheck = $('#chance').val() + $('#effect').val()
+			var strCheck = $('#effect').val() + $('#chance').val()
 			document.getElementById("showPerformance").innerHTML = "";
 			if (checkLossLevel(strCheck) == 1) {
 				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
 			} else if (checkLossLevel(strCheck) == 2) {
 				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
 			} else if (checkLossLevel(strCheck) == 3) {
-				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FF9400; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
 			} else if (checkLossLevel(strCheck) == 4) {
 				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
 			}
-		}else  {
-			var strCheck = $('#chance').val() + $('#effect').val()
+		} else {
+			var strCheck = $('#effect').val() + $('#chance').val()
 			document.getElementById("showPerformance").innerHTML = "";
 			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
 		}
@@ -779,19 +1849,19 @@ ORDER BY
 
 	$('#effect').on('change', function() {
 		if ($('#chance').val() != 0 && $('#effect').val() != 0) {
-			var strCheck = $('#chance').val() + $('#effect').val()
+			var strCheck = $('#effect').val() + $('#chance').val()
 			document.getElementById("showPerformance").innerHTML = "";
 			if (checkLossLevel(strCheck) == 1) {
 				$("#showPerformance").append('<a    class="btn" style="background-color: #00B050; color:#FFFFFF; width:120px; cursor: default;" > ต่ำ</a>');
 			} else if (checkLossLevel(strCheck) == 2) {
 				$("#showPerformance").append('<a    class="btn" style="background-color: #FFFF00; color:#000000; width:120px; cursor: default;" > ปานกลาง</a>');
 			} else if (checkLossLevel(strCheck) == 3) {
-				$("#showPerformance").append('<a    class="btn" style="background-color: #FFC000; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
+				$("#showPerformance").append('<a    class="btn" style="background-color: #FF9400; color:#FFFFFF; width:120px; cursor: default;" > สูง</a>');
 			} else if (checkLossLevel(strCheck) == 4) {
 				$("#showPerformance").append('<a    class="btn" style="background-color: #FF0000;; color:#FFFFFF; width:120px; cursor: default;" > สูงมาก</a>');
-			} 
-		}else  {
-			var strCheck = $('#chance').val() + $('#effect').val()
+			}
+		} else {
+			var strCheck = $('#effect').val() + $('#chance').val()
 			document.getElementById("showPerformance").innerHTML = "";
 			$("#showPerformance").append('<a    class="btn" style="background-color: #EEF1F5;; color:#7A7877; width:120px; cursor: default;" > ระดับความเสียง </a>');
 		}
@@ -799,10 +1869,10 @@ ORDER BY
 </script>
 <script>
 	function checkLossLevel($parameters) {
-		
+
 		if ($parameters == '00') {
 			return 0;
-		}else if ($parameters == 11) {
+		} else if ($parameters == 11) {
 			return 1;
 		} else if ($parameters == 12) {
 			return 1;
@@ -857,3 +1927,187 @@ ORDER BY
 		}
 	}
 </script>
+<script>
+	$('#csa_impact_id1, #csa_likelihood_id1').change(function() {
+		cal_level("1");
+		var impact_id = $('#csa_impact_id1').val();
+		var likelihood_id = $('#csa_likelihood_id1').val();
+		$.post("loss_data_matrix.php", {
+				action: 'loss_data_matrix',
+				data1: impact_id,
+				data2: likelihood_id
+			})
+			.done(function(data) {
+				$("#modalPopupEdit").html(data);
+			});
+
+	}).change();
+
+
+
+	var maxc = 1000000000;
+	<?
+	echo "\n risk_mat = {}; \n";
+
+	$d = array();
+	$sql2 = "SELECT * FROM `csa_risk_matrix` ";
+	$result3 = mysqli_query($connect, $sql2);
+	while ($row3 = mysqli_fetch_array($result3)) {
+		$d[$row3['csa_impact_id']][$row3['csa_likelihood_id']] = $row3['csa_risk_level'];
+	}
+	?>
+
+	risk_mat = [
+		<?
+		for ($i = 1; $i <= 5; $i++) {
+			if ($i == 1)
+				echo '[';
+			else
+				echo ',[';
+			for ($j = 1; $j <= 5; $j++) {
+				if ($j > 1) echo ',';
+				echo $d[$i][$j];
+			}
+			echo "]\n";
+		}
+		?>
+
+	];
+
+	function risk_level_color(r) {
+
+		switch (r) {
+
+			case 0:
+				return '';
+
+			case 1:
+				return '#00ff00';
+			case 2:
+				return '#ffff00';
+			case 3:
+				return '#ff9900';
+			case 4:
+				return '#ff0000';
+
+		}
+
+	}
+
+	function risk_level_name(r) {
+
+		switch (r) {
+
+			case 0:
+				return '';
+
+			case 1:
+				return 'ต่ำ';
+
+			case 2:
+				return 'ปานกลาง';
+
+			case 3:
+				return 'สูง';
+
+			case 4:
+				return 'สูงมาก';
+
+		}
+
+	}
+
+	function risk_level_acceptable(r) {
+		if (r >= 3)
+			return 'ไม่เพียงพอ';
+		else
+			return 'เพียงพอ';
+
+	}
+
+	function risk_level_acceptable_color(r) {
+		if (r >= 3)
+			return '#ff0000';
+		else
+			return '#00ff00';
+	}
+
+	function cal_level(w) {
+
+		var i = parseInt($('#csa_impact_id' + w).val()) - 1;
+		var j = parseInt($('#csa_likelihood_id' + w).val()) - 1;
+		var lv = 0;
+
+		if (isNaN(i) || isNaN(j)) {
+			$('#risk_level_' + w + '_div').css('background-color', '#ffffff');
+			$('#risk_level_' + w + '_div').html('ระดับความเสี่ยง');
+
+		} else {
+			lv = risk_mat[i][j];
+
+			$('#risk_level_' + w + '_div').css('background-color', risk_level_color(lv));
+			$('#risk_level_' + w + '_div').html(risk_level_name(lv));
+			$('#risk_level_' + w + '_div_name').html('');
+			$('#risk_level_' + w + '_div_name').append('<input type="hidden" id="loss_text_level" name="loss_text_level" value="' + risk_level_name(lv) + '">');
+
+
+		}
+	}
+</script>
+<script>
+	function showEventForm() {
+		$('#myModalSendCase').modal('show');
+	}
+</script>
+
+
+<script>
+	function Comma(Num) { //function to add commas to textboxes
+		Num += '';
+		Num = Num.replace(',', '');
+		Num = Num.replace(',', '');
+		Num = Num.replace(',', '');
+		Num = Num.replace(',', '');
+		Num = Num.replace(',', '');
+		Num = Num.replace(',', '');
+		x = Num.split('.');
+		x1 = x[0];
+		x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1))
+			x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		return x1 + x2;
+	}
+
+	function CheckNumeric() {
+		return event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode == 46;
+	}
+
+	var validate = function(e) {
+		var t = e.value;
+		e.value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+	}
+
+	function numberWithCommas(x) {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	}
+</script>
+<? function getEmail($u)
+{
+	include('inc/connect.php');
+	$sql = "SELECT email FROM user WHERE user_id='" . $u . "'";
+	$result = mysqli_query($connect, $sql);
+	$row = mysqli_fetch_array($result);
+	return $row['email'];
+}
+?>
+
+<? function getParentID($u)
+{
+	include('inc/connect.php');
+	$sql = "SELECT parent_id FROM department WHERE department_id='" . $u . "'";
+	$result = mysqli_query($connect, $sql);
+	$row = mysqli_fetch_array($result);
+	return $row['parent_id'];
+}
+?>

@@ -149,5 +149,17 @@ function checkLossLevel($parameters)
 		return 0;
 	}
 }
+function incidenceType($h)
+{
+	include('inc/connect.php');
+	$sql = "SELECT factor FROM loss_factor WHERE loss_factor_id='" . $h . "'";
+	$result = mysqli_query($connect, $sql);
+	$row = mysqli_fetch_array($result);
+	return $row['factor'];
+}
+
+
+
+
 
 ?>
